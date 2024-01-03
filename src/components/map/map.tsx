@@ -37,7 +37,7 @@ function addUploadedGeoJSONLayer(map: maplibregl.Map, uploadedGeoJSON: Record<st
         }
     });
 
-    const featuresBoundingBox = bbox(uploadedGeoJSON as unknown);
+    const featuresBoundingBox = bbox(uploadedGeoJSON as any);
     map.fitBounds([[featuresBoundingBox[0], featuresBoundingBox[1]],[featuresBoundingBox[2], featuresBoundingBox[3]]], {
         padding: 100
     })
