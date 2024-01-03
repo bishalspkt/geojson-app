@@ -1,6 +1,6 @@
 import './App.css'
 import { Map } from './components/map/'
-import { MapControls, UploadGeoJSONButton } from './components/map-controls'
+import { MapControls } from './components/map-controls'
 import { useState } from 'react'
 
 function App() {
