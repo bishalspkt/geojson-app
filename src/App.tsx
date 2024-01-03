@@ -8,8 +8,7 @@ function App() {
 
   return <>
     <Map uploadedGeoJSON={geoJSON}/>
-    <MapControls />
-    <UploadGeoJSONButton setGeoJSON={setGeoJSON as (geojson: any) => void}/>
+    <MapControls setGeoJSON={setGeoJSON as (geojson: any) => void} />
   </>
 }
 

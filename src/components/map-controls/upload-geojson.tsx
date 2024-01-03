@@ -52,7 +52,7 @@ export default function UploadGeoJSONButton({setGeoJSON}: UploadGeoJSONButtonPro
 
     return (
         <>
-            <button className="fixed bottom-4 right-2 bg-green-600 mx-4 p-2 rounded" onClick={handleButtonClick}>
+            <button className="bg-green-600 mx-4 p-2 rounded text-white" onClick={handleButtonClick}>
                 Upload GeoJSON
             </button>
             {isModalOpen && (
