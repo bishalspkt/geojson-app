@@ -9,7 +9,6 @@ interface MapProps {
 }
 
 function addUploadedGeoJSONLayer(map: maplibregl.Map, uploadedGeoJSON: Record<string, unknown>, sourceName = "uploaded-geojson") {
-    console.log(`addUploadedGeoJSONLayer called with ${sourceName}`)
     const layerName = `${sourceName}-layer`;
     // Check if source with the same name already exists
     if (map.getLayer(layerName)) {

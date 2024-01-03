@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Button from "../ui/button";
 
 interface UploadGeoJSONButtonProps {
     setGeoJSON: (geoJSON: unknown) => void; // Update the type of geoJSON
@@ -52,9 +53,7 @@ export default function UploadGeoJSONButton({setGeoJSON}: UploadGeoJSONButtonPro
 
     return (
         <>
-            <button className="bg-green-600 mx-4 p-2 rounded text-white" onClick={handleButtonClick}>
-                Upload GeoJSON
-            </button>
+            <Button label="Upload GeoJSON" onClick={handleButtonClick} />
             {isModalOpen && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50 text-gray-800">
                     <div className="bg-white rounded-lg p-4 relative">

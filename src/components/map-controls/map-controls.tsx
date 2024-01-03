@@ -24,11 +24,15 @@ export default function MapControls({ setGeoJSON }: UploadGeoJSONButtonProps) {
                 </div>
                 {!minimized && (
                     <>
-                        <div className="flex flex-col gap-2">
-                            <p className="text-gray-600">Please upload a GeoJSON file to get started</p>
-                            <div className="text-left py-4">
+                        <div className="flex flex-col gap-2 px-4 py-2">
+                            <h4 className="text-left">Upload GeoJSON</h4>
+                            <p className="text-gray-600 text-sm text-left">Please upload a GeoJSON file to get started</p>
+                            <div className="text-left py-2">
                                 <UploadGeoJSONButton setGeoJSON={setGeoJSON} />
                             </div>
+                            <p className="text-gray-600 text-sm text-bold">OR</p>
+                            <h4 className="text-left pt-4">Paste your GeoJSON here</h4>
+                            <textarea className="border border-gray-300 text-white rounded-lg p-2 h-40 bg-gray-800" placeholder="Enter GeoJSON"/>
                         </div>
                     </>
                 )}
