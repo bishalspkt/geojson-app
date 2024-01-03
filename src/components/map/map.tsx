@@ -5,7 +5,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
 
 interface MapProps {
-    uploadedGeoJSON: Record<string, unknown>; // Update the type of uploadedGeoJSON
+    uploadedGeoJSON?: Record<string, unknown>; // Update the type of uploadedGeoJSON
 }
 
 function addUploadedGeoJSONLayer(map: maplibregl.Map, uploadedGeoJSON: Record<string, unknown>, sourceName = "uploaded-geojson") {
@@ -37,9 +37,8 @@ function addUploadedGeoJSONLayer(map: maplibregl.Map, uploadedGeoJSON: Record<st
         }
     });
 
-    const featuredBoundingBox = bbox(uploadedGeoJSON as unknown);
-
-    map.fitBounds([[featuredBoundingBox[0], featuredBoundingBox[1]],[featuredBoundingBox[2], featuredBoundingBox[3]]], {
+    const featuresBoundingBox = bbox(uploadedGeoJSON as unknown);
+    map.fitBounds([[featuresBoundingBox[0], featuresBoundingBox[1]],[featuresBoundingBox[2], featuresBoundingBox[3]]], {
         padding: 100
     })
     
@@ -67,7 +66,7 @@ export default function Map({ uploadedGeoJSON }: MapProps) {
             setMapReady(true);
         })
 
-        if(mapReady) {
+        if(mapReady && uploadedGeoJSON) {
             addUploadedGeoJSONLayer(map.current, uploadedGeoJSON);
         }
 
