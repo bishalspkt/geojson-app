@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Button } from "../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 interface UploadGeoJSONButtonProps {
-    setGeoJSON: (geoJSON: unknown) => void; // Update the type of geoJSON
+    setGeoJSON: (geoJSON: Record<string, unknown>) => void; // Update the type of geoJSON
 }
 
 export default function UploadGeoJSONButton({ setGeoJSON }: UploadGeoJSONButtonProps) {

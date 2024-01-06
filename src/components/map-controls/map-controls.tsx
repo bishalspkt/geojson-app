@@ -3,7 +3,7 @@ import { UploadGeoJSONButton } from ".";
 import { Button } from "../ui/button";
 
 interface UploadGeoJSONButtonProps {
-    setGeoJSON: (geoJSON: unknown) => void; // Update the type of geoJSON
+    setGeoJSON: (geoJSON: Record<string, unknown>) => void; // Update the type of geoJSON
 }
 
 function handleViewGeoJsonClick(textareaRef: HTMLTextAreaElement): GeoJSON.GeoJSON {
