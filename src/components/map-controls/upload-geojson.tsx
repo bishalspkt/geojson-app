@@ -1,20 +1,14 @@
-import { useState } from "react";
-import Button from "../ui/button";
-
+import { useRef } from "react";
+import { Button } from "../ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 interface UploadGeoJSONButtonProps {
     setGeoJSON: (geoJSON: unknown) => void; // Update the type of geoJSON
 }
 
-export default function UploadGeoJSONButton({setGeoJSON}: UploadGeoJSONButtonProps) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+export default function UploadGeoJSONButton({ setGeoJSON }: UploadGeoJSONButtonProps) {
 
-    const handleButtonClick = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+    const fileUploadRef = useRef<HTMLInputElement>(null);
+    const dialogCloseRef = useRef<HTMLButtonElement>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -42,7 +36,7 @@ export default function UploadGeoJSONButton({setGeoJSON}: UploadGeoJSONButtonPro
                     const jsonData = JSON.parse(contents);
                     console.log("UploadGeoJSONButton: Calling setGeoJSON")
                     setGeoJSON(jsonData);
-                    closeModal();
+                    dialogCloseRef.current?.click();
                 } catch (error) {
                     console.error('Error parsing JSON file:', error);
                 }
@@ -53,31 +47,26 @@ export default function UploadGeoJSONButton({setGeoJSON}: UploadGeoJSONButtonPro
 
     return (
         <>
-            <Button label="Upload GeoJSON" onClick={handleButtonClick} />
-            {isModalOpen && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50 text-gray-800">
-                    <div className="bg-white rounded-lg p-4 relative">
-                        <button className="absolute top-2 right-2 bg-red-600 text-white p-0.5 w-8 h-8 rounded-3xl" onClick={closeModal}>
-                            X
-                        </button>
-                        {/* Modal content goes here */}
-                        <h2 className="text-xl font-bold mb-4">Upload your GeoJSON</h2>
-                        <p>Select a GeoJSON file that you would like to view.</p>
-                        <div className="mt-4">
-                            <label htmlFor="file-upload" className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer">
-                                Choose File
-                            </label>
-                            <input
-                                id="file-upload"
-                                type="file"
-                                accept="application/geo+json,application/vnd.geo+json,.geojson"
-                                className="hidden"
-                                onChange={handleFileChange}
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button>Upload GeoJSON</Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Upload your GeoJSON</DialogTitle>
+                        <DialogDescription>
+                            You may select a .json or .geojson file that is less than 10MB in size.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <Button className="mr-auto mt-4" onClick={() => fileUploadRef.current?.click()}>Upload</Button>
+                    <input
+                        ref={fileUploadRef}
+                        type="file"
+                        className="hidden"
+                        onChange={handleFileChange} />
+                </DialogContent>
+                <DialogClose ref={dialogCloseRef} />
+            </Dialog>
         </>
     );
 }
