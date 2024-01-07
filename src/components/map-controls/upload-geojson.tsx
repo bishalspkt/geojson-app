@@ -2,9 +2,10 @@ import { useRef } from "react";
 import { Button } from "../ui/button";
 interface UploadGeoJSONButtonProps {
     setGeoJSON: (geoJSON: Record<string, unknown>) => void; // Update the type of geoJSON
+    showTitleAndDescription?: boolean;
 }
 
-export default function UploadGeoJSONButton({ setGeoJSON }: UploadGeoJSONButtonProps) {
+export default function UploadGeoJSONButton({ setGeoJSON, showTitleAndDescription = true }: UploadGeoJSONButtonProps) {
 
     const fileUploadRef = useRef<HTMLInputElement>(null);
     const dialogCloseRef = useRef<HTMLButtonElement>(null);
@@ -46,8 +47,12 @@ export default function UploadGeoJSONButton({ setGeoJSON }: UploadGeoJSONButtonP
 
     return (
         <>
-            <p>Upload a GeoJSON file to get started</p>
-            <p className="text-gray-600 text-sm">You may select a .json or .geojson file that is less than 10MB in size.</p>
+            {showTitleAndDescription && (
+            <>
+                <p>Upload a GeoJSON file to get started</p>
+                <p className="text-gray-600 text-sm">You may select a .json or .geojson file that is less than 10MB in size.</p>
+            </>
+            )}
             <div className="py-2 mr-auto">
                 <Button onClick={() => fileUploadRef.current?.click()}>Upload GeoJSON</Button>
             </div>
