@@ -1,3 +1,3 @@
 import Map from './map'
-
-export { Map }
+import MapLabel from './map-label'
+export { Map, MapLabel }

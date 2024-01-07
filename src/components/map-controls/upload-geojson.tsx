@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { Button } from "../ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 interface UploadGeoJSONButtonProps {
     setGeoJSON: (geoJSON: Record<string, unknown>) => void; // Update the type of geoJSON
 }
@@ -47,26 +46,16 @@ export default function UploadGeoJSONButton({ setGeoJSON }: UploadGeoJSONButtonP
 
     return (
         <>
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button>Upload GeoJSON</Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Upload your GeoJSON</DialogTitle>
-                        <DialogDescription>
-                            You may select a .json or .geojson file that is less than 10MB in size.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Button className="mr-auto mt-4" onClick={() => fileUploadRef.current?.click()}>Upload</Button>
-                    <input
-                        ref={fileUploadRef}
-                        type="file"
-                        className="hidden"
-                        onChange={handleFileChange} />
-                </DialogContent>
-                <DialogClose ref={dialogCloseRef} />
-            </Dialog>
+            <p>Upload a GeoJSON file to get started</p>
+            <p className="text-gray-600 text-sm">You may select a .json or .geojson file that is less than 10MB in size.</p>
+            <div className="py-2 mr-auto">
+                <Button onClick={() => fileUploadRef.current?.click()}>Upload GeoJSON</Button>
+            </div>
+            <input
+                ref={fileUploadRef}
+                type="file"
+                className="hidden"
+                onChange={handleFileChange} />
         </>
     );
 }

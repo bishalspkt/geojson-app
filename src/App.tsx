@@ -1,5 +1,5 @@
 import './App.css'
-import { Map } from './components/map/'
+import { Map, MapLabel } from './components/map/'
 import { MapControls } from './components/map-controls'
 import { useState } from 'react'
 
@@ -8,7 +8,8 @@ function App() {
 
   return <>
     <Map uploadedGeoJSON={geoJSON}/>
-    <MapControls setGeoJSON={setGeoJSON as (geojson: Record<string, unknown>) => void} />
+    <MapLabel/>
+    <MapControls setGeoJSON={setGeoJSON} />
   </>
 }
 
