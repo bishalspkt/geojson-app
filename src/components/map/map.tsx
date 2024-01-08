@@ -12,6 +12,7 @@ const mapLibreMapStyle: StyleSpecification = {
         "protomaps-mvt": {
             type: "vector",
             tiles: ["https://tiles.geojson.app/20240107/{z}/{x}/{y}.mvt"],
+            maxzoom: 15,
             attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>'
         }
     },
@@ -37,7 +38,7 @@ export default function Map({ uploadedGeoJSON }: MapProps) {
             container: mapContainer.current!,
             style: mapLibreMapStyle,
             center: [0, 0],
-            zoom: 2
+            zoom: 1
         });
 
         map.current.on('load', () => { setMapReady(true); });
