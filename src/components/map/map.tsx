@@ -16,6 +16,7 @@ const mapLibreMapStyle: StyleSpecification = {
             attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>'
         }
     },
+    //  one of light, dark, white, black, grayscale or debug.
     layers: layers("protomaps-mvt","light")
 }
 
