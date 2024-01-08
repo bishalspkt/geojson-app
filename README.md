@@ -1,11 +1,20 @@
-# React + TypeScript + Vite
+# geojson.app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository hosts react frontend for geojson.app. This app using MapLibre as a base map, and allows import, manipulation, and export of various Geographical data types, including JSON
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+In order to get started run the following
+
+```bash
+# Install dependencies
+npm installl
+
+# Start server in dev mode
+npm run dev
+```
+
+For other options see `package.json`
 
 ## Expanding the ESLint configuration
 
