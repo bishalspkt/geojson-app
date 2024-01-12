@@ -4,6 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
 import { addGeoJSONLayer } from '../../lib/map-utils';
 import layers from 'protomaps-themes-base';
+import { GeoJSON } from 'geojson';
 
 const mapLibreMapStyle: StyleSpecification = {
     version: 8,
@@ -21,11 +22,11 @@ const mapLibreMapStyle: StyleSpecification = {
 }
 
 interface MapProps {
-    uploadedGeoJSON?: Record<string, unknown>; // Update the type of uploadedGeoJSON
+    geojson?: GeoJSON; // Update the type of uploadedGeoJSON
 }
 
 
-export default function Map({ uploadedGeoJSON }: MapProps) {
+export default function Map({ geojson }: MapProps) {
     const mapContainer = useRef<ElementRef<"div">>(null);
     const map = useRef<maplibregl.Map | null>(null);
     const [mapReady, setMapReady] = useState(false);
@@ -52,10 +53,11 @@ export default function Map({ uploadedGeoJSON }: MapProps) {
 
     // Update uploaded GeoJson Layer
     useEffect(() => {
-        if(mapReady && uploadedGeoJSON) {
-            addGeoJSONLayer(map.current!!, uploadedGeoJSON, 'uploaded-geojson');
+        if(mapReady && geojson) {
+            // eslint-disable-next-line @typescript-eslint/no-extra-non-null-assertion
+            addGeoJSONLayer(map.current!!, geojson, 'uploaded-geojson');
         }
-    }, [mapReady, uploadedGeoJSON])
+    }, [mapReady, geojson])
 
     return (
         <div className="map-wrap">

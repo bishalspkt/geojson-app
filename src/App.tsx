@@ -2,14 +2,16 @@ import './App.css'
 import { Map, MapLabel } from './components/map/'
 import { MapControls } from './components/map-controls'
 import { useState } from 'react'
+import { GeoJSON } from 'geojson';
+
 
 function App() {
-  const [geoJSON, setGeoJSON] = useState<Record<string, unknown>|undefined>(undefined);
+  const [geoJson, setGeoJson] = useState<GeoJSON|undefined>(undefined);
 
   return <>
-    <Map uploadedGeoJSON={geoJSON}/>
     <MapLabel/>
-    <MapControls setGeoJSON={setGeoJSON} />
+    <Map geojson={geoJson}/>
+    <MapControls geoJson={geoJson} setGeoJSON={setGeoJson} />
   </>
 }
 

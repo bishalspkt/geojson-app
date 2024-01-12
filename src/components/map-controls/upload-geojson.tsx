@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { Button } from "../ui/button";
+import { GeoJSON } from 'geojson';
 interface UploadGeoJSONButtonProps {
-    setGeoJSON: (geoJSON: Record<string, unknown>) => void; // Update the type of geoJSON
+    setGeoJSON: (geoJSON: GeoJSON) => void; // Update the type of geoJSON
     showTitleAndDescription?: boolean;
 }
 

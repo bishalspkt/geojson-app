@@ -1,10 +1,13 @@
 import { useRef } from "react";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
+import { GeoJSON } from 'geojson';
 
+type PasteGeoJSONFormProps = {
+    setGeoJSON: (geoJSON: GeoJSON) => void;
+}
 
-
-export default function PasteGeoJSONForm({setGeoJSON}: {setGeoJSON: React.Dispatch<React.SetStateAction<Record<string, unknown> | undefined>>}) {
+export default function PasteGeoJSONForm({setGeoJSON}: PasteGeoJSONFormProps) {
     const geojsonTextareRef = useRef<HTMLTextAreaElement>(null);
 
     const handleViewGeoJsonClick = () => {

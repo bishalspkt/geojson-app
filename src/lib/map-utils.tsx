@@ -1,6 +1,7 @@
 import bbox from '@turf/bbox';
+import { GeoJSON } from 'geojson';
 
-export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: Record<string, unknown>, sourceName: string) {
+export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: GeoJSON, sourceName: string) {
     const layerName = `${sourceName}-layer`;
     // Check if source with the same name already exists
     if (map.getLayer(layerName)) {
@@ -22,12 +23,13 @@ export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: Record<string, unk
         type: 'fill',
         source: sourceName,
         paint: {
-            'fill-color': '#888888',
-            'fill-outline-color': 'red',
-            'fill-opacity': 0.4
+            'fill-color': '#555555',
+            'fill-outline-color': '#bbbbbb',
+            'fill-opacity': 0.8
         }
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const featuresBoundingBox = bbox(geoJSON as any);
     map.fitBounds([[featuresBoundingBox[0], featuresBoundingBox[1]],[featuresBoundingBox[2], featuresBoundingBox[3]]], {
         padding: 100

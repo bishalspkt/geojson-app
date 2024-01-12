@@ -3,9 +3,11 @@ import UploadGeoJSONButton from "./upload-geojson.js";
 import PasteGeoJSONForm from "./paste-geojson.js";
 import { Button } from "../ui/button.js";
 import { Circle, Diamond, Import, Layers, MapPin, Pencil, Pentagon, Save, Triangle, X } from "lucide-react";
+import { GeoJSON } from 'geojson';
 
-interface UploadGeoJSONButtonProps {
-    setGeoJSON: React.Dispatch<React.SetStateAction<Record<string, unknown> | undefined>> // Update the type of geoJSON
+type UploadGeoJSONButtonProps = {
+    geoJson: GeoJSON | undefined;
+    setGeoJSON: React.Dispatch<React.SetStateAction<GeoJSON | undefined>> // Update the type of geoJSON
 }
 
 type PanelType = "upload" | "layers" | "create";
