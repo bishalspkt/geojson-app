@@ -56,7 +56,8 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
         case "Point":
             map.loadImage('/map-assets/pin-marker.png', function(error, image) {
                 if (error) throw error;
-                map.addImage('pin', image!!);
+                if(!image) throw new Error("Image not loaded")
+                map.addImage('pin', image);
                 map.addLayer({
                     id: layerName,
                     type: 'symbol',

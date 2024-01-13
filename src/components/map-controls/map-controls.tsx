@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { Button } from "../ui/button.js";
-import { Circle, Diamond, Import, Layers, MapPin, Pencil, Pentagon, Triangle } from "lucide-react";
-import Panel from "./panels/panel.js";
-import { PanelStatus, PanelType, UploadGeoJSONButtonProps } from "./types.js";
+import { Import, Layers, Pencil } from "lucide-react";
 import LayersPanel from "./panels/layers-panel.js";
 import UploadPanel from "./panels/upload-panel.js";
 import CreatePanel from "./panels/create-panel.js";
-
+import { PanelStatus, PanelType, UploadGeoJSONButtonProps } from "./types.js";
 
 export default function MapControls({ geoJson, setGeoJSON, setMapFocus }: UploadGeoJSONButtonProps) {
     const [uploadPanelStatus, setUploadPanelStatus] = useState<PanelStatus>("maximized");
     const [layersPanelStatus, setLayersPanelStatus] = useState<PanelStatus>("hidden");
     const [createPanelStatus, setCreatePanelStatus] = useState<PanelStatus>("hidden");
     
+
     const togglePanel = (panel: PanelType) => {
         switch (panel) {
             case "upload":

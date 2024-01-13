@@ -39,7 +39,7 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                                         <Button variant="ghost" size="lg" className="text-md block w-full text-left h-16" onClick={() => setMapFocus({ type: "Polygon", idx })}>
                                             <Shapes className="h-5 w-5 inline" />
                                             <p className="inline m-4">
-                                                New {p.type} {idx + 1}
+                                                {  p.properties?.name || `New ${p.type} ${idx + 1}` }
                                                 <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">Polygon</span>
                                             </p>
                                         </Button>
@@ -55,7 +55,7 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                                         <Button variant="ghost" size="lg" className="text-md block w-full text-left h-16" onClick={() => setMapFocus({ type: "Point", idx })}>
                                             <Shapes className="h-5 w-5 inline" />
                                             <p className="inline m-4">
-                                                New {p.type} {idx + 1}
+                                            {  p.properties?.name || `New ${p.type} ${idx + 1}` }
                                                 <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">Point</span>
                                             </p>
                                         </Button>
@@ -71,7 +71,7 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                                         <Button variant="ghost" size="lg" className="text-md block w-full text-left h-16" onClick={() => setMapFocus({ type: "LineString", idx })}>
                                             <Shapes className="h-5 w-5 inline" />
                                             <p className="inline m-4">
-                                                New {p.type} {idx + 1}
+                                            {  p.properties?.name || `New ${p.type} ${idx + 1}` }
                                                 <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">LineString</span>
                                             </p>
                                         </Button>

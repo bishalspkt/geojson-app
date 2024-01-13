@@ -63,12 +63,13 @@ export default function Map({ geojson, mapFocus }: MapProps) {
     }, [mapReady, geojson])
 
     useEffect(() => {
-        if(mapReady && map.current && geojson && mapFocus) {
+        if(map.current && geojson && mapFocus) {
             const feature = filterGeojsonFeatures(geojson, mapFocus.type)[mapFocus.idx]
             const bbox = getBoundingBox(feature);
-            map.current.fitBounds(bbox, { padding: 200 });
+            map.current.fitBounds(bbox, { padding: 200, maxZoom: 15 });
         }
-    }, [mapFocus])
+    }, [mapFocus, geojson])
+
     return (
         <div className="map-wrap">
             <div ref={mapContainer} className="map" />
