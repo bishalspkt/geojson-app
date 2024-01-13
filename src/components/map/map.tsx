@@ -66,7 +66,7 @@ export default function Map({ geojson, mapFocus }: MapProps) {
         if(map.current && geojson && mapFocus) {
             const feature = filterGeojsonFeatures(geojson, mapFocus.type)[mapFocus.idx]
             const bbox = getBoundingBox(feature);
-            map.current.fitBounds(bbox, { padding: 200, maxZoom: 15 });
+            map.current.fitBounds(bbox, { padding: 40, maxZoom: 15 });
         }
     }, [mapFocus, geojson])
 
