@@ -46,7 +46,7 @@ export default function MapControls({ geoJson, setGeoJSON }: UploadGeoJSONButton
             { uploadPanelStatus !== "hidden" && <UploadPanel togglePanel={togglePanel} setGeoJson={setGeoJSON} /> }
             { layersPanelStatus !== "hidden" && <LayersPanel togglePanel={togglePanel} geoJson={geoJson}/> }
             {createPanelStatus !== "hidden" &&
-                <Panel type="create" onToggle={togglePanel}>
+                <Panel type="create" onToggle={togglePanel} className="px-4 py-2">
                     <p>Select a tool to begin editing</p>
                     <p className="text-gray-600 text-sm">Add layers</p>
                     <div className="py-2 mr-auto flex gap-4">

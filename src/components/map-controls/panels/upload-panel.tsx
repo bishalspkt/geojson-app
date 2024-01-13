@@ -9,14 +9,12 @@ type UploadPanelProps = {
     setGeoJson: (geojson: GeoJSON) => void;
 }
 
-export default function UploadPanel({togglePanel, setGeoJson}: UploadPanelProps) {
+export default function UploadPanel({ togglePanel, setGeoJson }: UploadPanelProps) {
     return (
-        <Panel type="layers" onToggle={togglePanel}>
-                <Panel type="upload" onToggle={togglePanel}>
-                    <UploadGeoJSONButton setGeoJSON={setGeoJson} />
-                    <p className="text-l text-bold my-2 mx-auto">OR</p>
-                    <PasteGeoJSONForm setGeoJSON={setGeoJson} />
-                </Panel>
-    </Panel>
+        <Panel type="upload" onToggle={togglePanel} className="px-4 py-2">
+            <UploadGeoJSONButton setGeoJSON={setGeoJson} />
+            <p className="text-l text-bold my-2 mx-auto">OR</p>
+            <PasteGeoJSONForm setGeoJSON={setGeoJson} />
+        </Panel>
     )
 }

@@ -1,4 +1,5 @@
-import { GeoJSON } from "geojson";
+import { Feature, GeoJSON } from "geojson";
+import { GeoJsonPrimaryFetureTypes } from "../components/map-controls/types";
 
 type GeoJsonFeatureCountStats = {
     numberOfFeatures: number;
@@ -8,11 +9,11 @@ type GeoJsonFeatureCountStats = {
     numberOfGeometryCollections: number;
 }
 
-export function getPolygons(geoJson: GeoJSON|undefined): GeoJSON[] {
+export function filterGeojsonFeatures(geoJson: GeoJSON|undefined, type: GeoJsonPrimaryFetureTypes): Feature[] {
     if (!geoJson || geoJson.type !== "FeatureCollection") {
         return [];
     }
-    return geoJson.features.filter(feature => feature.geometry.type === "Polygon");
+    return geoJson.features.filter(feature => feature.geometry.type === type);
 }
 
 export function getGeoJsonFeatureCountStats(geoJson: GeoJSON|undefined): GeoJsonFeatureCountStats {

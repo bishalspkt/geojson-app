@@ -17,4 +17,12 @@ export type PanelProps = {
     type: PanelType;
     children: JSX.Element | JSX.Element[];
     onToggle: (panel: PanelType) => void;
+    className?: string;
+}
+
+export type GeoJsonPrimaryFetureTypes = "Point" | "LineString" | "Polygon";
+
+export type LayersPanelProps = {
+    togglePanel: (panel: PanelType) => void;
+    geoJson: GeoJSON | undefined;
 }
