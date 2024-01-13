@@ -2,9 +2,11 @@ import { useRef, useEffect, useState, ElementRef } from 'react';
 import maplibregl, { StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
-import { addGeoJSONLayer } from '../../lib/map-utils';
+import { addGeoJSONLayer, getBoundingBox } from '../../lib/map-utils';
 import layers from 'protomaps-themes-base';
 import { GeoJSON } from 'geojson';
+import { MapFocus } from '../map-controls/types';
+import { filterGeojsonFeatures } from '../../lib/geojson-utils';
 
 const mapLibreMapStyle: StyleSpecification = {
     version: 8,
@@ -23,10 +25,11 @@ const mapLibreMapStyle: StyleSpecification = {
 
 interface MapProps {
     geojson?: GeoJSON; // Update the type of uploadedGeoJSON
+    mapFocus?: MapFocus
 }
 
 
-export default function Map({ geojson }: MapProps) {
+export default function Map({ geojson, mapFocus }: MapProps) {
     const mapContainer = useRef<ElementRef<"div">>(null);
     const map = useRef<maplibregl.Map | null>(null);
     const [mapReady, setMapReady] = useState(false);
@@ -58,6 +61,14 @@ export default function Map({ geojson }: MapProps) {
             addGeoJSONLayer(map.current!!, geojson, 'uploaded-geojson');
         }
     }, [mapReady, geojson])
+
+    useEffect(() => {
+        if(map.current && geojson && mapFocus) {
+            const feature = filterGeojsonFeatures(geojson, mapFocus.type)[mapFocus.idx]
+            const bbox = getBoundingBox(feature);
+            map.current.fitBounds(bbox, { padding: 200, maxZoom: 15 });
+        }
+    }, [mapFocus, geojson])
 
     return (
         <div className="map-wrap">

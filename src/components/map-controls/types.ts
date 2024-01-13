@@ -1,8 +1,14 @@
 import { GeoJSON } from "geojson";
 
+export type MapFocus = {
+    type: GeoJsonPrimaryFetureTypes,
+    idx: number,
+}
+
 export type UploadGeoJSONButtonProps = {
     geoJson: GeoJSON | undefined;
     setGeoJSON: React.Dispatch<React.SetStateAction<GeoJSON | undefined>> // Update the type of geoJSON
+    setMapFocus: React.Dispatch<React.SetStateAction<MapFocus | undefined>> // Update the type of geoJSON
 }
 
 export type PasteGeoJSONFormProps = {
@@ -25,4 +31,6 @@ export type GeoJsonPrimaryFetureTypes = "Point" | "LineString" | "Polygon";
 export type LayersPanelProps = {
     togglePanel: (panel: PanelType) => void;
     geoJson: GeoJSON | undefined;
+    setMapFocus: React.Dispatch<React.SetStateAction<MapFocus | undefined>> // Update the type of geoJSON
+
 }
