@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { Button } from "../ui/button.js";
-import { Circle, Diamond, Import, Layers, MapPin, Pencil, Pentagon, Save, Triangle } from "lucide-react";
+import { Circle, Diamond, Import, Layers, MapPin, Pencil, Pentagon, Triangle } from "lucide-react";
 import Panel from "./panels/panel.js";
 import { PanelStatus, PanelType, UploadGeoJSONButtonProps } from "./types.js";
 import LayersPanel from "./panels/layers-panel.js";
 import UploadPanel from "./panels/upload-panel.js";
+import CreatePanel from "./panels/create-panel.js";
 
 
-export default function MapControls({ geoJson, setGeoJSON }: UploadGeoJSONButtonProps) {
+export default function MapControls({ geoJson, setGeoJSON, setMapFocus }: UploadGeoJSONButtonProps) {
     const [uploadPanelStatus, setUploadPanelStatus] = useState<PanelStatus>("maximized");
     const [layersPanelStatus, setLayersPanelStatus] = useState<PanelStatus>("hidden");
     const [createPanelStatus, setCreatePanelStatus] = useState<PanelStatus>("hidden");
-
+    
     const togglePanel = (panel: PanelType) => {
         switch (panel) {
             case "upload":
@@ -40,24 +41,11 @@ export default function MapControls({ geoJson, setGeoJSON }: UploadGeoJSONButton
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("upload")}><Import className="h-5 w-5" /></Button>
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("layers")}><Layers className="h-5 w-5" /></Button>
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("create")}><Pencil className="h-5 w-5" /></Button>
-                <Button variant="outline" size="icon" className="rounded-3xl"><Save className="h-5 w-5" /></Button>
             </div>
 
             { uploadPanelStatus !== "hidden" && <UploadPanel togglePanel={togglePanel} setGeoJson={setGeoJSON} /> }
-            { layersPanelStatus !== "hidden" && <LayersPanel togglePanel={togglePanel} geoJson={geoJson}/> }
-            {createPanelStatus !== "hidden" &&
-                <Panel type="create" onToggle={togglePanel} className="px-4 py-2">
-                    <p>Select a tool to begin editing</p>
-                    <p className="text-gray-600 text-sm">Add layers</p>
-                    <div className="py-2 mr-auto flex gap-4">
-                        <Button variant="secondary" size="icon"><MapPin /></Button>
-                        <Button variant="secondary" size="icon"><Triangle /></Button>
-                        <Button variant="secondary" size="icon"><Diamond /></Button>
-                        <Button variant="secondary" size="icon"><Pentagon /></Button>
-                        <Button variant="secondary" size="icon"><Circle /></Button>
-                    </div>
-                </Panel>
-            }
+            { layersPanelStatus !== "hidden" && <LayersPanel togglePanel={togglePanel} geoJson={geoJson} setMapFocus={setMapFocus}/> }
+            {createPanelStatus !== "hidden" && <CreatePanel togglePanel={togglePanel} /> }
         </>
     );
 }

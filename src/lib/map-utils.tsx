@@ -1,19 +1,28 @@
 import bbox from '@turf/bbox';
 import { Feature } from 'geojson';
 import { filterGeojsonFeatures } from './geojson-utils';
+import { GeoJSON } from 'geojson';
+
+export function getBoundingBox(geoJson: GeoJSON): [[number, number], [number, number]] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const featuresBoundingBox = bbox(geoJson as any);
+
+    return [[featuresBoundingBox[0], featuresBoundingBox[1]], [featuresBoundingBox[2], featuresBoundingBox[3]]] 
+}
 
 export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: GeoJSON, sourceName: string) {
 
     const pointFeatures = filterGeojsonFeatures(geoJSON, "Point");
-    // const lineFeatures = filterGeojsonFeatures(geoJSON, "LineString");
+    const lineFeatures = filterGeojsonFeatures(geoJSON, "LineString");
     const polygonFeatures = filterGeojsonFeatures(geoJSON, "Polygon");
 
     pointFeatures.length > 0 && updateGeoJsonLayer(map, `${sourceName}-points`, pointFeatures);
     polygonFeatures.length > 0 && updateGeoJsonLayer(map, `${sourceName}-polygons`, polygonFeatures);
+    lineFeatures.length > 0 && updateGeoJsonLayer(map, `${sourceName}-lines`, lineFeatures);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const featuresBoundingBox = bbox(geoJSON as any);
-    map.fitBounds([[featuresBoundingBox[0], featuresBoundingBox[1]], [featuresBoundingBox[2], featuresBoundingBox[3]]], {
+    const featuresBoundingBox =getBoundingBox(geoJSON as any)
+    map.fitBounds(featuresBoundingBox, {
         padding: 100
     })
 
@@ -57,6 +66,21 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
                         'icon-offset': [0, -15], // Shift the pin 15px above
                     }
                 });
+            });
+            break;
+        case "LineString":
+            map.addLayer({
+                id: layerName,
+                type: 'line',
+                source: sourceName,
+                layout: {
+                    'line-cap': 'round',
+                    'line-join': 'round'
+                },
+                paint: {
+                    'line-color': '#555555',
+                    'line-width': 4
+                }
             });
             break;
         case "Polygon":
