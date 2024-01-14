@@ -26,7 +26,7 @@ export type PanelProps = {
     className?: string;
 }
 
-export type GeoJsonPrimaryFetureTypes = "Point" | "LineString" | "Polygon";
+export type GeoJsonPrimaryFetureTypes = "Point" | "LineString" | "Polygon" | "MultiPoint" | "MultiLineString" | "MultiPolygon";
 
 export type LayersPanelProps = {
     togglePanel: (panel: PanelType) => void;

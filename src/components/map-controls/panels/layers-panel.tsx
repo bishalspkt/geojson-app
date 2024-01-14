@@ -9,9 +9,9 @@ import { useState } from "react";
 export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: LayersPanelProps) {
     const [filterByLayer, setFilterByLayer] = useState<GeoJsonPrimaryFetureTypes>("Polygon");
     const geoJsonStats = getGeoJsonFeatureCountStats(geoJson);
-    const polygons = filterGeojsonFeatures(geoJson, "Polygon");
-    const points = filterGeojsonFeatures(geoJson, "Point");
-    const lines = filterGeojsonFeatures(geoJson, "LineString");
+    const polygons = filterGeojsonFeatures(geoJson, ["Polygon", "MultiPolygon"]);
+    const points = filterGeojsonFeatures(geoJson, ["Point", "MultiPoint"]);
+    const lines = filterGeojsonFeatures(geoJson, ["LineString", "MultiLineString"]);
 
     return (
         <Panel type="layers" onToggle={togglePanel}>
@@ -53,7 +53,7 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                                 <ul>{points.map((p, idx) => (
                                     <li key={idx} className="flex flex-row">
                                         <Button variant="ghost" size="lg" className="text-md block w-full text-left h-16" onClick={() => setMapFocus({ type: "Point", idx })}>
-                                            <Shapes className="h-5 w-5 inline" />
+                                            <MapPin className="h-5 w-5 inline" />
                                             <p className="inline m-4">
                                             {  p.properties?.name || `New ${p.type} ${idx + 1}` }
                                                 <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">Point</span>
@@ -69,7 +69,7 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                                 <ul>{lines.map((p, idx) => (
                                     <li key={idx} className="flex flex-row">
                                         <Button variant="ghost" size="lg" className="text-md block w-full text-left h-16" onClick={() => setMapFocus({ type: "LineString", idx })}>
-                                            <Shapes className="h-5 w-5 inline" />
+                                            <Waypoints className="h-5 w-5 inline" />
                                             <p className="inline m-4">
                                             {  p.properties?.name || `New ${p.type} ${idx + 1}` }
                                                 <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">LineString</span>

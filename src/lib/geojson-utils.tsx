@@ -9,11 +9,26 @@ type GeoJsonFeatureCountStats = {
     numberOfGeometryCollections: number;
 }
 
-export function filterGeojsonFeatures(geoJson: GeoJSON|undefined, type: GeoJsonPrimaryFetureTypes): Feature[] {
+export function filterGeojsonFeatures(geoJson: GeoJSON|undefined, type: GeoJsonPrimaryFetureTypes[]|GeoJsonPrimaryFetureTypes): Feature[] {
     if (!geoJson || geoJson.type !== "FeatureCollection") {
         return [];
     }
-    return geoJson.features.filter(feature => feature.geometry.type === type);
+
+    if(!Array.isArray(type)) {
+        const p: GeoJsonPrimaryFetureTypes[] = ["Point", "MultiPoint"];
+        const l: GeoJsonPrimaryFetureTypes[] = ["LineString", "MultiLineString"];
+        const poly: GeoJsonPrimaryFetureTypes[] = ["Polygon", "MultiPolygon"];
+
+        if(p.includes(type)) {
+            type = p;
+        } else if (l.includes(type)) {
+            type = l;
+        } else if (poly.includes(type)) {
+            type = poly;
+        }
+    }
+
+    return geoJson.features.filter(feature =>  type.includes(feature.geometry.type as GeoJsonPrimaryFetureTypes));
 }
 
 export function getGeoJsonFeatureCountStats(geoJson: GeoJSON|undefined): GeoJsonFeatureCountStats {

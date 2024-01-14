@@ -42,8 +42,8 @@ export default function Map({ geojson, mapFocus }: MapProps) {
         map.current = new maplibregl.Map({
             container: mapContainer.current!,
             style: mapLibreMapStyle,
-            center: [0, 0],
-            zoom: 1
+            center: [105, -5],
+            zoom: 2.8
         });
 
         map.current.on('load', () => { setMapReady(true); });
@@ -66,7 +66,7 @@ export default function Map({ geojson, mapFocus }: MapProps) {
         if(map.current && geojson && mapFocus) {
             const feature = filterGeojsonFeatures(geojson, mapFocus.type)[mapFocus.idx]
             const bbox = getBoundingBox(feature);
-            map.current.fitBounds(bbox, { padding: 40, maxZoom: 15 });
+            map.current.fitBounds(bbox, { padding: 60, maxZoom: 15, maxDuration: 5000 });
         }
     }, [mapFocus, geojson])
 

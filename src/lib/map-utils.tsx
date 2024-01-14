@@ -12,13 +12,13 @@ export function getBoundingBox(geoJson: GeoJSON): [[number, number], [number, nu
 
 export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: GeoJSON, sourceName: string) {
 
-    const pointFeatures = filterGeojsonFeatures(geoJSON, "Point");
-    const lineFeatures = filterGeojsonFeatures(geoJSON, "LineString");
-    const polygonFeatures = filterGeojsonFeatures(geoJSON, "Polygon");
+    const pointFeatures = filterGeojsonFeatures(geoJSON, ["Point", "MultiPoint"]);
+    const lineFeatures = filterGeojsonFeatures(geoJSON, ["LineString", "MultiLineString"]);
+    const polygonFeatures = filterGeojsonFeatures(geoJSON, ["Polygon", "MultiPolygon"]);
 
-    pointFeatures.length > 0 && updateGeoJsonLayer(map, `${sourceName}-points`, pointFeatures);
-    polygonFeatures.length > 0 && updateGeoJsonLayer(map, `${sourceName}-polygons`, polygonFeatures);
-    lineFeatures.length > 0 && updateGeoJsonLayer(map, `${sourceName}-lines`, lineFeatures);
+    updateGeoJsonLayer(map, `${sourceName}-points`, pointFeatures);
+    updateGeoJsonLayer(map, `${sourceName}-polygons`, polygonFeatures);
+    updateGeoJsonLayer(map, `${sourceName}-lines`, lineFeatures);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const featuresBoundingBox =getBoundingBox(geoJSON as any)
@@ -32,8 +32,6 @@ export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: GeoJSON, sourceNam
 function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: Feature[]) {
     const layerName = `${sourceName}-layer`;
 
-    const featureType = features[0].geometry.type;
-
     // Check if source with the same name already exists
     if (map.getLayer(layerName)) {
         map.removeLayer(layerName);
@@ -42,6 +40,12 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
     if (map.getSource(sourceName)) {
         map.removeSource(sourceName);
     }
+
+    if (features.length === 0) {
+        return;
+    }
+
+    const featureType = features[0].geometry.type;
 
     // Add a new source and layer
     map.addSource(sourceName, {
@@ -54,6 +58,7 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
 
     switch (featureType) {
         case "Point":
+        case "MultiPoint":
             map.loadImage('/map-assets/pin-marker.png', function(error, image) {
                 if (error) throw error;
                 if(!image) throw new Error("Image not loaded")
@@ -70,29 +75,33 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
             });
             break;
         case "LineString":
+        case "MultiLineString":
             map.addLayer({
                 id: layerName,
                 type: 'line',
                 source: sourceName,
                 layout: {
                     'line-cap': 'round',
-                    'line-join': 'round'
+                    'line-join': 'round',
+
                 },
                 paint: {
-                    'line-color': '#555555',
+                    'line-color': '#5555bb',
                     'line-width': 4
                 }
             });
             break;
         case "Polygon":
+        case "MultiPolygon":
             map.addLayer({
                 id: layerName,
                 type: 'fill',
                 source: sourceName,
                 paint: {
-                    'fill-color': '#555555',
-                    'fill-outline-color': '#bbbbbb',
-                    'fill-opacity': 0.8
+                    'fill-color': '#927792',
+                    'fill-outline-color': '#d27070',
+                    'fill-opacity': 0.7,
+
                 }
             });
             break;

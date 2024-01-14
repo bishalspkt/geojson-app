@@ -5,6 +5,7 @@ import { PanelType } from "../types";
 import Panel from "./panel";
 import { useState } from "react";
 import example1 from "../../../assets/samples/example1.json";
+import example2 from "../../../assets/samples/example2.json";
 
 type UploadPanelProps = {
     togglePanel: (panel: PanelType) => void;
@@ -14,9 +15,11 @@ type UploadPanelProps = {
 export default function UploadPanel({ togglePanel, setGeoJson }: UploadPanelProps) {
     const [pasteGeoJsonFormShown, setPasteGeoJsonFormShown] = useState(false);
 
-    const importSampleGeoJson = () => {
-        togglePanel("layers");
-        setGeoJson(example1 as GeoJSON)
+    const importSampleGeoJson = (num: number) => {
+        return () => {
+            togglePanel("layers");
+            setGeoJson(num === 1 ? example1 as GeoJSON : example2 as GeoJSON)
+        }
     }
 
     const setGeoJsonWithToggleToLayers = () => {
@@ -34,7 +37,7 @@ export default function UploadPanel({ togglePanel, setGeoJson }: UploadPanelProp
                 <PasteGeoJSONForm setGeoJSON={setGeoJsonWithToggleToLayers()} /> :
                 <>
                     <p className="text-sm">You may also <a href="#" className="underline" onClick={() => setPasteGeoJsonFormShown(true)}>paste your GeoJSON content</a>. </p>
-                    <p className="text-sm"> Or simply import <a href="#" className="underline" onClick={importSampleGeoJson}>an example here</a>.</p>
+                    <p className="text-sm"> Or import an <a href="#" className="underline" onClick={importSampleGeoJson(1)}>example here</a> or <a href="#" className="underline" onClick={importSampleGeoJson(2)}>here.</a></p>
 
                 </>
             }
