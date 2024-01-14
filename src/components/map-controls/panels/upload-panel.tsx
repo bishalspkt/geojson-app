@@ -35,11 +35,11 @@ export default function UploadPanel({ togglePanel, setGeoJson }: UploadPanelProp
             <p className="text-l text-bold my-2 mx-auto">OR</p>
             {pasteGeoJsonFormShown ?
                 <PasteGeoJSONForm setGeoJSON={setGeoJsonWithToggleToLayers()} /> :
-                <>
+                <div className="py-2">
                     <p className="text-sm">You may also <a href="#" className="underline" onClick={() => setPasteGeoJsonFormShown(true)}>paste your GeoJSON content</a>. </p>
                     <p className="text-sm"> Or import an <a href="#" className="underline" onClick={importSampleGeoJson(1)}>example here</a> or <a href="#" className="underline" onClick={importSampleGeoJson(2)}>here.</a></p>
 
-                </>
+                </div>
             }
         </Panel>
     )
