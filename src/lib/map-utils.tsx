@@ -10,6 +10,60 @@ export function getBoundingBox(geoJson: GeoJSON): [[number, number], [number, nu
     return [[featuresBoundingBox[0], featuresBoundingBox[1]], [featuresBoundingBox[2], featuresBoundingBox[3]]] 
 }
 
+/**
+ * Uses the browser's geolocation API to get the current position
+ * @returns Promise that resolves to the current position
+ */
+export async function getCurrentPosition(): Promise<GeolocationCoordinates> {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            resolve(position.coords)
+        }, (error) => {
+            reject(error)
+        })
+    })
+}
+
+
+export function addBlueDot(map: maplibregl.Map, coordinates: GeolocationCoordinates) {
+    const sourceName = 'blue-dot';
+    const layerName = 'blue-dot-layer';
+    
+    if(map.getLayer(layerName)) {
+        map.removeLayer(layerName);
+    }
+
+    if(map.getSource(sourceName)) {
+        map.removeSource(sourceName);
+    }
+
+    map.addSource(sourceName, {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: [{
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [coordinates.longitude, coordinates.latitude]
+                }
+            }]
+        }
+    });
+    map.addLayer({
+        id: layerName,
+        type: 'circle',
+        source: sourceName,
+        paint: {
+            'circle-radius': 10,
+            'circle-color': '#007cbf',
+            'circle-stroke-color': '#fff',
+            'circle-stroke-width': 3,
+        }
+    });
+
+}
+
 export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: GeoJSON, sourceName: string) {
 
     const pointFeatures = filterGeojsonFeatures(geoJSON, ["Point", "MultiPoint"]);

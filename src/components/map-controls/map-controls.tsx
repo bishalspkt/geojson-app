@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Button } from "../ui/button.js";
-import { Import, Layers, Pencil } from "lucide-react";
+import { Import, Layers, Locate, Pencil } from "lucide-react";
 import LayersPanel from "./panels/layers-panel.js";
 import UploadPanel from "./panels/upload-panel.js";
 import CreatePanel from "./panels/create-panel.js";
 import { PanelStatus, PanelType, UploadGeoJSONButtonProps } from "./types.js";
+import { getCurrentPosition } from "../../lib/map-utils.js";
 
 export default function MapControls({ geoJson, setGeoJSON, setMapFocus }: UploadGeoJSONButtonProps) {
     const [uploadPanelStatus, setUploadPanelStatus] = useState<PanelStatus>("maximized");
@@ -34,12 +35,22 @@ export default function MapControls({ geoJson, setGeoJSON, setMapFocus }: Upload
         }
     }
 
+    const locateUserAndSetMapFocus = async () => {
+        try {
+            const position = await getCurrentPosition();
+            setMapFocus(position);
+        } catch(error) {
+            alert(error);
+        }
+    }
+
     return (
         <>
             <div className="fixed bottom-4 left-4 flex flex gap-2">
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("upload")}><Import className="h-5 w-5" /></Button>
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("layers")}><Layers className="h-5 w-5" /></Button>
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("create")}><Pencil className="h-5 w-5" /></Button>
+                <Button variant="outline" size="icon" className="rounded-3xl" onClick={locateUserAndSetMapFocus}><Locate className="h-5 w-5" /></Button>
             </div>
 
             { uploadPanelStatus !== "hidden" && <UploadPanel togglePanel={togglePanel} setGeoJson={setGeoJSON} /> }

@@ -1,6 +1,8 @@
 import { GeoJSON } from "geojson";
 
-export type MapFocus = {
+export type MapFocus = MapFeatureTypeAndId | GeolocationCoordinates;
+
+export type MapFeatureTypeAndId = {
     type: GeoJsonPrimaryFetureTypes,
     idx: number,
 }
