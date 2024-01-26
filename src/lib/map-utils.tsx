@@ -28,7 +28,6 @@ export async function getCurrentPosition(): Promise<GeolocationCoordinates> {
 export function addBlueDot(map: maplibregl.Map, coordinates: GeolocationCoordinates) {
     const sourceName = 'blue-dot';
     const layerName = 'blue-dot-layer';
-    const confidenceLayerName = `${layerName}-confidence`;
     
     if(map.getLayer(layerName)) {
         map.removeLayer(layerName);
