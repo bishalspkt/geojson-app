@@ -39,14 +39,14 @@ export default function MapControls({ geoJson, setGeoJSON, setMapFocus }: Upload
         try {
             const position = await getCurrentPosition();
             setMapFocus(position);
-        } catch(error) {
-            alert(error);
+        } catch(error: any) {
+            alert((error as Error).message);
         }
     }
 
     return (
         <>
-            <div className="fixed bottom-4 left-4 flex flex gap-2">
+            <div className="fixed bottom-4 left-4 flex flex gap-2 rounded-lg">
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("upload")}><Import className="h-5 w-5" /></Button>
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("layers")}><Layers className="h-5 w-5" /></Button>
                 <Button variant="outline" size="icon" className="rounded-3xl" onClick={() => togglePanel("create")}><Pencil className="h-5 w-5" /></Button>
