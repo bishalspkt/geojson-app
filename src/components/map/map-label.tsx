@@ -9,7 +9,7 @@ export default function MapLabel() {
     };
 
     const menuItems = [
-        { name: "GitHub", icon: <Github className="h-5 w-5 text-gray-800" />, url: "https://github.com/bishalspkt/geojson-app" }
+        { name: "GitHub", icon: <Github className="h-5 w-5" />, url: "https://github.com/bishalspkt/geojson-app" }
     ]
     return (
         <div className="fixed p-4 pl-4 w-full flex gap-2 z-10 bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm items-center  text-teal-600">
@@ -19,7 +19,7 @@ export default function MapLabel() {
                 <Menu className="h-5 w-5" />
             </div>
             {isMenuOpen && (
-                <div className="absolute top-0 right-0 mt-14 mr-2 bg-white shadow-lg rounded-lg p-4  z-10 bg-white bg-opacity-90 backdrop-filter backdrop-blur-sm items-center border">
+                <div className="absolute top-0 right-0 mt-14 mr-2 bg-white shadow-lg rounded-lg p-4  z-10 bg-white bg-opacity-90 backdrop-filter backdrop-blur-sm items-center border text-primary">
                     {menuItems.map((item, index) => (
                         <a href={item.url} target="_blank" rel="noreferrer">
                             <div className="flex gap-2 items-center" key={index}>
