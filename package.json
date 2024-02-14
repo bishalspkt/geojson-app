@@ -12,7 +12,9 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slot": "^1.0.2",
+    "@turf/area": "^6.5.0",
     "@turf/bbox": "^6.5.0",
+    "@turf/length": "^6.5.0",
     "@types/geojson": "^7946.0.13",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

@@ -4,6 +4,9 @@ import { GeoJsonPrimaryFetureTypes, LayersPanelProps } from "../types";
 import { filterGeojsonFeatures, getGeoJsonFeatureCountStats } from "../../../lib/geojson-utils";
 import { MapPin, Shapes, Waypoints } from "lucide-react";
 import { useState } from "react";
+// @ts-ignore
+import length from "@turf/length";
+import area from "@turf/area";
 
 
 export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: LayersPanelProps) {
@@ -40,7 +43,7 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                                             <Shapes className="h-5 w-5 inline" />
                                             <p className="inline m-4">
                                                 {  p.properties?.name || `New ${p.type} ${idx + 1}` }
-                                                <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">Polygon</span>
+                                                <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">{(area(p)/1e6).toFixed(2)} sq km</span>
                                             </p>
                                         </Button>
                                         { /* <Info className="h-5 w-5 m-auto" /> */}
@@ -56,7 +59,6 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                                             <MapPin className="h-5 w-5 inline" />
                                             <p className="inline m-4">
                                             {  p.properties?.name || `New ${p.type} ${idx + 1}` }
-                                                <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">Point</span>
                                             </p>
                                         </Button>
                                         { /* <Info className="h-5 w-5 m-auto" /> */}
@@ -72,7 +74,7 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                                             <Waypoints className="h-5 w-5 inline" />
                                             <p className="inline m-4">
                                             {  p.properties?.name || `New ${p.type} ${idx + 1}` }
-                                                <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">LineString</span>
+                                            <span className="text-xs text-secondary bg-primary px-2 py-1 mx-4 rounded-xl">{length(p).toFixed(2)} km</span>
                                             </p>
                                         </Button>
                                         { /* <Info className="h-5 w-5 m-auto" /> */}
