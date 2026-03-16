@@ -1,4 +1,5 @@
-import bbox from '@turf/bbox';
+import maplibregl from 'maplibre-gl';
+import { bbox } from '@turf/bbox';
 import { Feature } from 'geojson';
 import { filterGeojsonFeatures } from './geojson-utils';
 import { GeoJSON } from 'geojson';
@@ -43,6 +44,7 @@ export function addBlueDot(map: maplibregl.Map, coordinates: GeolocationCoordina
             type: 'FeatureCollection',
             features: [{
                 type: 'Feature',
+                properties: {},
                 geometry: {
                     type: 'Point',
                     coordinates: [coordinates.longitude, coordinates.latitude]
@@ -114,10 +116,10 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
     switch (featureType) {
         case "Point":
         case "MultiPoint":
-            map.loadImage('/map-assets/pin-marker.png', function(error, image) {
-                if (error) throw error;
-                if(!image) throw new Error("Image not loaded")
-                map.addImage('pin', image);
+            map.loadImage('/map-assets/pin-marker.png').then((response) => {
+                if (!map.hasImage('pin')) {
+                    map.addImage('pin', response.data);
+                }
                 map.addLayer({
                     id: layerName,
                     type: 'symbol',

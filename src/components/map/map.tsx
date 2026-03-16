@@ -3,7 +3,7 @@ import maplibregl, { StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
 import { addBlueDot, addGeoJSONLayer, getBoundingBox } from '../../lib/map-utils';
-import layers from 'protomaps-themes-base';
+import { layers, namedFlavor } from '@protomaps/basemaps';
 import { GeoJSON } from 'geojson';
 import { MapFocus } from '../map-controls/types';
 import { filterGeojsonFeatures } from '../../lib/geojson-utils';
@@ -11,16 +11,15 @@ import { filterGeojsonFeatures } from '../../lib/geojson-utils';
 const mapLibreMapStyle: StyleSpecification = {
     version: 8,
     glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+    sprite: 'https://protomaps.github.io/basemaps-assets/sprites/v4/light',
     sources: {
-        "protomaps-mvt": {
+        "protomaps": {
             type: "vector",
-            tiles: ["https://tiles.geojson.app/20240107/{z}/{x}/{y}.mvt"],
-            maxzoom: 15,
+            url: "https://tiles.geojson.app/20260308.json",
             attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>'
         }
     },
-    //  one of light, dark, white, black, grayscale or debug.
-    layers: layers("protomaps-mvt", "light")
+    layers: layers("protomaps", namedFlavor("light"), { lang: "en" })
 }
 
 interface MapProps {
@@ -39,6 +38,7 @@ export default function Map({ geojson, mapFocus }: MapProps) {
         if (map.current) {
             return
         }
+
         map.current = new maplibregl.Map({
             container: mapContainer.current!,
             style: mapLibreMapStyle,

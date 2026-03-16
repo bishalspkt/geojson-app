@@ -41,38 +41,27 @@ export function getGeoJsonFeatureCountStats(geoJson: GeoJSON|undefined): GeoJson
             numberOfGeometryCollections: 0
         }
     }
-    const numberOfFeatures = geoJson.features.length;
-    const numberOfPoints = geoJson.features.reduce((acc, feature) => {
-        if(["Point", "MultiPoint"].includes(feature.geometry.type)) {
-            return acc + 1;
-        }
-        return acc;
-    }, 0);
-    const numberOfLines = geoJson.features.reduce((acc, feature) => {
-        if(["LineString", "MultiLineString"].includes(feature.geometry.type)) {
-            return acc + 1;
-        }
-        return acc;
-    }, 0);
-    const numberOfPolygons = geoJson.features.reduce((acc, feature) => {
-        if(["Polygon", "MultiPolygon"].includes(feature.geometry.type)) {
-            return acc + 1;
-        }
-        return acc;
-    }, 0);
+    const stats = { numberOfFeatures: geoJson.features.length, numberOfPoints: 0, numberOfLines: 0, numberOfPolygons: 0, numberOfGeometryCollections: 0 };
 
-    const numberOfGeometryCollections = geoJson.features.reduce((acc, feature) => {
-        if(feature.geometry.type === "GeometryCollection") {
-            return acc + 1;
+    for (const feature of geoJson.features) {
+        switch (feature.geometry.type) {
+            case "Point":
+            case "MultiPoint":
+                stats.numberOfPoints++;
+                break;
+            case "LineString":
+            case "MultiLineString":
+                stats.numberOfLines++;
+                break;
+            case "Polygon":
+            case "MultiPolygon":
+                stats.numberOfPolygons++;
+                break;
+            case "GeometryCollection":
+                stats.numberOfGeometryCollections++;
+                break;
         }
-        return acc;
-    }, 0);
-
-    return {
-        numberOfFeatures,
-        numberOfPoints,
-        numberOfLines,
-        numberOfPolygons,
-        numberOfGeometryCollections
     }
+
+    return stats;
 }

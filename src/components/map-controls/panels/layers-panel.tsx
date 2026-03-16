@@ -3,18 +3,17 @@ import Panel from "./panel";
 import { GeoJsonPrimaryFetureTypes, LayersPanelProps } from "../types";
 import { filterGeojsonFeatures, getGeoJsonFeatureCountStats } from "../../../lib/geojson-utils";
 import { MapPin, Shapes, Waypoints } from "lucide-react";
-import { useState } from "react";
-// @ts-ignore
-import length from "@turf/length";
-import area from "@turf/area";
+import { useMemo, useState } from "react";
+import { length } from "@turf/length";
+import { area } from "@turf/area";
 
 
 export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: LayersPanelProps) {
     const [filterByLayer, setFilterByLayer] = useState<GeoJsonPrimaryFetureTypes>("Polygon");
-    const geoJsonStats = getGeoJsonFeatureCountStats(geoJson);
-    const polygons = filterGeojsonFeatures(geoJson, ["Polygon", "MultiPolygon"]);
-    const points = filterGeojsonFeatures(geoJson, ["Point", "MultiPoint"]);
-    const lines = filterGeojsonFeatures(geoJson, ["LineString", "MultiLineString"]);
+    const geoJsonStats = useMemo(() => getGeoJsonFeatureCountStats(geoJson), [geoJson]);
+    const polygons = useMemo(() => filterGeojsonFeatures(geoJson, ["Polygon", "MultiPolygon"]), [geoJson]);
+    const points = useMemo(() => filterGeojsonFeatures(geoJson, ["Point", "MultiPoint"]), [geoJson]);
+    const lines = useMemo(() => filterGeojsonFeatures(geoJson, ["LineString", "MultiLineString"]), [geoJson]);
 
     return (
         <Panel type="layers" onToggle={togglePanel}>
@@ -30,7 +29,7 @@ export default function LayersPanel({ togglePanel, geoJson, setMapFocus }: Layer
                 }
                 {geoJson &&
                     <div className="mb-20">
-                        <div className="absolute bottom-0 bg-white flex gap-2 w-full p-5 border-t border-gray-300 bg-opacity-90 backdrop-filter backdrop-blur-sm h-20">
+                        <div className="absolute bottom-0 bg-white/90 flex gap-2 w-full p-5 border-t border-gray-300 backdrop-blur-sm h-20">
                             <Button variant="outline" size="default" onClick={() => setFilterByLayer("Point")} className="text-md"><MapPin className="h-5 w-5" /> {geoJsonStats.numberOfPoints || ""} </Button>
                             <Button variant="outline" size="default" onClick={() => setFilterByLayer("LineString")}  className="text-md"><Waypoints className="h-5 w-5" /> {geoJsonStats.numberOfLines || ""} </Button>
                             <Button variant="outline" size="default" onClick={() => setFilterByLayer("Polygon")} className="text-md"><Shapes className="h-5 w-5" />{geoJsonStats.numberOfPolygons || ""}</Button>

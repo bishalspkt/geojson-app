@@ -12,14 +12,14 @@ export default function MapLabel() {
         { name: "GitHub", icon: <Github className="h-5 w-5" />, url: "https://github.com/bishalspkt/geojson-app" }
     ]
     return (
-        <div className="fixed p-4 pl-4 w-full flex gap-2 z-10 bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm items-center  text-teal-600">
+        <div className="fixed p-4 pl-4 w-full flex gap-2 z-10 bg-white/50 backdrop-blur-sm items-center  text-teal-600">
             <MapPinned className="h-5 w-5 " />
             <h2 className="font-semibold">geojson.app</h2>
             <div className="ml-auto cursor-pointer" onClick={handleMenuClick}>
                 <Menu className="h-5 w-5" />
             </div>
             {isMenuOpen && (
-                <div className="absolute top-0 right-0 mt-14 mr-2 bg-white shadow-lg rounded-lg p-4  z-10 bg-white bg-opacity-90 backdrop-filter backdrop-blur-sm items-center border text-primary">
+                <div className="absolute top-0 right-0 mt-14 mr-2 bg-white/90 shadow-lg rounded-lg p-4  z-10 backdrop-blur-sm items-center border text-primary">
                     {menuItems.map((item, index) => (
                         <a href={item.url} target="_blank" rel="noreferrer">
                             <div className="flex gap-2 items-center" key={index}>

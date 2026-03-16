@@ -1,3 +1,4 @@
+import React from "react";
 import { GeoJSON } from "geojson";
 
 export type MapFocus = MapFeatureTypeAndId | GeolocationCoordinates;
@@ -23,7 +24,7 @@ export type PanelStatus = "maximized" | "hidden";
 
 export type PanelProps = {
     type: PanelType;
-    children: JSX.Element | JSX.Element[];
+    children: React.ReactNode;
     onToggle: (panel: PanelType) => void;
     className?: string;
 }

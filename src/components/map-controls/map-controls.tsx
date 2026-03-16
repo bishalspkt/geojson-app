@@ -39,7 +39,7 @@ export default function MapControls({ geoJson, setGeoJSON, setMapFocus }: Upload
         try {
             const position = await getCurrentPosition();
             setMapFocus(position);
-        } catch(error: any) {
+        } catch(error: unknown) {
             alert((error as Error).message);
         }
     }
