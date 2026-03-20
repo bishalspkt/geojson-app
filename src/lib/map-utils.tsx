@@ -3,40 +3,45 @@ import { bbox } from '@turf/bbox';
 import { Feature } from 'geojson';
 import { filterGeojsonFeatures } from './geojson-utils';
 import { GeoJSON } from 'geojson';
+import { MapFeatureTypeAndId } from '../components/map-controls/types';
+
+// -- Color palette --
+const COLORS = {
+    point:           '#5b21b6',   // deep violet
+    pointStroke:     '#ffffff',
+    line:            '#7c3aed',   // vivid violet
+    lineCasing:      '#4c1d95',   // darker casing
+    polygonFill:     '#8b5cf6',   // bright violet
+    polygonOutline:  '#5b21b6',
+    highlightFill:   '#f97316',   // orange
+    highlightStroke: '#ea580c',   // darker orange
+    highlightGlow:   '#fb923c',   // light orange
+};
 
 export function getBoundingBox(geoJson: GeoJSON): [[number, number], [number, number]] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const featuresBoundingBox = bbox(geoJson as any);
-
-    return [[featuresBoundingBox[0], featuresBoundingBox[1]], [featuresBoundingBox[2], featuresBoundingBox[3]]] 
+    return [[featuresBoundingBox[0], featuresBoundingBox[1]], [featuresBoundingBox[2], featuresBoundingBox[3]]];
 }
 
-/**
- * Uses the browser's geolocation API to get the current position
- * @returns Promise that resolves to the current position
- */
 export async function getCurrentPosition(): Promise<GeolocationCoordinates> {
     return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            resolve(position.coords)
-        }, (error) => {
-            reject(error)
-        })
-    })
+        navigator.geolocation.getCurrentPosition(
+            (position) => resolve(position.coords),
+            (error) => reject(error),
+        );
+    });
 }
-
 
 export function addBlueDot(map: maplibregl.Map, coordinates: GeolocationCoordinates) {
     const sourceName = 'blue-dot';
     const layerName = 'blue-dot-layer';
-    
-    if(map.getLayer(layerName)) {
-        map.removeLayer(layerName);
-    }
+    const glowLayerName = 'blue-dot-glow-layer';
 
-    if(map.getSource(sourceName)) {
-        map.removeSource(sourceName);
+    for (const l of [glowLayerName, layerName]) {
+        if (map.getLayer(l)) map.removeLayer(l);
     }
+    if (map.getSource(sourceName)) map.removeSource(sourceName);
 
     map.addSource(sourceName, {
         type: 'geojson',
@@ -52,117 +57,280 @@ export function addBlueDot(map: maplibregl.Map, coordinates: GeolocationCoordina
             }]
         }
     });
+
+    // Glow ring
+    map.addLayer({
+        id: glowLayerName,
+        type: 'circle',
+        source: sourceName,
+        paint: {
+            'circle-radius': 18,
+            'circle-color': '#3b82f6',
+            'circle-opacity': 0.15,
+        }
+    });
+
     map.addLayer({
         id: layerName,
         type: 'circle',
         source: sourceName,
         paint: {
-            'circle-radius': 10,
-            'circle-color': '#007cbf',
+            'circle-radius': 7,
+            'circle-color': '#3b82f6',
             'circle-stroke-color': '#fff',
-            'circle-stroke-width': 3,
+            'circle-stroke-width': 2.5,
         }
     });
-
-
 }
 
 export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: GeoJSON, sourceName: string) {
-
     const pointFeatures = filterGeojsonFeatures(geoJSON, ["Point", "MultiPoint"]);
     const lineFeatures = filterGeojsonFeatures(geoJSON, ["LineString", "MultiLineString"]);
     const polygonFeatures = filterGeojsonFeatures(geoJSON, ["Polygon", "MultiPolygon"]);
 
-    updateGeoJsonLayer(map, `${sourceName}-points`, pointFeatures);
-    updateGeoJsonLayer(map, `${sourceName}-polygons`, polygonFeatures);
-    updateGeoJsonLayer(map, `${sourceName}-lines`, lineFeatures);
+    // Inject a stable _featureIndex into properties for highlight matching
+    const addIndex = (features: Feature[]) =>
+        features.map((f, i) => ({ ...f, properties: { ...f.properties, _featureIndex: i } }));
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const featuresBoundingBox =getBoundingBox(geoJSON as any)
-    map.fitBounds(featuresBoundingBox, {
-        padding: 100
-    })
-
+    updateGeoJsonLayer(map, `${sourceName}-polygons`, addIndex(polygonFeatures));
+    updateGeoJsonLayer(map, `${sourceName}-lines`, addIndex(lineFeatures));
+    updateGeoJsonLayer(map, `${sourceName}-points`, addIndex(pointFeatures));
 }
 
+function removeLayerSafe(map: maplibregl.Map, id: string) {
+    if (map.getLayer(id)) map.removeLayer(id);
+}
+function removeSourceSafe(map: maplibregl.Map, id: string) {
+    if (map.getSource(id)) map.removeSource(id);
+}
 
 function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: Feature[]) {
-    const layerName = `${sourceName}-layer`;
+    const layerIds = getLayerIds(sourceName);
 
-    // Check if source with the same name already exists
-    if (map.getLayer(layerName)) {
-        map.removeLayer(layerName);
+    // Remove all layers for this source
+    for (const id of Object.values(layerIds)) {
+        removeLayerSafe(map, id);
     }
+    removeSourceSafe(map, sourceName);
 
-    if (map.getSource(sourceName)) {
-        map.removeSource(sourceName);
-    }
-
-    if (features.length === 0) {
-        return;
-    }
+    if (features.length === 0) return;
 
     const featureType = features[0].geometry.type;
 
-    // Add a new source and layer
     map.addSource(sourceName, {
         type: 'geojson',
-        data: {
-            type: 'FeatureCollection',
-            features: features
-        }
+        data: { type: 'FeatureCollection', features },
     });
 
     switch (featureType) {
         case "Point":
         case "MultiPoint":
-            map.loadImage('/map-assets/pin-marker.png').then((response) => {
-                if (!map.hasImage('pin')) {
-                    map.addImage('pin', response.data);
+            // Outer glow
+            map.addLayer({
+                id: layerIds.glow,
+                type: 'circle',
+                source: sourceName,
+                paint: {
+                    'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 10, 10, 16],
+                    'circle-color': COLORS.point,
+                    'circle-opacity': 0.1,
                 }
-                map.addLayer({
-                    id: layerName,
-                    type: 'symbol',
-                    source: sourceName,
-                    layout: {
-                        'icon-image': 'pin',
-                        'icon-offset': [0, -15], // Shift the pin 15px above
-                    }
-                });
+            });
+            // Main circle
+            map.addLayer({
+                id: layerIds.main,
+                type: 'circle',
+                source: sourceName,
+                paint: {
+                    'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 5, 10, 8],
+                    'circle-color': COLORS.point,
+                    'circle-stroke-color': COLORS.pointStroke,
+                    'circle-stroke-width': 2,
+                }
             });
             break;
+
         case "LineString":
         case "MultiLineString":
+            // Casing (darker outline behind main line)
             map.addLayer({
-                id: layerName,
+                id: layerIds.casing,
                 type: 'line',
                 source: sourceName,
-                layout: {
-                    'line-cap': 'round',
-                    'line-join': 'round',
-
-                },
+                layout: { 'line-cap': 'round', 'line-join': 'round' },
                 paint: {
-                    'line-color': '#5555bb',
-                    'line-width': 4
+                    'line-color': COLORS.lineCasing,
+                    'line-width': ['interpolate', ['linear'], ['zoom'], 2, 4, 10, 7],
+                    'line-opacity': 0.4,
+                }
+            });
+            // Main line
+            map.addLayer({
+                id: layerIds.main,
+                type: 'line',
+                source: sourceName,
+                layout: { 'line-cap': 'round', 'line-join': 'round' },
+                paint: {
+                    'line-color': COLORS.line,
+                    'line-width': ['interpolate', ['linear'], ['zoom'], 2, 2.5, 10, 5],
                 }
             });
             break;
+
         case "Polygon":
         case "MultiPolygon":
+            // Fill
             map.addLayer({
-                id: layerName,
+                id: layerIds.main,
                 type: 'fill',
                 source: sourceName,
                 paint: {
-                    'fill-color': '#927792',
-                    'fill-outline-color': '#d27070',
-                    'fill-opacity': 0.7,
-
+                    'fill-color': COLORS.polygonFill,
+                    'fill-opacity': 0.2,
+                }
+            });
+            // Outline
+            map.addLayer({
+                id: layerIds.outline,
+                type: 'line',
+                source: sourceName,
+                layout: { 'line-cap': 'round', 'line-join': 'round' },
+                paint: {
+                    'line-color': COLORS.polygonOutline,
+                    'line-width': ['interpolate', ['linear'], ['zoom'], 2, 1.5, 10, 3],
+                    'line-opacity': 0.7,
                 }
             });
             break;
+
         default:
-            alert("Unknown feature type " + featureType)
+            console.warn("Unknown feature type", featureType);
     }
+}
+
+function getLayerIds(sourceName: string) {
+    return {
+        main: `${sourceName}-layer`,
+        glow: `${sourceName}-glow`,
+        casing: `${sourceName}-casing`,
+        outline: `${sourceName}-outline`,
+    };
+}
+
+// -- Highlight system --
+
+const HIGHLIGHT_SOURCE = 'highlight-source';
+const HIGHLIGHT_LAYERS = {
+    fillGlow:   'highlight-fill-glow',
+    fill:       'highlight-fill',
+    outline:    'highlight-outline',
+    lineGlow:   'highlight-line-glow',
+    line:       'highlight-line',
+    circleGlow: 'highlight-circle-glow',
+    circle:     'highlight-circle',
+};
+
+export function initHighlightLayers(map: maplibregl.Map) {
+    // Guard against re-initialization (e.g. after style swap)
+    if (map.getSource(HIGHLIGHT_SOURCE)) return;
+
+    map.addSource(HIGHLIGHT_SOURCE, {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+    });
+
+    // Polygon highlight
+    map.addLayer({
+        id: HIGHLIGHT_LAYERS.fillGlow,
+        type: 'fill',
+        source: HIGHLIGHT_SOURCE,
+        filter: ['==', '$type', 'Polygon'],
+        paint: {
+            'fill-color': COLORS.highlightGlow,
+            'fill-opacity': 0.25,
+        }
+    });
+    map.addLayer({
+        id: HIGHLIGHT_LAYERS.outline,
+        type: 'line',
+        source: HIGHLIGHT_SOURCE,
+        filter: ['==', '$type', 'Polygon'],
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: {
+            'line-color': COLORS.highlightStroke,
+            'line-width': 3,
+        }
+    });
+
+    // Line highlight
+    map.addLayer({
+        id: HIGHLIGHT_LAYERS.lineGlow,
+        type: 'line',
+        source: HIGHLIGHT_SOURCE,
+        filter: ['==', '$type', 'LineString'],
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: {
+            'line-color': COLORS.highlightGlow,
+            'line-width': 8,
+            'line-opacity': 0.4,
+        }
+    });
+    map.addLayer({
+        id: HIGHLIGHT_LAYERS.line,
+        type: 'line',
+        source: HIGHLIGHT_SOURCE,
+        filter: ['==', '$type', 'LineString'],
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: {
+            'line-color': COLORS.highlightStroke,
+            'line-width': 4,
+        }
+    });
+
+    // Point highlight
+    map.addLayer({
+        id: HIGHLIGHT_LAYERS.circleGlow,
+        type: 'circle',
+        source: HIGHLIGHT_SOURCE,
+        filter: ['==', '$type', 'Point'],
+        paint: {
+            'circle-radius': 16,
+            'circle-color': COLORS.highlightGlow,
+            'circle-opacity': 0.3,
+        }
+    });
+    map.addLayer({
+        id: HIGHLIGHT_LAYERS.circle,
+        type: 'circle',
+        source: HIGHLIGHT_SOURCE,
+        filter: ['==', '$type', 'Point'],
+        paint: {
+            'circle-radius': 7,
+            'circle-color': COLORS.highlightFill,
+            'circle-stroke-color': '#ffffff',
+            'circle-stroke-width': 2.5,
+        }
+    });
+}
+
+export function updateHighlight(map: maplibregl.Map, geoJson: GeoJSON | undefined, selected: MapFeatureTypeAndId | null) {
+    const source = map.getSource(HIGHLIGHT_SOURCE) as maplibregl.GeoJSONSource | undefined;
+    if (!source) return;
+
+    if (!selected || !geoJson) {
+        source.setData({ type: 'FeatureCollection', features: [] });
+        return;
+    }
+
+    const features = filterGeojsonFeatures(geoJson, selected.type);
+    const feature = features[selected.idx];
+    if (!feature) {
+        source.setData({ type: 'FeatureCollection', features: [] });
+        return;
+    }
+
+    source.setData({
+        type: 'FeatureCollection',
+        features: [feature],
+    });
 }

@@ -1,7 +1,7 @@
 {
   "name": "geojson-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,6 +15,7 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@turf/area": "^7.3.4",
     "@turf/bbox": "^7.3.4",
+    "@turf/distance": "^7.3.4",
     "@turf/length": "^7.3.4",
     "@types/geojson": "^7946.0.16",
     "class-variance-authority": "^0.7.1",

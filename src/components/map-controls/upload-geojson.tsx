@@ -19,7 +19,7 @@ export default function UploadGeoJSONButton({ setGeoJSON, showTitleAndDescriptio
         }
 
         const allowedExtensions = ['json', 'geojson'];
-        const maxSize = 10 * 1024 * 1024; // 10MB
+        const maxSize = 25 * 1024 * 1024; // 25MB
 
         const fileExtension = file.name.split('.').pop()!.toLowerCase()!;
         const fileSize = file.size;
@@ -51,7 +51,7 @@ export default function UploadGeoJSONButton({ setGeoJSON, showTitleAndDescriptio
             {showTitleAndDescription && (
             <>
                 <p>Upload a GeoJSON file to get started</p>
-                <p className="text-gray-600 text-sm">You may select a .json or .geojson file that is less than 10MB in size.</p>
+                <p className="text-gray-600 text-sm">You may select a .json or .geojson file that is less than 25MB in size.</p>
             </>
             )}
             <div className="py-2 mr-auto">

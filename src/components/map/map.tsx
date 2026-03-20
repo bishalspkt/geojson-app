@@ -1,52 +1,219 @@
-import { useRef, useEffect, useState, ElementRef } from 'react';
-import maplibregl, { StyleSpecification } from 'maplibre-gl';
+import { useRef, useEffect, useState, ElementRef, useCallback } from 'react';
+import maplibregl, { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
-import { addBlueDot, addGeoJSONLayer, getBoundingBox } from '../../lib/map-utils';
+import { addBlueDot, addGeoJSONLayer, getBoundingBox, initHighlightLayers, updateHighlight } from '../../lib/map-utils';
 import { layers, namedFlavor } from '@protomaps/basemaps';
 import { GeoJSON } from 'geojson';
-import { MapFocus } from '../map-controls/types';
+import { MapFocus, MapFeatureTypeAndId, MapSettings, MapTheme, MeasurePoint } from '../map-controls/types';
 import { filterGeojsonFeatures } from '../../lib/geojson-utils';
 
-const mapLibreMapStyle: StyleSpecification = {
-    version: 8,
-    glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
-    sprite: 'https://protomaps.github.io/basemaps-assets/sprites/v4/light',
-    sources: {
-        "protomaps": {
-            type: "vector",
-            url: "https://tiles.geojson.app/20260308.json",
-            attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>'
+/**
+ * Post-process Protomaps base layers to improve boundary and label visibility.
+ */
+function customizeBaseLayers(baseLayers: LayerSpecification[], theme: MapTheme): LayerSpecification[] {
+    const isDark = theme === "dark" || theme === "black";
+    const boundaryColor = isDark ? "#9ca3af" : "#6b7280";
+    const subBoundaryColor = isDark ? "#6b7280" : "#9ca3af";
+    const cityColor = isDark ? "#d1d5db" : "#374151";
+    const haloColor = isDark ? "#1f2937" : "#ffffff";
+    const countryColor = isDark ? "#9ca3af" : "#4b5563";
+    const regionColor = isDark ? "#6b7280" : "#6b7280";
+
+    return baseLayers.map((layer) => {
+        if (layer.id === "boundaries_country" && layer.type === "line") {
+            return {
+                ...layer,
+                paint: {
+                    ...layer.paint,
+                    "line-color": boundaryColor,
+                    "line-width": ["interpolate", ["linear"], ["zoom"], 1, 0.8, 4, 1.5, 8, 2],
+                    "line-opacity": 0.8,
+                },
+            };
         }
-    },
-    layers: layers("protomaps", namedFlavor("light"), { lang: "en" })
+
+        if (layer.id === "boundaries" && layer.type === "line") {
+            return {
+                ...layer,
+                paint: {
+                    ...layer.paint,
+                    "line-color": subBoundaryColor,
+                    "line-width": ["interpolate", ["linear"], ["zoom"], 3, 0.4, 6, 0.8, 10, 1.2],
+                    "line-opacity": 0.6,
+                },
+            };
+        }
+
+        if (layer.id === "places_locality" && layer.type === "symbol") {
+            return {
+                ...layer,
+                layout: {
+                    ...layer.layout,
+                    "text-size": ["interpolate", ["linear"], ["zoom"],
+                        2, ["step", ["get", "population_rank"], 9, 12, 13],
+                        4, ["step", ["get", "population_rank"], 10, 10, 15],
+                        6, ["step", ["get", "population_rank"], 11, 8, 17],
+                        8, ["step", ["get", "population_rank"], 12, 6, 19],
+                        12, ["step", ["get", "population_rank"], 13, 4, 22],
+                    ],
+                },
+                paint: { ...layer.paint, "text-color": cityColor, "text-halo-color": haloColor, "text-halo-width": 1.5 },
+            };
+        }
+
+        if (layer.id === "places_country" && layer.type === "symbol") {
+            return {
+                ...layer,
+                paint: { ...layer.paint, "text-color": countryColor, "text-halo-color": haloColor, "text-halo-width": 2 },
+            };
+        }
+
+        if (layer.id === "places_region" && layer.type === "symbol") {
+            return {
+                ...layer,
+                paint: { ...layer.paint, "text-color": regionColor, "text-halo-color": haloColor, "text-halo-width": 1.5 },
+            };
+        }
+
+        return layer;
+    });
 }
+
+function buildStyle(theme: MapTheme): StyleSpecification {
+    const flavor = namedFlavor(theme);
+    const baseLayers = customizeBaseLayers(
+        layers("protomaps", flavor, { lang: "en" }) as LayerSpecification[],
+        theme,
+    );
+
+    return {
+        version: 8,
+        glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+        sprite: `https://protomaps.github.io/basemaps-assets/sprites/v4/${theme}`,
+        sources: {
+            "protomaps": {
+                type: "vector",
+                url: "https://tiles.geojson.app/20260308.json",
+                attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>'
+            }
+        },
+        layers: baseLayers,
+    };
+}
+
+const MEASURE_SOURCE = 'measure-source';
+const MEASURE_LINE_LAYER = 'measure-line-layer';
+const MEASURE_POINTS_LAYER = 'measure-points-layer';
 
 interface MapProps {
-    geojson?: GeoJSON; // Update the type of uploadedGeoJSON
-    mapFocus?: MapFocus
+    geojson?: GeoJSON;
+    mapFocus?: MapFocus;
+    isMeasuring: boolean;
+    measurePoints: MeasurePoint[];
+    onMeasureClick: (point: MeasurePoint) => void;
+    selectedFeature: MapFeatureTypeAndId | null;
+    settings: MapSettings;
 }
 
+function updateMeasureLayers(mapInstance: maplibregl.Map, points: MeasurePoint[]) {
+    const geojsonData: GeoJSON.FeatureCollection = {
+        type: 'FeatureCollection',
+        features: [],
+    };
 
-export default function Map({ geojson, mapFocus }: MapProps) {
+    if (points.length > 0) {
+        points.forEach((pt, i) => {
+            geojsonData.features.push({
+                type: 'Feature',
+                geometry: { type: 'Point', coordinates: [pt.lng, pt.lat] },
+                properties: { index: i },
+            });
+        });
+
+        if (points.length >= 2) {
+            geojsonData.features.push({
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: points.map(p => [p.lng, p.lat]),
+                },
+                properties: {},
+            });
+        }
+    }
+
+    const source = mapInstance.getSource(MEASURE_SOURCE) as maplibregl.GeoJSONSource | undefined;
+    if (source) {
+        source.setData(geojsonData);
+    }
+}
+
+function addOverlayLayers(m: maplibregl.Map) {
+    if (!m.getSource(MEASURE_SOURCE)) {
+        m.addSource(MEASURE_SOURCE, {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] },
+        });
+    }
+    if (!m.getLayer(MEASURE_LINE_LAYER)) {
+        m.addLayer({
+            id: MEASURE_LINE_LAYER,
+            type: 'line',
+            source: MEASURE_SOURCE,
+            filter: ['==', '$type', 'LineString'],
+            paint: { 'line-color': '#d97706', 'line-width': 2.5, 'line-dasharray': [3, 2] },
+        });
+    }
+    if (!m.getLayer(MEASURE_POINTS_LAYER)) {
+        m.addLayer({
+            id: MEASURE_POINTS_LAYER,
+            type: 'circle',
+            source: MEASURE_SOURCE,
+            filter: ['==', '$type', 'Point'],
+            paint: { 'circle-radius': 5, 'circle-color': '#1e3a5f', 'circle-stroke-width': 2, 'circle-stroke-color': '#ffffff' },
+        });
+    }
+    initHighlightLayers(m);
+}
+
+export default function Map({ geojson, mapFocus, isMeasuring, measurePoints, onMeasureClick, selectedFeature, settings }: MapProps) {
     const mapContainer = useRef<ElementRef<"div">>(null);
     const map = useRef<maplibregl.Map | null>(null);
     const [mapReady, setMapReady] = useState(false);
+    const prevThemeRef = useRef(settings.theme);
+    const prevGeojsonRef = useRef<GeoJSON | undefined>(undefined);
+
+    // Refs for current values so style.load callback always has fresh data
+    const geojsonRef = useRef(geojson);
+    geojsonRef.current = geojson;
+    const measurePointsRef = useRef(measurePoints);
+    measurePointsRef.current = measurePoints;
+    const selectedFeatureRef = useRef(selectedFeature);
+    selectedFeatureRef.current = selectedFeature;
+    const projectionRef = useRef(settings.projection);
+    projectionRef.current = settings.projection;
+
+    const handleMapClick = useCallback((e: maplibregl.MapMouseEvent) => {
+        onMeasureClick({ lng: e.lngLat.lng, lat: e.lngLat.lat });
+    }, [onMeasureClick]);
 
     // Initialize MapLibre Map
     useEffect(() => {
-        if (map.current) {
-            return
-        }
+        if (map.current) return;
 
         map.current = new maplibregl.Map({
             container: mapContainer.current!,
-            style: mapLibreMapStyle,
+            style: buildStyle(settings.theme),
             center: [105, -5],
-            zoom: 2.8
+            zoom: 2.8,
         });
 
-        map.current.on('load', () => { setMapReady(true); });
+        map.current.on('load', () => {
+            if (!map.current) return;
+            addOverlayLayers(map.current);
+            setMapReady(true);
+        });
 
         return () => {
             map.current?.remove();
@@ -54,44 +221,117 @@ export default function Map({ geojson, mapFocus }: MapProps) {
         }
     }, []);
 
+    // Handle theme changes — swap the entire style
+    useEffect(() => {
+        if (!map.current || !mapReady) return;
+        if (settings.theme === prevThemeRef.current) return;
+        prevThemeRef.current = settings.theme;
+
+        const m = map.current;
+        const center = m.getCenter();
+        const zoom = m.getZoom();
+        const bearing = m.getBearing();
+        const pitch = m.getPitch();
+
+        m.setStyle(buildStyle(settings.theme));
+
+        m.once('style.load', () => {
+            m.jumpTo({ center, zoom, bearing, pitch });
+            m.setProjection({ type: projectionRef.current });
+            addOverlayLayers(m);
+
+            // Re-add geojson data if present (no fitBounds — purely visual re-add)
+            if (geojsonRef.current) {
+                addGeoJSONLayer(m, geojsonRef.current, 'uploaded-geojson');
+            }
+
+            // Re-apply measure points
+            updateMeasureLayers(m, measurePointsRef.current);
+
+            // Re-apply highlight
+            updateHighlight(m, geojsonRef.current, selectedFeatureRef.current);
+        });
+    }, [settings.theme, mapReady]);
+
+    // Handle projection changes
+    useEffect(() => {
+        if (!map.current || !mapReady) return;
+        map.current.setProjection({ type: settings.projection });
+    }, [settings.projection, mapReady]);
+
+    // Toggle measure click handler
+    useEffect(() => {
+        if (!map.current) return;
+        const m = map.current;
+
+        if (isMeasuring) {
+            m.getCanvas().style.cursor = 'crosshair';
+            m.on('click', handleMapClick);
+        } else {
+            m.getCanvas().style.cursor = '';
+            m.off('click', handleMapClick);
+        }
+
+        return () => {
+            m.off('click', handleMapClick);
+            m.getCanvas().style.cursor = '';
+        };
+    }, [isMeasuring, handleMapClick]);
+
+    // Update measure visualization
+    useEffect(() => {
+        if (map.current && mapReady) {
+            updateMeasureLayers(map.current, measurePoints);
+        }
+    }, [measurePoints, mapReady]);
+
     // Update uploaded GeoJson Layer
     useEffect(() => {
-        if (mapReady && geojson) {
-            // eslint-disable-next-line @typescript-eslint/no-extra-non-null-assertion
-            addGeoJSONLayer(map.current!!, geojson, 'uploaded-geojson');
+        if (!mapReady || !geojson) return;
+        const m = map.current!;
+        const isNewData = geojson !== prevGeojsonRef.current;
+        prevGeojsonRef.current = geojson;
+        addGeoJSONLayer(m, geojson, 'uploaded-geojson');
+        if (isNewData) {
+            m.fitBounds(getBoundingBox(geojson), { padding: 100 });
         }
     }, [mapReady, geojson])
 
+    // Update highlight when selected feature changes
+    useEffect(() => {
+        if (map.current && mapReady) {
+            updateHighlight(map.current, geojson, selectedFeature);
+        }
+    }, [selectedFeature, mapReady, geojson]);
+
+    // Fly to focused feature
     useEffect(() => {
         if (map.current && mapFocus) {
             if ("idx" in mapFocus && "type" in mapFocus) {
-                // Focus by MapFeatureTypeAndId
-                if(!geojson) {
-                    return;
-                }
+                if (!geojson) return;
                 const feature = filterGeojsonFeatures(geojson, mapFocus.type)[mapFocus.idx]
                 if (feature) {
                     const bbox = getBoundingBox(feature);
                     map.current.fitBounds(bbox, { padding: 60, maxZoom: 15, maxDuration: 5000 });
                 }
             } else {
-                // assume this is a GeolocationCoordinates
                 map.current.flyTo({
                     center: [mapFocus.longitude, mapFocus.latitude],
                     zoom: 15,
                     maxDuration: 5000
                 })
-
                 addBlueDot(map.current, mapFocus);
             }
-
-
         }
     }, [mapFocus, geojson])
 
     return (
         <div className="map-wrap">
-            <div ref={mapContainer} className="map" />
+            <div
+                ref={mapContainer}
+                className="map"
+                style={{ backgroundColor: settings.projection === "globe" ? "#0a0e1a" : undefined }}
+            />
         </div>
     );
 }

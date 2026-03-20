@@ -30,15 +30,18 @@ export default function UploadPanel({ togglePanel, setGeoJson }: UploadPanelProp
     }
 
     return (
-        <Panel type="upload" onToggle={togglePanel} className="px-4 py-2">
+        <Panel type="upload" onToggle={togglePanel} className="p-3">
             <UploadGeoJSONButton setGeoJSON={setGeoJsonWithToggleToLayers()} />
-            <p className="text-l text-bold my-2 mx-auto">OR</p>
+            <div className="flex items-center gap-3 my-2">
+                <div className="flex-1 h-px bg-gray-200/50" />
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">or</span>
+                <div className="flex-1 h-px bg-gray-200/50" />
+            </div>
             {pasteGeoJsonFormShown ?
                 <PasteGeoJSONForm setGeoJSON={setGeoJsonWithToggleToLayers()} /> :
-                <div className="py-2">
-                    <p className="text-sm">You may also <a href="#" className="underline" onClick={() => setPasteGeoJsonFormShown(true)}>paste your GeoJSON content</a>. </p>
-                    <p className="text-sm"> Or import an <a href="#" className="underline" onClick={importSampleGeoJson(2)}>example here</a> or <a href="#" className="underline" onClick={importSampleGeoJson(1)}>here.</a></p>
-
+                <div className="text-xs text-gray-500 space-y-1.5">
+                    <p><a href="#" className="font-bold text-gray-700 hover:text-gray-900 underline underline-offset-2 transition-colors duration-150" onClick={() => setPasteGeoJsonFormShown(true)}>Paste GeoJSON</a> directly</p>
+                    <p>Try a sample: <a href="#" className="font-bold text-gray-700 hover:text-gray-900 underline underline-offset-2 transition-colors duration-150" onClick={importSampleGeoJson(2)}>Landmarks</a> or <a href="#" className="font-bold text-gray-700 hover:text-gray-900 underline underline-offset-2 transition-colors duration-150" onClick={importSampleGeoJson(1)}>Regions</a></p>
                 </div>
             }
         </Panel>
