@@ -83,6 +83,17 @@ export function addBlueDot(map: maplibregl.Map, coordinates: GeolocationCoordina
     });
 }
 
+export function removeGeoJSONLayers(map: maplibregl.Map, sourceName: string) {
+    for (const suffix of ['polygons', 'lines', 'points']) {
+        const sub = `${sourceName}-${suffix}`;
+        const layerIds = getLayerIds(sub);
+        for (const id of Object.values(layerIds)) {
+            removeLayerSafe(map, id);
+        }
+        removeSourceSafe(map, sub);
+    }
+}
+
 export function addGeoJSONLayer(map: maplibregl.Map, geoJSON: GeoJSON, sourceName: string) {
     const pointFeatures = filterGeojsonFeatures(geoJSON, ["Point", "MultiPoint"]);
     const lineFeatures = filterGeojsonFeatures(geoJSON, ["LineString", "MultiLineString"]);
@@ -120,6 +131,7 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
     map.addSource(sourceName, {
         type: 'geojson',
         data: { type: 'FeatureCollection', features },
+        promoteId: '_featureIndex',
     });
 
     switch (featureType) {
@@ -186,7 +198,10 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
                 source: sourceName,
                 paint: {
                     'fill-color': COLORS.polygonFill,
-                    'fill-opacity': 0.2,
+                    'fill-opacity': ['case',
+                        ['boolean', ['feature-state', 'hover'], false], 0.35,
+                        0.2
+                    ],
                 }
             });
             // Outline
@@ -196,9 +211,15 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
                 source: sourceName,
                 layout: { 'line-cap': 'round', 'line-join': 'round' },
                 paint: {
-                    'line-color': COLORS.polygonOutline,
+                    'line-color': ['case',
+                        ['boolean', ['feature-state', 'hover'], false], COLORS.polygonOutline,
+                        COLORS.polygonOutline
+                    ],
                     'line-width': ['interpolate', ['linear'], ['zoom'], 2, 1.5, 10, 3],
-                    'line-opacity': 0.7,
+                    'line-opacity': ['case',
+                        ['boolean', ['feature-state', 'hover'], false], 1.0,
+                        0.7
+                    ],
                 }
             });
             break;
@@ -215,6 +236,40 @@ function getLayerIds(sourceName: string) {
         casing: `${sourceName}-casing`,
         outline: `${sourceName}-outline`,
     };
+}
+
+// -- Visibility filters --
+
+export function applyVisibilityFilters(
+    map: maplibregl.Map,
+    sourceName: string,
+    hiddenFeatures: Set<string>,
+) {
+    const typeLayerMap: [string, string[]][] = [
+        ['Polygon', [`${sourceName}-polygons-layer`, `${sourceName}-polygons-outline`]],
+        ['LineString', [`${sourceName}-lines-layer`, `${sourceName}-lines-casing`]],
+        ['Point', [`${sourceName}-points-layer`, `${sourceName}-points-glow`]],
+    ];
+
+    for (const [type, layerIds] of typeLayerMap) {
+        const hiddenIndices: number[] = [];
+        for (const key of hiddenFeatures) {
+            const dashIdx = key.indexOf('-');
+            const keyType = key.substring(0, dashIdx);
+            const keyIdx = parseInt(key.substring(dashIdx + 1));
+            if (keyType === type) hiddenIndices.push(keyIdx);
+        }
+
+        for (const layerId of layerIds) {
+            if (!map.getLayer(layerId)) continue;
+            if (hiddenIndices.length === 0) {
+                map.setFilter(layerId, null);
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                map.setFilter(layerId, ['!', ['in', ['get', '_featureIndex'], ['literal', hiddenIndices]]] as any);
+            }
+        }
+    }
 }
 
 // -- Highlight system --

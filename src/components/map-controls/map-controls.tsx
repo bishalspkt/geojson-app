@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Import, Layers, Locate, Ruler } from "lucide-react";
 import LayersPanel from "./panels/layers-panel.js";
 import UploadPanel from "./panels/upload-panel.js";
 import MeasurePanel from "./panels/measure-panel.js";
-import { MapFeatureTypeAndId, MeasurePoint, PanelStatus, PanelType, UploadGeoJSONButtonProps } from "./types.js";
+import { GeoJsonPrimaryFetureTypes, MapFeatureTypeAndId, MeasurePoint, PanelStatus, PanelType, UploadGeoJSONButtonProps } from "./types.js";
 import { getCurrentPosition } from "../../lib/map-utils.js";
 
 interface MapControlsProps extends UploadGeoJSONButtonProps {
@@ -13,6 +13,10 @@ interface MapControlsProps extends UploadGeoJSONButtonProps {
     onToggleMeasure: (active: boolean) => void;
     selectedFeature: MapFeatureTypeAndId | null;
     setSelectedFeature: React.Dispatch<React.SetStateAction<MapFeatureTypeAndId | null>>;
+    hiddenFeatures: Set<string>;
+    onToggleFeature: (type: GeoJsonPrimaryFetureTypes, idx: number) => void;
+    onSetFeatureVisibility: (keys: string[], visible: boolean) => void;
+    onResetMap: () => void;
 }
 
 export default function MapControls({
@@ -25,6 +29,10 @@ export default function MapControls({
     onToggleMeasure,
     selectedFeature,
     setSelectedFeature,
+    hiddenFeatures,
+    onToggleFeature,
+    onSetFeatureVisibility,
+    onResetMap,
 }: MapControlsProps) {
     const [uploadPanelStatus, setUploadPanelStatus] =
         useState<PanelStatus>("maximized");
@@ -68,6 +76,20 @@ export default function MapControls({
                 break;
         }
     };
+
+    // Auto-open layers panel when a feature is selected (e.g. from map click)
+    const prevSelectedRef = useRef(selectedFeature);
+    useEffect(() => {
+        if (selectedFeature && selectedFeature !== prevSelectedRef.current) {
+            if (layersPanelStatus === "hidden") {
+                setUploadPanelStatus("hidden");
+                setLayersPanelStatus("maximized");
+                setMeasurePanelStatus("hidden");
+                onToggleMeasure(false);
+            }
+        }
+        prevSelectedRef.current = selectedFeature;
+    }, [selectedFeature]);
 
     const locateUserAndSetMapFocus = async () => {
         try {
@@ -127,6 +149,10 @@ export default function MapControls({
                     setMapFocus={setMapFocus}
                     selectedFeature={selectedFeature}
                     setSelectedFeature={setSelectedFeature}
+                    hiddenFeatures={hiddenFeatures}
+                    onToggleFeature={onToggleFeature}
+                    onSetFeatureVisibility={onSetFeatureVisibility}
+                    onResetMap={onResetMap}
                 />
             )}
             {measurePanelStatus !== "hidden" && (

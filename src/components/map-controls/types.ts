@@ -49,4 +49,8 @@ export type LayersPanelProps = {
     setMapFocus: React.Dispatch<React.SetStateAction<MapFocus | undefined>>
     selectedFeature: MapFeatureTypeAndId | null;
     setSelectedFeature: React.Dispatch<React.SetStateAction<MapFeatureTypeAndId | null>>;
+    hiddenFeatures: Set<string>;
+    onToggleFeature: (type: GeoJsonPrimaryFetureTypes, idx: number) => void;
+    onSetFeatureVisibility: (keys: string[], visible: boolean) => void;
+    onResetMap: () => void;
 }
