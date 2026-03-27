@@ -1,5 +1,6 @@
 import { Feature } from 'geojson';
 import { DEFAULTS } from './style-defaults';
+import { getMarkerImageId } from './marker-icons';
 
 /**
  * Resolves MapLibre paint/layout properties for point features.
@@ -32,6 +33,45 @@ export function resolvePointPaint(features: Feature[]) {
         DEFAULTS.point.glowRadius.baseZoom, DEFAULTS.point.glowRadius.baseSize,
         DEFAULTS.point.glowRadius.maxZoom, DEFAULTS.point.glowRadius.maxSize];
 
+  const hasSymbols = features.some(f => f.properties?.['marker-symbol']);
+
+  // Build a match expression that maps each marker-symbol value to its Maki image ID
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let symbolLayout: Record<string, any> | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let symbolPaint: Record<string, any> | null = null;
+
+  if (hasSymbols) {
+    const symbolNames = new Set<string>();
+    for (const f of features) {
+      const sym = f.properties?.['marker-symbol'];
+      if (typeof sym === 'string' && sym.length > 0) symbolNames.add(sym);
+    }
+
+    // Build ['match', ['get', 'marker-symbol'], 'mountain', 'maki-mountain', ..., '']
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const iconImageExpr: any[] = ['match', ['get', 'marker-symbol']];
+    for (const name of symbolNames) {
+      iconImageExpr.push(name, getMarkerImageId(name));
+    }
+    iconImageExpr.push(''); // fallback — no icon
+
+    symbolLayout = {
+      'icon-image': iconImageExpr,
+      'icon-size': hasCustomSizes
+        ? ['match', ['get', 'marker-size'], 'small', 0.8, 'large', 1.6, 1.2]
+        : 1.2,
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
+    };
+
+    symbolPaint = {
+      'icon-color': colorExpr,
+      'icon-halo-color': '#ffffff',
+      'icon-halo-width': 1,
+    };
+  }
+
   return {
     mainPaint: {
       'circle-radius': radiusExpr,
@@ -44,6 +84,9 @@ export function resolvePointPaint(features: Feature[]) {
       'circle-color': colorExpr,
       'circle-opacity': 0.1,
     },
+    symbolLayout,
+    symbolPaint,
+    hasSymbols,
   };
 }
 

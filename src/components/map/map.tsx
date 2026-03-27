@@ -362,6 +362,7 @@ export default function Map() {
             { layerId: 'uploaded-geojson-polygons-layer', source: 'uploaded-geojson-polygons', type: 'Polygon' },
             { layerId: 'uploaded-geojson-lines-layer', source: 'uploaded-geojson-lines', type: 'LineString' },
             { layerId: 'uploaded-geojson-points-layer', source: 'uploaded-geojson-points', type: 'Point' },
+            { layerId: 'uploaded-geojson-points-symbol', source: 'uploaded-geojson-points', type: 'Point' },
         ];
 
         let hoveredSource: string | null = null;
@@ -447,6 +448,7 @@ export default function Map() {
             'uploaded-geojson-polygons-layer',
             'uploaded-geojson-lines-layer',
             'uploaded-geojson-points-layer',
+            'uploaded-geojson-points-symbol',
         ];
 
         const onContextMenu = (e: maplibregl.MapMouseEvent) => {

@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { contextMenuRegistry, ContextMenuContext, ContextMenuItem } from './context-menu-registry';
-import { ZoomIn, Copy, Trash2, FileJson } from 'lucide-react';
+import { ZoomIn, Copy, Trash2, FileJson, MapPin, Minus, Pentagon } from 'lucide-react';
+import type { Feature } from 'geojson';
 
 interface ContextMenuState {
   visible: boolean;
@@ -15,6 +16,36 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   'copy-geojson': FileJson,
   'delete-feature': Trash2,
 };
+
+const GEOMETRY_LABELS: Record<string, string> = {
+  Point: 'Point', MultiPoint: 'MultiPoint',
+  LineString: 'Line', MultiLineString: 'MultiLine',
+  Polygon: 'Polygon', MultiPolygon: 'MultiPolygon',
+};
+
+const GEOMETRY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Point: MapPin, MultiPoint: MapPin,
+  LineString: Minus, MultiLineString: Minus,
+  Polygon: Pentagon, MultiPolygon: Pentagon,
+};
+
+const NAME_KEYS = ['name', 'Name', 'NAME', 'title', 'Title', 'TITLE', 'label', 'Label', 'LABEL', 'description'];
+
+function getFeatureInfo(feature: Feature) {
+  const props = feature.properties || {};
+  let name: string | null = null;
+  for (const key of NAME_KEYS) {
+    if (typeof props[key] === 'string' && props[key].length > 0) {
+      name = props[key];
+      break;
+    }
+  }
+
+  const geomType = feature.geometry.type;
+  const propCount = Object.keys(props).filter(k => !k.startsWith('_')).length;
+
+  return { name, geomType, propCount };
+}
 
 export default function ContextMenu() {
   const [menu, setMenu] = useState<ContextMenuState>({
@@ -66,15 +97,32 @@ export default function ContextMenu() {
     }
   }
 
+  const { name, geomType, propCount } = getFeatureInfo(menu.context.feature);
+  const GeomIcon = GEOMETRY_ICONS[geomType] || MapPin;
+  const geomLabel = GEOMETRY_LABELS[geomType] || geomType;
+
   // Clamp menu position to stay within viewport
   const menuX = Math.min(menu.x, window.innerWidth - 200);
-  const menuY = Math.min(menu.y, window.innerHeight - (items.length * 36 + 16));
+  const menuY = Math.min(menu.y, window.innerHeight - (items.length * 36 + 60));
 
   return (
     <div
-      className="fixed z-50 min-w-[180px] rounded-xl bg-white/80 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/10 py-1"
+      className="fixed z-50 min-w-[180px] max-w-[240px] rounded-xl bg-white/80 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/10 py-1"
       style={{ left: menuX, top: menuY }}
     >
+      {/* Feature info header */}
+      <div className="px-3 py-2 border-b border-gray-200/50">
+        {name && (
+          <p className="text-xs font-semibold text-gray-800 truncate">{name}</p>
+        )}
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <GeomIcon className="h-3 w-3 text-gray-400 shrink-0" />
+          <span className="text-[10px] text-gray-400">{geomLabel}</span>
+          {propCount > 0 && (
+            <span className="text-[10px] text-gray-400 ml-auto">{propCount} {propCount === 1 ? 'prop' : 'props'}</span>
+          )}
+        </div>
+      </div>
       {items.map((item: ContextMenuItem) => {
         const showDivider = dividerBefore.has(item.id);
         const Icon = ICON_MAP[item.id];

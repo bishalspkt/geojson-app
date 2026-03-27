@@ -3,7 +3,7 @@ import { bbox } from '@turf/bbox';
 import { Feature } from 'geojson';
 import { filterGeojsonFeatures } from './geojson-utils';
 import { GeoJSON } from 'geojson';
-import { resolvePointPaint, resolveLinePaint, resolvePolygonPaint, DEFAULTS } from '@/style';
+import { resolvePointPaint, resolveLinePaint, resolvePolygonPaint, DEFAULTS, loadMarkerIcons } from '@/style';
 
 const COLORS = {
     highlightFill:   DEFAULTS.highlight.fillColor,
@@ -128,11 +128,21 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
     switch (featureType) {
         case "Point":
         case "MultiPoint": {
-            const { mainPaint, glowPaint } = resolvePointPaint(features);
+            const { mainPaint, glowPaint, symbolLayout, symbolPaint, hasSymbols } = resolvePointPaint(features);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             map.addLayer({ id: layerIds.glow, type: 'circle', source: sourceName, paint: glowPaint as any });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             map.addLayer({ id: layerIds.main, type: 'circle', source: sourceName, paint: mainPaint as any });
+
+            if (hasSymbols && symbolLayout && symbolPaint) {
+                // Load Maki icons then add the symbol layer
+                loadMarkerIcons(map, features).then(() => {
+                    if (!map.getSource(sourceName)) return; // source may have been removed
+                    if (map.getLayer(layerIds.symbol)) return; // already added
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    map.addLayer({ id: layerIds.symbol, type: 'symbol', source: sourceName, layout: symbolLayout as any, paint: symbolPaint as any });
+                });
+            }
             break;
         }
 
@@ -167,6 +177,7 @@ function getLayerIds(sourceName: string) {
         glow: `${sourceName}-glow`,
         casing: `${sourceName}-casing`,
         outline: `${sourceName}-outline`,
+        symbol: `${sourceName}-symbol`,
     };
 }
 
@@ -180,7 +191,7 @@ export function applyVisibilityFilters(
     const typeLayerMap: [string, string[]][] = [
         ['Polygon', [`${sourceName}-polygons-layer`, `${sourceName}-polygons-outline`]],
         ['LineString', [`${sourceName}-lines-layer`, `${sourceName}-lines-casing`]],
-        ['Point', [`${sourceName}-points-layer`, `${sourceName}-points-glow`]],
+        ['Point', [`${sourceName}-points-layer`, `${sourceName}-points-glow`, `${sourceName}-points-symbol`]],
     ];
 
     for (const [type, layerIds] of typeLayerMap) {
