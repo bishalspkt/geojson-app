@@ -1,5 +1,6 @@
 import { Feature, GeoJSON } from "geojson";
-import { GeoJsonPrimaryFetureTypes } from "../components/map-controls/types";
+
+type GeoJsonPrimaryFeatureTypes = "Point" | "LineString" | "Polygon" | "MultiPoint" | "MultiLineString" | "MultiPolygon";
 
 type GeoJsonFeatureCountStats = {
     numberOfFeatures: number;
@@ -9,26 +10,26 @@ type GeoJsonFeatureCountStats = {
     numberOfGeometryCollections: number;
 }
 
-export function filterGeojsonFeatures(geoJson: GeoJSON|undefined, type: GeoJsonPrimaryFetureTypes[]|GeoJsonPrimaryFetureTypes): Feature[] {
+export function filterGeojsonFeatures(geoJson: GeoJSON|undefined, type: GeoJsonPrimaryFeatureTypes[]|string[]|string): Feature[] {
     if (!geoJson || geoJson.type !== "FeatureCollection") {
         return [];
     }
 
     if(!Array.isArray(type)) {
-        const p: GeoJsonPrimaryFetureTypes[] = ["Point", "MultiPoint"];
-        const l: GeoJsonPrimaryFetureTypes[] = ["LineString", "MultiLineString"];
-        const poly: GeoJsonPrimaryFetureTypes[] = ["Polygon", "MultiPolygon"];
+        const p: GeoJsonPrimaryFeatureTypes[] = ["Point", "MultiPoint"];
+        const l: GeoJsonPrimaryFeatureTypes[] = ["LineString", "MultiLineString"];
+        const poly: GeoJsonPrimaryFeatureTypes[] = ["Polygon", "MultiPolygon"];
 
-        if(p.includes(type)) {
+        if(p.includes(type as GeoJsonPrimaryFeatureTypes)) {
             type = p;
-        } else if (l.includes(type)) {
+        } else if (l.includes(type as GeoJsonPrimaryFeatureTypes)) {
             type = l;
-        } else if (poly.includes(type)) {
+        } else if (poly.includes(type as GeoJsonPrimaryFeatureTypes)) {
             type = poly;
         }
     }
 
-    return geoJson.features.filter(feature =>  type.includes(feature.geometry.type as GeoJsonPrimaryFetureTypes));
+    return geoJson.features.filter(feature => (type as string[]).includes(feature.geometry.type));
 }
 
 export function getGeoJsonFeatureCountStats(geoJson: GeoJSON|undefined): GeoJsonFeatureCountStats {

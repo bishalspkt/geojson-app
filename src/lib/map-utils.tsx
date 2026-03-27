@@ -3,22 +3,15 @@ import { bbox } from '@turf/bbox';
 import { Feature } from 'geojson';
 import { filterGeojsonFeatures } from './geojson-utils';
 import { GeoJSON } from 'geojson';
-import { MapFeatureTypeAndId } from '../components/map-controls/types';
+import { resolvePointPaint, resolveLinePaint, resolvePolygonPaint, DEFAULTS } from '@/style';
 
-// -- Color palette --
 const COLORS = {
-    point:           '#5b21b6',   // deep violet
-    pointStroke:     '#ffffff',
-    line:            '#7c3aed',   // vivid violet
-    lineCasing:      '#4c1d95',   // darker casing
-    polygonFill:     '#8b5cf6',   // bright violet
-    polygonOutline:  '#5b21b6',
-    highlightFill:   '#f97316',   // orange
-    highlightStroke: '#ea580c',   // darker orange
-    highlightGlow:   '#fb923c',   // light orange
+    highlightFill:   DEFAULTS.highlight.fillColor,
+    highlightStroke: DEFAULTS.highlight.strokeColor,
+    highlightGlow:   DEFAULTS.highlight.glowColor,
 };
 
-export function getBoundingBox(geoJson: GeoJSON): [[number, number], [number, number]] {
+export function getBoundingBox(geoJson: GeoJSON | Feature): [[number, number], [number, number]] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const featuresBoundingBox = bbox(geoJson as any);
     return [[featuresBoundingBox[0], featuresBoundingBox[1]], [featuresBoundingBox[2], featuresBoundingBox[3]]];
@@ -58,7 +51,6 @@ export function addBlueDot(map: maplibregl.Map, coordinates: GeolocationCoordina
         }
     });
 
-    // Glow ring
     map.addLayer({
         id: glowLayerName,
         type: 'circle',
@@ -118,7 +110,6 @@ function removeSourceSafe(map: maplibregl.Map, id: string) {
 function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: Feature[]) {
     const layerIds = getLayerIds(sourceName);
 
-    // Remove all layers for this source
     for (const id of Object.values(layerIds)) {
         removeLayerSafe(map, id);
     }
@@ -136,93 +127,34 @@ function updateGeoJsonLayer(map: maplibregl.Map, sourceName: string, features: F
 
     switch (featureType) {
         case "Point":
-        case "MultiPoint":
-            // Outer glow
-            map.addLayer({
-                id: layerIds.glow,
-                type: 'circle',
-                source: sourceName,
-                paint: {
-                    'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 10, 10, 16],
-                    'circle-color': COLORS.point,
-                    'circle-opacity': 0.1,
-                }
-            });
-            // Main circle
-            map.addLayer({
-                id: layerIds.main,
-                type: 'circle',
-                source: sourceName,
-                paint: {
-                    'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 5, 10, 8],
-                    'circle-color': COLORS.point,
-                    'circle-stroke-color': COLORS.pointStroke,
-                    'circle-stroke-width': 2,
-                }
-            });
+        case "MultiPoint": {
+            const { mainPaint, glowPaint } = resolvePointPaint(features);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            map.addLayer({ id: layerIds.glow, type: 'circle', source: sourceName, paint: glowPaint as any });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            map.addLayer({ id: layerIds.main, type: 'circle', source: sourceName, paint: mainPaint as any });
             break;
+        }
 
         case "LineString":
-        case "MultiLineString":
-            // Casing (darker outline behind main line)
-            map.addLayer({
-                id: layerIds.casing,
-                type: 'line',
-                source: sourceName,
-                layout: { 'line-cap': 'round', 'line-join': 'round' },
-                paint: {
-                    'line-color': COLORS.lineCasing,
-                    'line-width': ['interpolate', ['linear'], ['zoom'], 2, 4, 10, 7],
-                    'line-opacity': 0.4,
-                }
-            });
-            // Main line
-            map.addLayer({
-                id: layerIds.main,
-                type: 'line',
-                source: sourceName,
-                layout: { 'line-cap': 'round', 'line-join': 'round' },
-                paint: {
-                    'line-color': COLORS.line,
-                    'line-width': ['interpolate', ['linear'], ['zoom'], 2, 2.5, 10, 5],
-                }
-            });
+        case "MultiLineString": {
+            const { mainPaint, mainLayout, casingPaint, casingLayout } = resolveLinePaint(features);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            map.addLayer({ id: layerIds.casing, type: 'line', source: sourceName, layout: casingLayout as any, paint: casingPaint as any });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            map.addLayer({ id: layerIds.main, type: 'line', source: sourceName, layout: mainLayout as any, paint: mainPaint as any });
             break;
+        }
 
         case "Polygon":
-        case "MultiPolygon":
-            // Fill
-            map.addLayer({
-                id: layerIds.main,
-                type: 'fill',
-                source: sourceName,
-                paint: {
-                    'fill-color': COLORS.polygonFill,
-                    'fill-opacity': ['case',
-                        ['boolean', ['feature-state', 'hover'], false], 0.35,
-                        0.2
-                    ],
-                }
-            });
-            // Outline
-            map.addLayer({
-                id: layerIds.outline,
-                type: 'line',
-                source: sourceName,
-                layout: { 'line-cap': 'round', 'line-join': 'round' },
-                paint: {
-                    'line-color': ['case',
-                        ['boolean', ['feature-state', 'hover'], false], COLORS.polygonOutline,
-                        COLORS.polygonOutline
-                    ],
-                    'line-width': ['interpolate', ['linear'], ['zoom'], 2, 1.5, 10, 3],
-                    'line-opacity': ['case',
-                        ['boolean', ['feature-state', 'hover'], false], 1.0,
-                        0.7
-                    ],
-                }
-            });
+        case "MultiPolygon": {
+            const { fillPaint, outlinePaint, outlineLayout } = resolvePolygonPaint(features);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            map.addLayer({ id: layerIds.main, type: 'fill', source: sourceName, paint: fillPaint as any });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            map.addLayer({ id: layerIds.outline, type: 'line', source: sourceName, layout: outlineLayout as any, paint: outlinePaint as any });
             break;
+        }
 
         default:
             console.warn("Unknown feature type", featureType);
@@ -286,7 +218,6 @@ const HIGHLIGHT_LAYERS = {
 };
 
 export function initHighlightLayers(map: maplibregl.Map) {
-    // Guard against re-initialization (e.g. after style swap)
     if (map.getSource(HIGHLIGHT_SOURCE)) return;
 
     map.addSource(HIGHLIGHT_SOURCE, {
@@ -294,7 +225,6 @@ export function initHighlightLayers(map: maplibregl.Map) {
         data: { type: 'FeatureCollection', features: [] },
     });
 
-    // Polygon highlight
     map.addLayer({
         id: HIGHLIGHT_LAYERS.fillGlow,
         type: 'fill',
@@ -317,7 +247,6 @@ export function initHighlightLayers(map: maplibregl.Map) {
         }
     });
 
-    // Line highlight
     map.addLayer({
         id: HIGHLIGHT_LAYERS.lineGlow,
         type: 'line',
@@ -342,7 +271,6 @@ export function initHighlightLayers(map: maplibregl.Map) {
         }
     });
 
-    // Point highlight
     map.addLayer({
         id: HIGHLIGHT_LAYERS.circleGlow,
         type: 'circle',
@@ -368,7 +296,11 @@ export function initHighlightLayers(map: maplibregl.Map) {
     });
 }
 
-export function updateHighlight(map: maplibregl.Map, geoJson: GeoJSON | undefined, selected: MapFeatureTypeAndId | null) {
+export function updateHighlight(
+    map: maplibregl.Map,
+    geoJson: GeoJSON | undefined,
+    selected: { type: string; idx: number } | null,
+) {
     const source = map.getSource(HIGHLIGHT_SOURCE) as maplibregl.GeoJSONSource | undefined;
     if (!source) return;
 

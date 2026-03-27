@@ -1,11 +1,7 @@
 import { Globe, Map, Settings } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
-import { MapSettings, MapTheme, MapProjection } from "../map-controls/types";
-
-interface MapSettingsProps {
-    settings: MapSettings;
-    onSettingsChange: (settings: MapSettings) => void;
-}
+import { useState, useRef, useEffect, useMemo } from "react";
+import { MapTheme, MapProjection } from "@/types";
+import { useGeoJson, createGeoJsonActions } from "@/services";
 
 const THEMES: { id: MapTheme; label: string; swatch: string; bg: string }[] = [
     { id: "light",     label: "Light",     swatch: "bg-sky-100",    bg: "border-sky-200" },
@@ -15,11 +11,13 @@ const THEMES: { id: MapTheme; label: string; swatch: string; bg: string }[] = [
     { id: "black",     label: "Midnight",  swatch: "bg-gray-950",   bg: "border-gray-700" },
 ];
 
-export default function MapSettingsButton({ settings, onSettingsChange }: MapSettingsProps) {
+export default function MapSettingsButton() {
+    const { state, dispatch } = useGeoJson();
+    const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
+    const settings = state.mapSettings;
     const [open, setOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement>(null);
 
-    // Close on outside click
     useEffect(() => {
         if (!open) return;
         const handler = (e: MouseEvent) => {
@@ -32,11 +30,11 @@ export default function MapSettingsButton({ settings, onSettingsChange }: MapSet
     }, [open]);
 
     const setTheme = (theme: MapTheme) => {
-        onSettingsChange({ ...settings, theme });
+        actions.setMapSettings({ ...settings, theme });
     };
 
     const setProjection = (projection: MapProjection) => {
-        onSettingsChange({ ...settings, projection });
+        actions.setMapSettings({ ...settings, projection });
     };
 
     return (
@@ -53,7 +51,6 @@ export default function MapSettingsButton({ settings, onSettingsChange }: MapSet
 
             {open && (
                 <div className="absolute top-full left-0 mt-2.5 w-64 rounded-2xl bg-white/70 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/10 p-4 flex flex-col gap-4 z-50">
-                    {/* Theme picker */}
                     <div>
                         <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">Theme</p>
                         <div className="grid grid-cols-5 gap-2">
@@ -76,7 +73,6 @@ export default function MapSettingsButton({ settings, onSettingsChange }: MapSet
                         </div>
                     </div>
 
-                    {/* Projection toggle */}
                     <div className="border-t border-black/8 pt-3">
                         <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Projection</p>
                         <div className="grid grid-cols-2 gap-2">

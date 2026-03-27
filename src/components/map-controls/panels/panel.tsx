@@ -1,6 +1,6 @@
 import React from "react";
 import { Import, Layers, Pencil, Play, Ruler, X } from "lucide-react";
-import { PanelProps, PanelType } from "../types";
+import { PanelProps, PanelType } from "@/types";
 
 const panelDict: Record<PanelType, { title: string; icon: React.ReactNode }> = {
     "upload": { title: "Import GeoJSON", icon: <Import className="h-4 w-4" /> },

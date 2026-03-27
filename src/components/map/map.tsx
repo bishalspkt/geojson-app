@@ -1,16 +1,16 @@
-import { useRef, useEffect, useState, ElementRef, useCallback } from 'react';
+import { useRef, useEffect, useState, ElementRef, useCallback, useMemo } from 'react';
 import maplibregl, { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
 import { addBlueDot, addGeoJSONLayer, applyVisibilityFilters, getBoundingBox, initHighlightLayers, removeGeoJSONLayers, updateHighlight } from '../../lib/map-utils';
 import { layers, namedFlavor } from '@protomaps/basemaps';
 import { GeoJSON } from 'geojson';
-import { GeoJsonPrimaryFetureTypes, MapFocus, MapFeatureTypeAndId, MapSettings, MapTheme, MeasurePoint } from '../map-controls/types';
+import { useGeoJson, createGeoJsonActions } from '@/services';
+import { useMapInstance } from '@/services/map';
+import { categorizeGeometry, FeatureId } from '@/types';
+import { MapTheme, MeasurePoint } from '@/types';
 import { filterGeojsonFeatures } from '../../lib/geojson-utils';
 
-/**
- * Post-process Protomaps base layers to improve boundary and label visibility.
- */
 function customizeBaseLayers(baseLayers: LayerSpecification[], theme: MapTheme): LayerSpecification[] {
     const isDark = theme === "dark" || theme === "black";
     const boundaryColor = isDark ? "#9ca3af" : "#6b7280";
@@ -106,18 +106,6 @@ const MEASURE_SOURCE = 'measure-source';
 const MEASURE_LINE_LAYER = 'measure-line-layer';
 const MEASURE_POINTS_LAYER = 'measure-points-layer';
 
-interface MapProps {
-    geojson?: GeoJSON;
-    mapFocus?: MapFocus;
-    isMeasuring: boolean;
-    measurePoints: MeasurePoint[];
-    onMeasureClick: (point: MeasurePoint) => void;
-    selectedFeature: MapFeatureTypeAndId | null;
-    setSelectedFeature: React.Dispatch<React.SetStateAction<MapFeatureTypeAndId | null>>;
-    settings: MapSettings;
-    hiddenFeatures: Set<string>;
-}
-
 function updateMeasureLayers(mapInstance: maplibregl.Map, points: MeasurePoint[]) {
     const geojsonData: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
@@ -179,97 +167,154 @@ function addOverlayLayers(m: maplibregl.Map) {
     initHighlightLayers(m);
 }
 
-export default function Map({ geojson, mapFocus, isMeasuring, measurePoints, onMeasureClick, selectedFeature, setSelectedFeature, settings, hiddenFeatures }: MapProps) {
+// Build a legacy-compatible GeoJSON FeatureCollection from identified features
+function buildGeoJsonFromFeatures(features: import('@/types').IdentifiedFeature[]): GeoJSON | undefined {
+    if (features.length === 0) return undefined;
+    return {
+        type: 'FeatureCollection',
+        features: features,
+    } as GeoJSON;
+}
+
+// Build legacy hidden features set (type-idx keys) from feature IDs
+function buildLegacyHiddenSet(
+    features: import('@/types').IdentifiedFeature[],
+    hiddenIds: Set<FeatureId>,
+): Set<string> {
+    const result = new Set<string>();
+    // Group features by category and track their index within that category
+    const counters: Record<string, number> = {};
+    for (const f of features) {
+        const cat = categorizeGeometry(f.geometry.type);
+        const baseType = cat === 'point' ? 'Point' : cat === 'line' ? 'LineString' : 'Polygon';
+        const idx = counters[baseType] ?? 0;
+        counters[baseType] = idx + 1;
+        if (hiddenIds.has(f.id)) {
+            result.add(`${baseType}-${idx}`);
+        }
+    }
+    return result;
+}
+
+// Find a feature's legacy type+idx from its FeatureId
+function findLegacySelection(
+    features: import('@/types').IdentifiedFeature[],
+    selectedId: FeatureId | null,
+): { type: string; idx: number } | null {
+    if (!selectedId) return null;
+    const counters: Record<string, number> = {};
+    for (const f of features) {
+        const cat = categorizeGeometry(f.geometry.type);
+        const baseType = cat === 'point' ? 'Point' : cat === 'line' ? 'LineString' : 'Polygon';
+        const idx = counters[baseType] ?? 0;
+        counters[baseType] = idx + 1;
+        if (f.id === selectedId) {
+            return { type: baseType, idx };
+        }
+    }
+    return null;
+}
+
+export default function Map() {
+    const { state, dispatch } = useGeoJson();
+    const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
+    const mapRef = useMapInstance();
     const mapContainer = useRef<ElementRef<"div">>(null);
-    const map = useRef<maplibregl.Map | null>(null);
     const [mapReady, setMapReady] = useState(false);
-    const prevThemeRef = useRef(settings.theme);
-    const prevGeojsonRef = useRef<GeoJSON | undefined>(undefined);
+    const prevThemeRef = useRef(state.mapSettings.theme);
+    const prevCollectionRef = useRef<GeoJSON | undefined>(undefined);
+
+    // Derive legacy-compatible values from the store
+    const geojson = useMemo(() => buildGeoJsonFromFeatures(state.features), [state.features]);
+    const hiddenFeatures = useMemo(
+        () => buildLegacyHiddenSet(state.features, state.hiddenFeatureIds),
+        [state.features, state.hiddenFeatureIds],
+    );
+    const selectedFeature = useMemo(
+        () => findLegacySelection(state.features, state.selectedFeatureId),
+        [state.features, state.selectedFeatureId],
+    );
 
     // Refs for current values so style.load callback always has fresh data
     const geojsonRef = useRef(geojson);
-    geojsonRef.current = geojson;
-    const measurePointsRef = useRef(measurePoints);
-    measurePointsRef.current = measurePoints;
+    const measurePointsRef = useRef(state.measurePoints);
     const selectedFeatureRef = useRef(selectedFeature);
-    selectedFeatureRef.current = selectedFeature;
-    const projectionRef = useRef(settings.projection);
-    projectionRef.current = settings.projection;
+    const projectionRef = useRef(state.mapSettings.projection);
     const hiddenFeaturesRef = useRef(hiddenFeatures);
-    hiddenFeaturesRef.current = hiddenFeatures;
+    useEffect(() => { geojsonRef.current = geojson; }, [geojson]);
+    useEffect(() => { measurePointsRef.current = state.measurePoints; }, [state.measurePoints]);
+    useEffect(() => { selectedFeatureRef.current = selectedFeature; }, [selectedFeature]);
+    useEffect(() => { projectionRef.current = state.mapSettings.projection; }, [state.mapSettings.projection]);
+    useEffect(() => { hiddenFeaturesRef.current = hiddenFeatures; }, [hiddenFeatures]);
 
     const handleMapClick = useCallback((e: maplibregl.MapMouseEvent) => {
-        onMeasureClick({ lng: e.lngLat.lng, lat: e.lngLat.lat });
-    }, [onMeasureClick]);
+        actions.addMeasurePoint({ lng: e.lngLat.lng, lat: e.lngLat.lat });
+    }, [actions]);
 
     // Initialize MapLibre Map
     useEffect(() => {
-        if (map.current) return;
+        if (mapRef.current) return;
 
-        map.current = new maplibregl.Map({
+        mapRef.current = new maplibregl.Map({
             container: mapContainer.current!,
-            style: buildStyle(settings.theme),
+            style: buildStyle(state.mapSettings.theme),
             center: [105, -5],
             zoom: 2.8,
         });
 
-        map.current.on('load', () => {
-            if (!map.current) return;
-            addOverlayLayers(map.current);
+        mapRef.current.on('load', () => {
+            if (!mapRef.current) return;
+            addOverlayLayers(mapRef.current);
             setMapReady(true);
         });
 
         return () => {
-            map.current?.remove();
-            map.current = null;
+            mapRef.current?.remove();
+            mapRef.current = null;
         }
     }, []);
 
-    // Handle theme changes — swap the entire style
+    // Handle theme changes
     useEffect(() => {
-        if (!map.current || !mapReady) return;
-        if (settings.theme === prevThemeRef.current) return;
-        prevThemeRef.current = settings.theme;
+        if (!mapRef.current || !mapReady) return;
+        if (state.mapSettings.theme === prevThemeRef.current) return;
+        prevThemeRef.current = state.mapSettings.theme;
 
-        const m = map.current;
+        const m = mapRef.current;
         const center = m.getCenter();
         const zoom = m.getZoom();
         const bearing = m.getBearing();
         const pitch = m.getPitch();
 
-        m.setStyle(buildStyle(settings.theme));
+        m.setStyle(buildStyle(state.mapSettings.theme));
 
         m.once('style.load', () => {
             m.jumpTo({ center, zoom, bearing, pitch });
             m.setProjection({ type: projectionRef.current });
             addOverlayLayers(m);
 
-            // Re-add geojson data if present (no fitBounds — purely visual re-add)
             if (geojsonRef.current) {
                 addGeoJSONLayer(m, geojsonRef.current, 'uploaded-geojson');
                 applyVisibilityFilters(m, 'uploaded-geojson', hiddenFeaturesRef.current);
             }
 
-            // Re-apply measure points
             updateMeasureLayers(m, measurePointsRef.current);
-
-            // Re-apply highlight
             updateHighlight(m, geojsonRef.current, selectedFeatureRef.current);
         });
-    }, [settings.theme, mapReady]);
+    }, [state.mapSettings.theme, mapReady]);
 
     // Handle projection changes
     useEffect(() => {
-        if (!map.current || !mapReady) return;
-        map.current.setProjection({ type: settings.projection });
-    }, [settings.projection, mapReady]);
+        if (!mapRef.current || !mapReady) return;
+        mapRef.current.setProjection({ type: state.mapSettings.projection });
+    }, [state.mapSettings.projection, mapReady]);
 
     // Toggle measure click handler
     useEffect(() => {
-        if (!map.current) return;
-        const m = map.current;
+        if (!mapRef.current) return;
+        const m = mapRef.current;
 
-        if (isMeasuring) {
+        if (state.isMeasuring) {
             m.getCanvas().style.cursor = 'crosshair';
             m.on('click', handleMapClick);
         } else {
@@ -281,26 +326,26 @@ export default function Map({ geojson, mapFocus, isMeasuring, measurePoints, onM
             m.off('click', handleMapClick);
             m.getCanvas().style.cursor = '';
         };
-    }, [isMeasuring, handleMapClick]);
+    }, [state.isMeasuring, handleMapClick]);
 
     // Update measure visualization
     useEffect(() => {
-        if (map.current && mapReady) {
-            updateMeasureLayers(map.current, measurePoints);
+        if (mapRef.current && mapReady) {
+            updateMeasureLayers(mapRef.current, state.measurePoints);
         }
-    }, [measurePoints, mapReady]);
+    }, [state.measurePoints, mapReady]);
 
     // Update uploaded GeoJson Layer
     useEffect(() => {
-        if (!mapReady || !map.current) return;
-        const m = map.current;
+        if (!mapReady || !mapRef.current) return;
+        const m = mapRef.current;
         if (!geojson) {
             removeGeoJSONLayers(m, 'uploaded-geojson');
-            prevGeojsonRef.current = undefined;
+            prevCollectionRef.current = undefined;
             return;
         }
-        const isNewData = geojson !== prevGeojsonRef.current;
-        prevGeojsonRef.current = geojson;
+        const isNewData = geojson !== prevCollectionRef.current;
+        prevCollectionRef.current = geojson;
         addGeoJSONLayer(m, geojson, 'uploaded-geojson');
         applyVisibilityFilters(m, 'uploaded-geojson', hiddenFeaturesRef.current);
         if (isNewData) {
@@ -310,10 +355,10 @@ export default function Map({ geojson, mapFocus, isMeasuring, measurePoints, onM
 
     // Handle hover + click on GeoJSON features
     useEffect(() => {
-        if (!map.current || !mapReady || !geojson) return;
-        const m = map.current;
+        if (!mapRef.current || !mapReady || !geojson) return;
+        const m = mapRef.current;
 
-        const GEOJSON_FEATURE_LAYERS: { layerId: string; source: string; type: GeoJsonPrimaryFetureTypes }[] = [
+        const GEOJSON_FEATURE_LAYERS: { layerId: string; source: string; type: string }[] = [
             { layerId: 'uploaded-geojson-polygons-layer', source: 'uploaded-geojson-polygons', type: 'Polygon' },
             { layerId: 'uploaded-geojson-lines-layer', source: 'uploaded-geojson-lines', type: 'LineString' },
             { layerId: 'uploaded-geojson-points-layer', source: 'uploaded-geojson-points', type: 'Point' },
@@ -337,23 +382,35 @@ export default function Map({ geojson, mapFocus, isMeasuring, measurePoints, onM
         for (const { layerId, source, type } of GEOJSON_FEATURE_LAYERS) {
             if (!m.getLayer(layerId)) continue;
 
-            // Click handler
             const onClick = (e: maplibregl.MapLayerMouseEvent) => {
-                if (isMeasuring) return;
+                if (state.isMeasuring) return;
                 const feature = e.features?.[0];
                 if (!feature || feature.properties?._featureIndex == null) return;
                 const idx = feature.properties._featureIndex as number;
-                setSelectedFeature(prev => {
-                    if (prev?.type === type && prev?.idx === idx) return null;
-                    return { type, idx };
-                });
+
+                // Find the feature ID from the store
+                const fid = feature.properties?._fid as string | undefined;
+                if (fid) {
+                    const currentSelected = state.selectedFeatureId;
+                    actions.selectFeature(currentSelected === fid ? null : fid);
+                } else {
+                    // Fallback: use legacy type+idx to find the feature
+                    const cat = categorizeGeometry(type);
+                    const matchingFeatures = state.features.filter(
+                        (f) => categorizeGeometry(f.geometry.type) === cat,
+                    );
+                    const matched = matchingFeatures[idx];
+                    if (matched) {
+                        const currentSelected = state.selectedFeatureId;
+                        actions.selectFeature(currentSelected === matched.id ? null : matched.id);
+                    }
+                }
             };
             m.on('click', layerId, onClick);
             clickHandlers.push([layerId, onClick]);
 
-            // Hover enter
             const onEnter = (e: maplibregl.MapLayerMouseEvent) => {
-                if (isMeasuring) return;
+                if (state.isMeasuring) return;
                 m.getCanvas().style.cursor = 'pointer';
                 const feature = e.features?.[0];
                 if (!feature || feature.id == null) return;
@@ -365,9 +422,8 @@ export default function Map({ geojson, mapFocus, isMeasuring, measurePoints, onM
             m.on('mouseenter', layerId, onEnter);
             enterHandlers.push([layerId, onEnter]);
 
-            // Hover leave
             const onLeave = () => {
-                if (!isMeasuring) m.getCanvas().style.cursor = '';
+                if (!state.isMeasuring) m.getCanvas().style.cursor = '';
                 clearHover();
             };
             m.on('mouseleave', layerId, onLeave);
@@ -380,49 +436,102 @@ export default function Map({ geojson, mapFocus, isMeasuring, measurePoints, onM
             for (const [id, fn] of enterHandlers) m.off('mouseenter', id, fn);
             for (const [id, fn] of leaveHandlers) m.off('mouseleave', id, fn);
         };
-    }, [mapReady, geojson, isMeasuring, setSelectedFeature]);
+    }, [mapReady, geojson, state.isMeasuring, state.features, state.selectedFeatureId, actions]);
+
+    // Right-click context menu
+    useEffect(() => {
+        if (!mapRef.current || !mapReady || !geojson) return;
+        const m = mapRef.current;
+
+        const CONTEXT_LAYERS = [
+            'uploaded-geojson-polygons-layer',
+            'uploaded-geojson-lines-layer',
+            'uploaded-geojson-points-layer',
+        ];
+
+        const onContextMenu = (e: maplibregl.MapMouseEvent) => {
+            if (state.isMeasuring) return;
+            // Query features at the click point
+            const features = m.queryRenderedFeatures(e.point, { layers: CONTEXT_LAYERS.filter(l => m.getLayer(l)) });
+            if (!features.length) return;
+            const mapFeature = features[0];
+            const fid = mapFeature.properties?._fid as string | undefined;
+            if (!fid) return;
+
+            const storeFeature = state.features.find((f) => f.id === fid);
+            if (!storeFeature) return;
+
+            e.preventDefault();
+
+            const event = new CustomEvent('geojson-context-menu', {
+                detail: {
+                    x: e.originalEvent.clientX,
+                    y: e.originalEvent.clientY,
+                    context: {
+                        feature: storeFeature,
+                        lngLat: { lng: e.lngLat.lng, lat: e.lngLat.lat },
+                        mapInstance: m,
+                        actions,
+                    },
+                },
+            });
+            window.dispatchEvent(event);
+        };
+
+        m.on('contextmenu', onContextMenu);
+        return () => { m.off('contextmenu', onContextMenu); };
+    }, [mapReady, geojson, state.isMeasuring, state.features, actions]);
 
     // Apply visibility filters when hidden features change
     useEffect(() => {
-        if (!map.current || !mapReady) return;
-        applyVisibilityFilters(map.current, 'uploaded-geojson', hiddenFeatures);
+        if (!mapRef.current || !mapReady) return;
+        applyVisibilityFilters(mapRef.current, 'uploaded-geojson', hiddenFeatures);
     }, [hiddenFeatures, mapReady]);
 
-    // Update highlight when selected feature changes (skip if feature is hidden)
+    // Update highlight when selected feature changes
     useEffect(() => {
-        if (map.current && mapReady) {
-            const isHidden = selectedFeature && hiddenFeatures.has(`${selectedFeature.type}-${selectedFeature.idx}`);
-            updateHighlight(map.current, geojson, isHidden ? null : selectedFeature);
+        if (mapRef.current && mapReady) {
+            const isHidden = state.selectedFeatureId && state.hiddenFeatureIds.has(state.selectedFeatureId);
+            updateHighlight(mapRef.current, geojson, isHidden ? null : selectedFeature);
         }
-    }, [selectedFeature, mapReady, geojson, hiddenFeatures]);
+    }, [selectedFeature, mapReady, geojson, state.hiddenFeatureIds, state.selectedFeatureId]);
 
     // Fly to focused feature
     useEffect(() => {
-        if (map.current && mapFocus) {
-            if ("idx" in mapFocus && "type" in mapFocus) {
-                if (!geojson) return;
-                const feature = filterGeojsonFeatures(geojson, mapFocus.type)[mapFocus.idx]
+        if (mapRef.current && state.mapFocus) {
+            const focus = state.mapFocus;
+            if ("featureId" in focus) {
+                // New-style focus by feature ID
+                const feature = state.features.find((f) => f.id === focus.featureId);
                 if (feature) {
                     const bbox = getBoundingBox(feature);
-                    map.current.fitBounds(bbox, { padding: 60, maxZoom: 15, maxDuration: 5000 });
+                    mapRef.current.fitBounds(bbox, { padding: 60, maxZoom: 15, maxDuration: 5000 });
                 }
-            } else {
-                map.current.flyTo({
-                    center: [mapFocus.longitude, mapFocus.latitude],
+            } else if ("idx" in focus && "type" in focus) {
+                // Legacy-style focus by type+idx
+                if (!geojson) return;
+                const feature = filterGeojsonFeatures(geojson, focus.type)[focus.idx];
+                if (feature) {
+                    const bbox = getBoundingBox(feature);
+                    mapRef.current.fitBounds(bbox, { padding: 60, maxZoom: 15, maxDuration: 5000 });
+                }
+            } else if ("longitude" in focus) {
+                mapRef.current.flyTo({
+                    center: [focus.longitude, focus.latitude],
                     zoom: 15,
                     maxDuration: 5000
-                })
-                addBlueDot(map.current, mapFocus);
+                });
+                addBlueDot(mapRef.current, focus);
             }
         }
-    }, [mapFocus, geojson])
+    }, [state.mapFocus, geojson, state.features])
 
     return (
         <div className="map-wrap">
             <div
                 ref={mapContainer}
                 className="map"
-                style={{ backgroundColor: settings.projection === "globe" ? "#0a0e1a" : undefined }}
+                style={{ backgroundColor: state.mapSettings.projection === "globe" ? "#0a0e1a" : undefined }}
             />
         </div>
     );

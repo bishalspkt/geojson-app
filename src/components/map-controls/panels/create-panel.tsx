@@ -1,7 +1,7 @@
 import { Circle, Diamond, MapPin, Pentagon, Triangle } from "lucide-react";
 import { Button } from "../../ui/button";
 import Panel from "./panel";
-import { PanelType } from "../types";
+import { PanelType } from "@/types";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "../../ui/dialog";
 import { DialogClose, DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 

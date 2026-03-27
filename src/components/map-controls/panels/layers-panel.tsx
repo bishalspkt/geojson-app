@@ -1,7 +1,8 @@
 import { Button } from "../../ui/button";
 import Panel from "./panel";
-import { GeoJsonPrimaryFetureTypes, LayersPanelProps, MapFeatureTypeAndId } from "../types";
-import { filterGeojsonFeatures, getGeoJsonFeatureCountStats } from "../../../lib/geojson-utils";
+import { PanelType } from "@/types";
+import { GeometryCategory, categorizeGeometry, IdentifiedFeature } from "@/types";
+import { useGeoJson, createGeoJsonActions, selectFeaturesByCategory, selectFeatureStats } from "@/services";
 import { Eye, EyeOff, MapPin, RotateCcw, Shapes, Waypoints } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { length } from "@turf/length";
@@ -16,103 +17,107 @@ function formatNumber(value: number): string {
     return value.toFixed(4);
 }
 
-function featureKey(type: GeoJsonPrimaryFetureTypes, idx: number): string {
-    return `${type}-${idx}`;
+interface LayersPanelProps {
+    togglePanel: (panel: PanelType) => void;
 }
 
+export default function LayersPanel({ togglePanel }: LayersPanelProps) {
+    const { state, dispatch } = useGeoJson();
+    const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
 
-export default function LayersPanel({
-    togglePanel, geoJson, setMapFocus, selectedFeature, setSelectedFeature,
-    hiddenFeatures, onToggleFeature, onSetFeatureVisibility, onResetMap,
-}: LayersPanelProps) {
-    const [filterByLayer, setFilterByLayer] = useState<GeoJsonPrimaryFetureTypes>("Polygon");
-    const geoJsonStats = useMemo(() => getGeoJsonFeatureCountStats(geoJson), [geoJson]);
-    const polygons = useMemo(() => filterGeojsonFeatures(geoJson, ["Polygon", "MultiPolygon"]), [geoJson]);
-    const points = useMemo(() => filterGeojsonFeatures(geoJson, ["Point", "MultiPoint"]), [geoJson]);
-    const lines = useMemo(() => filterGeojsonFeatures(geoJson, ["LineString", "MultiLineString"]), [geoJson]);
+    const [filterByLayer, setFilterByLayer] = useState<GeometryCategory>("polygon");
+    const stats = useMemo(() => selectFeatureStats(state.features), [state.features]);
+    const polygons = useMemo(() => selectFeaturesByCategory(state.features, "polygon"), [state.features]);
+    const points = useMemo(() => selectFeaturesByCategory(state.features, "point"), [state.features]);
+    const lines = useMemo(() => selectFeaturesByCategory(state.features, "line"), [state.features]);
 
-    // Auto-switch tab when a feature is selected (e.g. from map click)
+    // Auto-switch tab when a feature is selected
     useEffect(() => {
-        if (selectedFeature) {
-            const primaryType = selectedFeature.type.replace('Multi', '') as GeoJsonPrimaryFetureTypes;
-            if (primaryType !== filterByLayer) {
-                setFilterByLayer(primaryType);
+        if (state.selectedFeatureId) {
+            const feature = state.features.find((f) => f.id === state.selectedFeatureId);
+            if (feature) {
+                const cat = categorizeGeometry(feature.geometry.type);
+                if (cat !== filterByLayer) {
+                    setFilterByLayer(cat);
+                }
             }
         }
-    }, [selectedFeature]);
+    }, [state.selectedFeatureId, state.features]);
 
-    const filterTabs: { type: GeoJsonPrimaryFetureTypes; icon: React.ReactNode; count: number }[] = [
-        { type: "Point", icon: <MapPin className="h-3.5 w-3.5" />, count: geoJsonStats.numberOfPoints },
-        { type: "LineString", icon: <Waypoints className="h-3.5 w-3.5" />, count: geoJsonStats.numberOfLines },
-        { type: "Polygon", icon: <Shapes className="h-3.5 w-3.5" />, count: geoJsonStats.numberOfPolygons },
+    const filterTabs: { type: GeometryCategory; icon: React.ReactNode; count: number }[] = [
+        { type: "point", icon: <MapPin className="h-3.5 w-3.5" />, count: stats.points },
+        { type: "line", icon: <Waypoints className="h-3.5 w-3.5" />, count: stats.lines },
+        { type: "polygon", icon: <Shapes className="h-3.5 w-3.5" />, count: stats.polygons },
     ];
 
     const currentFeatures = useMemo(() => {
         switch (filterByLayer) {
-            case "Point": return points;
-            case "LineString": return lines;
-            case "Polygon": return polygons;
+            case "point": return points;
+            case "line": return lines;
+            case "polygon": return polygons;
             default: return [];
         }
     }, [filterByLayer, points, lines, polygons]);
 
-    const currentKeys = useMemo(
-        () => currentFeatures.map((_, idx) => featureKey(filterByLayer, idx)),
-        [currentFeatures, filterByLayer],
+    const currentIds = useMemo(
+        () => currentFeatures.map((f) => f.id),
+        [currentFeatures],
     );
 
     const allCurrentVisible = useMemo(
-        () => currentKeys.length > 0 && currentKeys.every(k => !hiddenFeatures.has(k)),
-        [currentKeys, hiddenFeatures],
+        () => currentIds.length > 0 && currentIds.every(id => !state.hiddenFeatureIds.has(id)),
+        [currentIds, state.hiddenFeatureIds],
     );
 
     const allCurrentHidden = useMemo(
-        () => currentKeys.length > 0 && currentKeys.every(k => hiddenFeatures.has(k)),
-        [currentKeys, hiddenFeatures],
+        () => currentIds.length > 0 && currentIds.every(id => state.hiddenFeatureIds.has(id)),
+        [currentIds, state.hiddenFeatureIds],
     );
 
     const handleShowAll = useCallback(() => {
-        onSetFeatureVisibility(currentKeys, true);
-    }, [currentKeys, onSetFeatureVisibility]);
+        actions.setFeaturesVisibility(currentIds, true);
+    }, [currentIds, actions]);
 
     const handleHideAll = useCallback(() => {
-        onSetFeatureVisibility(currentKeys, false);
-    }, [currentKeys, onSetFeatureVisibility]);
+        actions.setFeaturesVisibility(currentIds, false);
+    }, [currentIds, actions]);
 
-    const isSelected = (type: GeoJsonPrimaryFetureTypes, idx: number) =>
-        selectedFeature?.type === type && selectedFeature?.idx === idx;
+    const isSelected = (feature: IdentifiedFeature) =>
+        state.selectedFeatureId === feature.id;
 
-    const isHidden = (type: GeoJsonPrimaryFetureTypes, idx: number) =>
-        hiddenFeatures.has(featureKey(type, idx));
+    const isHidden = (feature: IdentifiedFeature) =>
+        state.hiddenFeatureIds.has(feature.id);
 
-    const handleFeatureClick = (type: GeoJsonPrimaryFetureTypes, idx: number) => {
-        const sel: MapFeatureTypeAndId = { type, idx };
-        if (isSelected(type, idx)) {
-            setSelectedFeature(null);
+    const handleFeatureClick = (feature: IdentifiedFeature) => {
+        if (isSelected(feature)) {
+            actions.selectFeature(null);
         } else {
-            setSelectedFeature(sel);
-            if (!isHidden(type, idx)) {
-                setMapFocus(sel);
+            actions.selectFeature(feature.id);
+            if (!isHidden(feature)) {
+                actions.setMapFocus({ featureId: feature.id });
             }
         }
     };
 
-    const handleVisibilityClick = (e: React.MouseEvent, type: GeoJsonPrimaryFetureTypes, idx: number) => {
+    const handleVisibilityClick = (e: React.MouseEvent, feature: IdentifiedFeature) => {
         e.stopPropagation();
-        onToggleFeature(type, idx);
+        actions.toggleFeatureVisibility(feature.id);
+    };
+
+    const handleReset = () => {
+        actions.clearGeoJson();
     };
 
     const featureRow = (
-        type: GeoJsonPrimaryFetureTypes,
-        idx: number,
+        feature: IdentifiedFeature,
         icon: React.ReactNode,
         name: string,
         subtitle?: string,
     ) => {
-        const active = isSelected(type, idx);
-        const hidden = isHidden(type, idx);
+        const active = isSelected(feature);
+        const hidden = isHidden(feature);
         return (
-            <li key={idx}>
+            <li key={feature.id}>
                 <div
                     role="button"
                     tabIndex={0}
@@ -121,8 +126,8 @@ export default function LayersPanel({
                             ? "bg-orange-50 ring-1 ring-orange-300"
                             : "hover:bg-white/40"
                     } ${hidden ? "opacity-40" : ""}`}
-                    onClick={() => handleFeatureClick(type, idx)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleFeatureClick(type, idx); } }}
+                    onClick={() => handleFeatureClick(feature)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleFeatureClick(feature); } }}
                 >
                     <div className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${active ? "bg-orange-100" : "bg-violet-50"}`}>
                         {icon}
@@ -139,7 +144,7 @@ export default function LayersPanel({
                                 ? "text-gray-300 hover:text-gray-500 hover:bg-gray-100"
                                 : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
                         }`}
-                        onClick={(e) => handleVisibilityClick(e, type, idx)}
+                        onClick={(e) => handleVisibilityClick(e, feature)}
                         aria-label={hidden ? "Show feature" : "Hide feature"}
                     >
                         {hidden ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
@@ -149,10 +154,12 @@ export default function LayersPanel({
         );
     };
 
+    const hasData = state.features.length > 0;
+
     return (
         <Panel type="layers" onToggle={togglePanel}>
             <>
-                {(!geoJson) &&
+                {!hasData &&
                     <div className="p-3">
                         <p className="text-sm font-bold text-gray-900">No layers added</p>
                         <p className="text-gray-500 text-xs mt-0.5">Import GeoJSON to see layers here</p>
@@ -161,7 +168,7 @@ export default function LayersPanel({
                         </div>
                     </div>
                 }
-                {geoJson &&
+                {hasData &&
                     <div className="pb-12">
                         <div className="sticky bottom-0 flex gap-1 p-1.5 border-t border-white/30 bg-white/50 backdrop-blur-xl">
                             {filterTabs.map((tab) => (
@@ -199,7 +206,7 @@ export default function LayersPanel({
                                 </button>
                                 <div className="flex-1" />
                                 <button
-                                    onClick={onResetMap}
+                                    onClick={handleReset}
                                     className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-semibold text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
                                 >
                                     <RotateCcw className="h-3 w-3" />
@@ -208,26 +215,26 @@ export default function LayersPanel({
                             </div>
                         )}
                         <ul className="p-1">
-                            {filterByLayer === "Polygon" && polygons.map((p, idx) =>
+                            {filterByLayer === "polygon" && polygons.map((p) =>
                                 featureRow(
-                                    "Polygon", idx,
-                                    <Shapes className={`h-3.5 w-3.5 ${isSelected("Polygon", idx) ? "text-orange-500" : "text-violet-400"}`} />,
-                                    p.properties?.name || `Polygon ${idx + 1}`,
+                                    p,
+                                    <Shapes className={`h-3.5 w-3.5 ${isSelected(p) ? "text-orange-500" : "text-violet-400"}`} />,
+                                    p.properties?.name || `Polygon ${polygons.indexOf(p) + 1}`,
                                     `${formatNumber(area(p)/1e6)} sq km`,
                                 )
                             )}
-                            {filterByLayer === "Point" && points.map((p, idx) =>
+                            {filterByLayer === "point" && points.map((p) =>
                                 featureRow(
-                                    "Point", idx,
-                                    <MapPin className={`h-3.5 w-3.5 ${isSelected("Point", idx) ? "text-orange-500" : "text-violet-400"}`} />,
-                                    p.properties?.name || `Point ${idx + 1}`,
+                                    p,
+                                    <MapPin className={`h-3.5 w-3.5 ${isSelected(p) ? "text-orange-500" : "text-violet-400"}`} />,
+                                    p.properties?.name || `Point ${points.indexOf(p) + 1}`,
                                 )
                             )}
-                            {filterByLayer === "LineString" && lines.map((p, idx) =>
+                            {filterByLayer === "line" && lines.map((p) =>
                                 featureRow(
-                                    "LineString", idx,
-                                    <Waypoints className={`h-3.5 w-3.5 ${isSelected("LineString", idx) ? "text-orange-500" : "text-violet-400"}`} />,
-                                    p.properties?.name || `Line ${idx + 1}`,
+                                    p,
+                                    <Waypoints className={`h-3.5 w-3.5 ${isSelected(p) ? "text-orange-500" : "text-violet-400"}`} />,
+                                    p.properties?.name || `Line ${lines.indexOf(p) + 1}`,
                                     `${formatNumber(length(p))} km`,
                                 )
                             )}

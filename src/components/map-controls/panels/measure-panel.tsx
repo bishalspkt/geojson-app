@@ -1,14 +1,13 @@
 import { MapPin, RotateCcw, Ruler } from "lucide-react";
 import Panel from "./panel";
-import { MeasurePoint, PanelType } from "../types";
+import { PanelType, MeasurePoint } from "@/types";
 import { distance } from "@turf/distance";
 import { point } from "@turf/helpers";
+import { useGeoJson, createGeoJsonActions } from "@/services";
+import { useMemo } from "react";
 
 interface MeasurePanelProps {
     togglePanel: (panel: PanelType) => void;
-    points: MeasurePoint[];
-    onClear: () => void;
-    isMeasuring: boolean;
 }
 
 function formatDistance(km: number): string {
@@ -27,14 +26,17 @@ function getSegmentDistances(points: MeasurePoint[]): number[] {
     return distances;
 }
 
-export default function MeasurePanel({ togglePanel, points, onClear, isMeasuring }: MeasurePanelProps) {
+export default function MeasurePanel({ togglePanel }: MeasurePanelProps) {
+    const { state, dispatch } = useGeoJson();
+    const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
+    const points = state.measurePoints;
+    const isMeasuring = state.isMeasuring;
     const segments = getSegmentDistances(points);
     const totalDistance = segments.reduce((sum, d) => sum + d, 0);
 
     return (
         <Panel type="measure" onToggle={togglePanel}>
             <div className="p-3 flex flex-col gap-3">
-                {/* Empty state */}
                 {points.length === 0 && (
                     <div className="flex flex-col items-center gap-2 py-4 text-center">
                         <div className="h-10 w-10 rounded-xl bg-amber-50 flex items-center justify-center">
@@ -45,7 +47,6 @@ export default function MeasurePanel({ togglePanel, points, onClear, isMeasuring
                     </div>
                 )}
 
-                {/* Single point */}
                 {points.length === 1 && (
                     <div className="flex items-center gap-2 px-1 py-2">
                         <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
@@ -53,7 +54,6 @@ export default function MeasurePanel({ togglePanel, points, onClear, isMeasuring
                     </div>
                 )}
 
-                {/* Total distance */}
                 {points.length >= 2 && (
                     <div className="flex items-center justify-between px-1">
                         <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total</span>
@@ -61,7 +61,6 @@ export default function MeasurePanel({ togglePanel, points, onClear, isMeasuring
                     </div>
                 )}
 
-                {/* Segments list */}
                 {segments.length > 0 && (
                     <div className="flex flex-col gap-1 max-h-[250px] overflow-y-auto">
                         {points.map((pt, i) => (
@@ -89,11 +88,10 @@ export default function MeasurePanel({ togglePanel, points, onClear, isMeasuring
                     </div>
                 )}
 
-                {/* Actions */}
                 {points.length > 0 && (
                     <div className="flex gap-2 pt-1 border-t border-white/30">
                         <button
-                            onClick={onClear}
+                            onClick={() => actions.clearMeasurePoints()}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-gray-500 hover:bg-white/40 transition-colors duration-150 active:scale-95"
                         >
                             <RotateCcw className="h-3.5 w-3.5" />

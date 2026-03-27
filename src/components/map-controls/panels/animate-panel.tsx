@@ -1,6 +1,6 @@
 import { Play, RotateCcw, Plane, Globe, MapPin } from "lucide-react";
 import Panel from "./panel";
-import { PanelType } from "../types";
+import { PanelType } from "@/types";
 import { ANIMATION_PRESETS } from "../../../lib/animation-presets";
 
 interface AnimatePanelProps {
