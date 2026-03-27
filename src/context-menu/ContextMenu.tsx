@@ -102,12 +102,13 @@ export default function ContextMenu() {
   const geomLabel = GEOMETRY_LABELS[geomType] || geomType;
 
   // Clamp menu position to stay within viewport
-  const menuX = Math.min(menu.x, window.innerWidth - 200);
-  const menuY = Math.min(menu.y, window.innerHeight - (items.length * 36 + 60));
+  const menuWidth = 200;
+  const menuX = Math.max(8, Math.min(menu.x, window.innerWidth - menuWidth - 8));
+  const menuY = Math.max(8, Math.min(menu.y, window.innerHeight - (items.length * 36 + 60)));
 
   return (
     <div
-      className="fixed z-50 min-w-[180px] max-w-[240px] rounded-xl bg-white/80 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/10 py-1"
+      className="fixed z-50 min-w-[180px] max-w-[calc(100vw-16px)] sm:max-w-[240px] rounded-xl bg-white/80 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/10 py-1"
       style={{ left: menuX, top: menuY }}
     >
       {/* Feature info header */}

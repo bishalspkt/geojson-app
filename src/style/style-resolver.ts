@@ -66,9 +66,10 @@ export function resolvePointPaint(features: Feature[]) {
     };
 
     symbolPaint = {
-      'icon-color': colorExpr,
-      'icon-halo-color': '#ffffff',
-      'icon-halo-width': 1,
+      'icon-color': '#ffffff',
+      'icon-halo-color': colorExpr,
+      'icon-halo-width': 0.5,
+      'icon-opacity': 0.95,
     };
   }
 

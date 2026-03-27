@@ -121,7 +121,7 @@ export default function LayersPanel({ togglePanel }: LayersPanelProps) {
                 <div
                     role="button"
                     tabIndex={0}
-                    className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-left transition-colors duration-150 cursor-pointer active:scale-[0.98] ${
+                    className={`flex items-center gap-2.5 w-full px-3 py-2.5 sm:py-2 rounded-xl text-left transition-colors duration-150 cursor-pointer active:scale-[0.98] ${
                         active
                             ? "bg-orange-50 ring-1 ring-orange-300"
                             : "hover:bg-white/40"
@@ -139,7 +139,7 @@ export default function LayersPanel({ togglePanel }: LayersPanelProps) {
                         {subtitle && <p className="text-[11px] text-gray-400">{subtitle}</p>}
                     </div>
                     <button
-                        className={`shrink-0 p-1 rounded-lg transition-colors duration-150 ${
+                        className={`shrink-0 p-2 sm:p-1 rounded-lg transition-colors duration-150 ${
                             hidden
                                 ? "text-gray-300 hover:text-gray-500 hover:bg-gray-100"
                                 : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"

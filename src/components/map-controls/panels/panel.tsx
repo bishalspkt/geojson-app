@@ -25,7 +25,7 @@ export default function Panel({ type, children, className, onToggle }: PanelProp
                     <X className="h-3.5 w-3.5 text-gray-400" />
                 </button>
             </div>
-            <div className={`flex flex-col gap-2 text-left max-h-[60vh] overflow-y-auto ${className}`}>
+            <div className={`flex flex-col gap-2 text-left max-h-[45vh] sm:max-h-[60vh] overflow-y-auto ${className}`}>
                 {children}
             </div>
         </div>

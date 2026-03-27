@@ -100,7 +100,7 @@ export default function MapControls() {
                             key={btn.label}
                             onClick={btn.onClick ?? (() => togglePanel(btn.panel!))}
                             aria-label={btn.label}
-                            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-colors duration-150 active:scale-95 ${
+                            className={`flex items-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl text-xs font-bold transition-colors duration-150 active:scale-95 ${
                                 isActive
                                     ? "bg-primary text-primary-foreground shadow-md"
                                     : "text-gray-600 hover:bg-white/40 hover:text-gray-900"
