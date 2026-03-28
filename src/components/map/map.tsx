@@ -11,6 +11,7 @@ import { categorizeGeometry, FeatureId } from '@/types';
 import { MapTheme, MeasurePoint } from '@/types';
 import { filterGeojsonFeatures } from '../../lib/geojson-utils';
 import { usePostHog } from '@posthog/react';
+import { useEmbed } from '@/services/embed-context';
 
 // Generate a starfield SVG data URI for globe background
 function generateStarfieldSvg(): string {
@@ -239,9 +240,11 @@ export default function Map() {
     const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
     const mapRef = useMapInstance();
     const posthog = usePostHog();
+    const embed = useEmbed();
     const mapContainer = useRef<ElementRef<"div">>(null);
     const [mapReady, setMapReady] = useState(false);
-    const prevThemeRef = useRef(state.mapSettings.theme);
+    const initialTheme = embed.enabled ? embed.theme : state.mapSettings.theme;
+    const prevThemeRef = useRef(initialTheme);
     const prevCollectionRef = useRef<GeoJSON | undefined>(undefined);
 
     // Derive legacy-compatible values from the store
@@ -271,15 +274,28 @@ export default function Map() {
         actions.addMeasurePoint({ lng: e.lngLat.lng, lat: e.lngLat.lat });
     }, [actions]);
 
+    // Apply embed theme/projection on first render
+    const embedAppliedRef = useRef(false);
+    useEffect(() => {
+        if (embed.enabled && !embedAppliedRef.current) {
+            embedAppliedRef.current = true;
+            actions.setMapSettings({
+                theme: embed.theme,
+                projection: embed.projection,
+            });
+        }
+    }, [embed, actions]);
+
     // Initialize MapLibre Map
     useEffect(() => {
         if (mapRef.current) return;
 
         mapRef.current = new maplibregl.Map({
             container: mapContainer.current!,
-            style: buildStyle(state.mapSettings.theme),
-            center: [105, -5],
-            zoom: 2.8,
+            style: buildStyle(embed.enabled ? embed.theme : state.mapSettings.theme),
+            center: embed.enabled ? embed.center : [105, -5],
+            zoom: embed.enabled ? embed.zoom : 2.8,
+            interactive: embed.interactive,
         });
 
         mapRef.current.on('load', () => {
@@ -634,10 +650,12 @@ export default function Map() {
     return (
         <div
             className="map-wrap"
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
+            {...(!embed.enabled ? {
+                onDragEnter: handleDragEnter,
+                onDragLeave: handleDragLeave,
+                onDragOver: handleDragOver,
+                onDrop: handleDrop,
+            } : {})}
         >
             {isGlobe && (
                 <div
