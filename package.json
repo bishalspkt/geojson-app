@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@posthog/react": "^1.8.2",
     "@protomaps/basemaps": "^5.7.2",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.4",
@@ -23,6 +24,7 @@
     "lucide-react": "^0.563.0",
     "maplibre-gl": "^5.17.0",
     "pmtiles": "^4.4.0",
+    "posthog-js": "^1.364.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwind-merge": "^3.4.0",

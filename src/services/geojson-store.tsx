@@ -12,6 +12,7 @@ export interface GeoJsonState {
   isMeasuring: boolean;
   measurePoints: MeasurePoint[];
   mapSettings: MapSettings;
+  fileName: string | null;
 }
 
 export type GeoJsonAction =
@@ -28,7 +29,8 @@ export type GeoJsonAction =
   | { type: 'SET_MEASURING'; payload: boolean }
   | { type: 'ADD_MEASURE_POINT'; payload: MeasurePoint }
   | { type: 'CLEAR_MEASURE_POINTS' }
-  | { type: 'SET_MAP_SETTINGS'; payload: MapSettings };
+  | { type: 'SET_MAP_SETTINGS'; payload: MapSettings }
+  | { type: 'SET_FILE_NAME'; payload: string | null };
 
 let nextId = 0;
 
@@ -82,6 +84,7 @@ const initialState: GeoJsonState = {
   isMeasuring: false,
   measurePoints: [],
   mapSettings: DEFAULT_SETTINGS,
+  fileName: null,
 };
 
 function geojsonReducer(state: GeoJsonState, action: GeoJsonAction): GeoJsonState {
@@ -104,6 +107,7 @@ function geojsonReducer(state: GeoJsonState, action: GeoJsonAction): GeoJsonStat
         selectedFeatureId: null,
         hiddenFeatureIds: new Set(),
         mapFocus: null,
+        fileName: null,
       };
     case 'ADD_FEATURE': {
       const newFeature = assignSingleFeatureId(action.payload);
@@ -171,6 +175,8 @@ function geojsonReducer(state: GeoJsonState, action: GeoJsonAction): GeoJsonStat
       return { ...state, measurePoints: [] };
     case 'SET_MAP_SETTINGS':
       return { ...state, mapSettings: action.payload };
+    case 'SET_FILE_NAME':
+      return { ...state, fileName: action.payload };
     default:
       return state;
   }

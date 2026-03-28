@@ -18,29 +18,40 @@ Single-page React 18 + TypeScript app for visualizing and processing GeoJSON dat
 
 ### State Management
 
-No state library — plain React `useState` at the App root:
-- `geoJson: GeoJSON | undefined` — the current FeatureCollection
-- `mapFocus: MapFocus | undefined` — controls map navigation (feature selection or geolocation)
+React Context + `useReducer` via `GeoJsonProvider` (in `src/services/geojson-store.tsx`):
+- **GeoJsonState**: `features` (IdentifiedFeature[]), `collection`, `selectedFeatureId`, `hiddenFeatureIds`, `mapFocus`, `isMeasuring`, `measurePoints`, `mapSettings`
+- **Actions**: typed action creators via `createGeoJsonActions(dispatch)` in `src/services/geojson-actions.ts`
+- **Selectors**: pure functions in `src/services/geojson-selectors.ts` (selectFeaturesByCategory, selectFeatureStats, etc.)
 
-State flows down via props; child components call `setGeoJson`/`setMapFocus` callbacks. No routing — everything renders on one page.
+Each feature gets a stable `FeatureId` (e.g., `"f-0"`) assigned at load time. Components access state via `useGeoJson()` hook.
+
+A separate `MapInstanceProvider` (in `src/services/map/`) holds the mutable `maplibregl.Map` ref, accessed via `useMapInstance()`.
 
 ### Key Source Layout
 
-- **`src/App.tsx`** — Root component, owns all top-level state
-- **`src/components/map/map.tsx`** — MapLibre GL initialization, GeoJSON layer rendering, map event handling. Uses `useRef` to persist the map instance across renders.
-- **`src/components/map-controls/`** — Control panel system (Import/Layers/Create/Locate buttons + toggleable panels)
-- **`src/components/map-controls/panels/`** — Panel implementations: `upload-panel.tsx` (file upload, paste, sample data), `layers-panel.tsx` (feature list with turf.js stats), `create-panel.tsx` (placeholder)
-- **`src/lib/map-utils.tsx`** — MapLibre helpers: `addGeoJSONLayer()` renders features split by geometry type (points → symbol layer, lines → line layer, polygons → fill layer), `getBoundingBox()`, geolocation, blue dot marker
-- **`src/lib/geojson-utils.tsx`** — `filterGeojsonFeatures()` and `getGeoJsonFeatureCountStats()` for filtering/counting by geometry type
+- **`src/App.tsx`** — Thin shell: wraps providers (`GeoJsonProvider` > `MapInstanceProvider`) + layout components
+- **`src/types/`** — Shared type definitions: `geojson.ts` (FeatureId, IdentifiedFeature, GeometryCategory), `map.ts` (MapFocus, MapSettings, MapTheme), `panels.ts` (PanelType, PanelStatus)
+- **`src/services/`** — State management: `geojson-store.tsx` (reducer + provider), `geojson-actions.ts`, `geojson-selectors.ts`, `map/map-instance-store.tsx`
+- **`src/style/`** — Feature styling: `simplestyle.ts` (simplestyle-spec types), `style-defaults.ts` (default palette), `style-resolver.ts` (data-driven MapLibre paint expressions)
+- **`src/context-menu/`** — Right-click context menu: `context-menu-registry.ts` (extensible registry), `context-menu-actions.ts` (built-in actions), `ContextMenu.tsx` (React component)
+- **`src/components/map/map.tsx`** — MapLibre GL initialization, GeoJSON layer rendering, map event handling, context menu event dispatch
+- **`src/components/map-controls/`** — Control panel system (Import/Layers/Measure/Locate buttons + toggleable panels)
+- **`src/components/map-controls/panels/`** — Panel implementations using `useGeoJson()` directly
+- **`src/lib/map-utils.tsx`** — MapLibre helpers: layer management, highlight system, visibility filters, uses style resolver for data-driven styling
+- **`src/lib/geojson-utils.tsx`** — `filterGeojsonFeatures()` and `getGeoJsonFeatureCountStats()`
 - **`src/components/ui/`** — shadcn/ui primitives (Button, Dialog, Textarea)
 
 ### Map Setup
 
-MapLibre GL with Protomaps vector tiles (`https://tiles.geojson.app/20240107/`). Base style uses `protomaps-themes-base` light theme. Custom types in `src/components/map-controls/types.ts` define `MapFocus`, `PanelStatus`, and `GeoJsonPrimaryFetureTypes`.
+MapLibre GL with Protomaps vector tiles (`https://tiles.geojson.app/20260308.json`). Base style uses `protomaps-themes-base` with customizable themes (light, dark, white, grayscale, black).
 
 ### GeoJSON Data Flow
 
-Three import paths (file upload, paste, sample JSON) all converge on `setGeoJson()` in App. The Map component reacts to geojson prop changes by calling `addGeoJSONLayer()`, which clears existing layers and re-adds per geometry type. The Layers panel uses turf.js (`@turf/area`, `@turf/length`, `@turf/bbox`) to compute feature statistics.
+Three import paths (file upload, paste, sample JSON) all call `actions.loadGeoJson()` which dispatches to the reducer. The reducer assigns stable FeatureIds and stores IdentifiedFeature[]. The Map component derives legacy-compatible data via bridge functions and renders layers using `addGeoJSONLayer()` which splits features by geometry type. The style resolver reads simplestyle-spec properties (`fill`, `stroke`, `marker-color`, etc.) from features and generates MapLibre data-driven expressions.
+
+### Context Menu
+
+Right-click on a map feature fires a `CustomEvent('geojson-context-menu')`. The `<ContextMenu>` React component listens and renders a positioned menu. Built-in actions: Zoom to Feature, Copy Properties, Copy as GeoJSON, Delete Feature. New actions can be added via `contextMenuRegistry.register()`.
 
 ## TypeScript
 

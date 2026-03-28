@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Import, Layers, Locate, Ruler } from "lucide-react";
+import { Import, Layers, Locate } from "lucide-react";
 import LayersPanel from "./panels/layers-panel.js";
 import UploadPanel from "./panels/upload-panel.js";
 import MeasurePanel from "./panels/measure-panel.js";
@@ -54,6 +54,15 @@ export default function MapControls() {
         }
     };
 
+    // Auto-open measure panel when measuring is activated externally (e.g. from context menu)
+    useEffect(() => {
+        if (state.isMeasuring && measurePanelStatus === "hidden") {
+            setUploadPanelStatus("hidden");
+            setLayersPanelStatus("hidden");
+            setMeasurePanelStatus("maximized");
+        }
+    }, [state.isMeasuring]);
+
     // Auto-open layers panel when a feature is selected (e.g. from map click)
     const prevSelectedRef = useRef(state.selectedFeatureId);
     useEffect(() => {
@@ -79,8 +88,7 @@ export default function MapControls() {
 
     const toolbarButtons: { panel?: PanelType; icon: React.ReactNode; label: string; onClick?: () => void }[] = [
         { panel: "upload", icon: <Import className="h-4 w-4" />, label: "Import" },
-        { panel: "layers", icon: <Layers className="h-4 w-4" />, label: "Layers" },
-        { panel: "measure", icon: <Ruler className="h-4 w-4" />, label: "Measure" },
+        { panel: "layers", icon: <Layers className="h-4 w-4" />, label: "Features" },
         { icon: <Locate className="h-4 w-4" />, label: "Locate", onClick: locateUserAndSetMapFocus },
     ];
 
@@ -92,7 +100,7 @@ export default function MapControls() {
 
     return (
         <>
-            <div className="fixed bottom-3 left-3 flex items-center gap-0.5 p-1 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-lg shadow-black/5">
+            <div className="fixed bottom-3 left-3 z-30 flex items-center gap-0.5 p-1 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-lg shadow-black/5">
                 {toolbarButtons.map((btn) => {
                     const isActive = btn.panel && activePanels[btn.panel] !== "hidden";
                     return (

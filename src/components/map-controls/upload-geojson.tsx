@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Button } from "../ui/button";
 import { GeoJSON } from 'geojson';
 interface UploadGeoJSONButtonProps {
-    setGeoJSON: (geoJSON: GeoJSON) => void; // Update the type of geoJSON
+    setGeoJSON: (geoJSON: GeoJSON, fileName?: string, fileSize?: number) => void;
     showTitleAndDescription?: boolean;
 }
 
@@ -35,8 +35,7 @@ export default function UploadGeoJSONButton({ setGeoJSON, showTitleAndDescriptio
             if (typeof contents === 'string') {
                 try {
                     const jsonData = JSON.parse(contents);
-                    console.log("UploadGeoJSONButton: Calling setGeoJSON")
-                    setGeoJSON(jsonData);
+                    setGeoJSON(jsonData, file.name, file.size);
                     dialogCloseRef.current?.click();
                 } catch (error) {
                     console.error('Error parsing JSON file:', error);

@@ -9,10 +9,10 @@ export const DEFAULTS = {
   line: {
     color: '#7c3aed',
     casingColor: '#4c1d95',
-    width: { baseZoom: 2, baseSize: 2.5, maxZoom: 10, maxSize: 5 },
-    casingWidth: { baseZoom: 2, baseSize: 4, maxZoom: 10, maxSize: 7 },
-    opacity: 1,
-    casingOpacity: 0.4,
+    width: { baseZoom: 2, baseSize: 1.5, maxZoom: 10, maxSize: 3 },
+    casingWidth: { baseZoom: 2, baseSize: 2.5, maxZoom: 10, maxSize: 4.5 },
+    opacity: 0.7,
+    casingOpacity: 0.25,
   },
   polygon: {
     fillColor: '#8b5cf6',

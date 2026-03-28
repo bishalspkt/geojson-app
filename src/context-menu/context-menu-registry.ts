@@ -2,7 +2,7 @@ import { IdentifiedFeature } from '@/types';
 import { GeoJsonActions } from '@/services';
 
 export interface ContextMenuContext {
-  feature: IdentifiedFeature;
+  feature: IdentifiedFeature | null;
   lngLat: { lng: number; lat: number };
   mapInstance: maplibregl.Map | null;
   actions: GeoJsonActions;

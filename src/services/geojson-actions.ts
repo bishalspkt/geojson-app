@@ -47,6 +47,9 @@ export function createGeoJsonActions(dispatch: Dispatch<GeoJsonAction>) {
     setMapSettings(settings: MapSettings) {
       dispatch({ type: 'SET_MAP_SETTINGS', payload: settings });
     },
+    setFileName(name: string | null) {
+      dispatch({ type: 'SET_FILE_NAME', payload: name });
+    },
   };
 }
 

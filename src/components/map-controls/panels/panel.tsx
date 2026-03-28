@@ -4,7 +4,7 @@ import { PanelProps, PanelType } from "@/types";
 
 const panelDict: Record<PanelType, { title: string; icon: React.ReactNode }> = {
     "upload": { title: "Import GeoJSON", icon: <Import className="h-4 w-4" /> },
-    "layers": { title: "Layers", icon: <Layers className="h-4 w-4" /> },
+    "layers": { title: "Features", icon: <Layers className="h-4 w-4" /> },
     "measure": { title: "Measure", icon: <Ruler className="h-4 w-4" /> },
     "create": { title: "Create", icon: <Pencil className="h-4 w-4" /> },
     "animate": { title: "Animate", icon: <Play className="h-4 w-4" /> },

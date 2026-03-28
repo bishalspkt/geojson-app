@@ -4,12 +4,31 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
 import { addBlueDot, addGeoJSONLayer, applyVisibilityFilters, getBoundingBox, initHighlightLayers, removeGeoJSONLayers, updateHighlight } from '../../lib/map-utils';
 import { layers, namedFlavor } from '@protomaps/basemaps';
-import { GeoJSON } from 'geojson';
+import { GeoJSON, FeatureCollection } from 'geojson';
 import { useGeoJson, createGeoJsonActions } from '@/services';
 import { useMapInstance } from '@/services/map';
 import { categorizeGeometry, FeatureId } from '@/types';
 import { MapTheme, MeasurePoint } from '@/types';
 import { filterGeojsonFeatures } from '../../lib/geojson-utils';
+import { usePostHog } from '@posthog/react';
+
+// Generate a starfield SVG data URI for globe background
+function generateStarfieldSvg(): string {
+    const W = 1200, H = 1200, NUM = 350;
+    let seed = 42;
+    const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+    let circles = '';
+    for (let i = 0; i < NUM; i++) {
+        const x = rand() * W;
+        const y = rand() * H;
+        const r = rand() * 1.1 + 0.3;
+        const opacity = rand() * 0.5 + 0.2;
+        circles += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="white" opacity="${opacity.toFixed(2)}"/>`;
+    }
+    return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'>${circles}</svg>`)}")`;
+}
+
+const STARFIELD_BG = generateStarfieldSvg();
 
 function customizeBaseLayers(baseLayers: LayerSpecification[], theme: MapTheme): LayerSpecification[] {
     const isDark = theme === "dark" || theme === "black";
@@ -219,6 +238,7 @@ export default function Map() {
     const { state, dispatch } = useGeoJson();
     const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
     const mapRef = useMapInstance();
+    const posthog = usePostHog();
     const mapContainer = useRef<ElementRef<"div">>(null);
     const [mapReady, setMapReady] = useState(false);
     const prevThemeRef = useRef(state.mapSettings.theme);
@@ -439,9 +459,9 @@ export default function Map() {
         };
     }, [mapReady, geojson, state.isMeasuring, state.features, state.selectedFeatureId, actions]);
 
-    // Right-click context menu
+    // Right-click context menu (works with or without features)
     useEffect(() => {
-        if (!mapRef.current || !mapReady || !geojson) return;
+        if (!mapRef.current || !mapReady) return;
         const m = mapRef.current;
 
         const CONTEXT_LAYERS = [
@@ -453,15 +473,19 @@ export default function Map() {
 
         const onContextMenu = (e: maplibregl.MapMouseEvent) => {
             if (state.isMeasuring) return;
-            // Query features at the click point
-            const features = m.queryRenderedFeatures(e.point, { layers: CONTEXT_LAYERS.filter(l => m.getLayer(l)) });
-            if (!features.length) return;
-            const mapFeature = features[0];
-            const fid = mapFeature.properties?._fid as string | undefined;
-            if (!fid) return;
 
-            const storeFeature = state.features.find((f) => f.id === fid);
-            if (!storeFeature) return;
+            // Try to find a feature at the click point
+            const activeLayers = CONTEXT_LAYERS.filter(l => m.getLayer(l));
+            const features = activeLayers.length > 0
+                ? m.queryRenderedFeatures(e.point, { layers: activeLayers })
+                : [];
+            let storeFeature: import('@/types').IdentifiedFeature | null = null;
+            if (features.length > 0) {
+                const fid = features[0].properties?._fid as string | undefined;
+                if (fid) {
+                    storeFeature = state.features.find((f) => f.id === fid) ?? null;
+                }
+            }
 
             e.preventDefault();
 
@@ -482,7 +506,7 @@ export default function Map() {
 
         m.on('contextmenu', onContextMenu);
         return () => { m.off('contextmenu', onContextMenu); };
-    }, [mapReady, geojson, state.isMeasuring, state.features, actions]);
+    }, [mapReady, state.isMeasuring, state.features, actions]);
 
     // Apply visibility filters when hidden features change
     useEffect(() => {
@@ -528,13 +552,110 @@ export default function Map() {
         }
     }, [state.mapFocus, geojson, state.features])
 
+    // Starfield parallax: shift background-position based on map center
+    const starfieldRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (!mapRef.current || !mapReady) return;
+        const m = mapRef.current;
+        const onMove = () => {
+            if (!starfieldRef.current) return;
+            const center = m.getCenter();
+            const bearing = m.getBearing();
+            const offsetX = center.lng * 1.5 + bearing * 0.5;
+            const offsetY = -center.lat * 1.5;
+            starfieldRef.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        };
+        m.on('move', onMove);
+        return () => { m.off('move', onMove); };
+    }, [mapReady]);
+
+    // Drag-and-drop GeoJSON files
+    const [isDragging, setIsDragging] = useState(false);
+    const dragCounterRef = useRef(0);
+
+    const handleDragEnter = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        dragCounterRef.current++;
+        if (dragCounterRef.current === 1) setIsDragging(true);
+    }, []);
+
+    const handleDragLeave = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        dragCounterRef.current--;
+        if (dragCounterRef.current === 0) setIsDragging(false);
+    }, []);
+
+    const handleDragOver = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+    }, []);
+
+    const handleDrop = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        dragCounterRef.current = 0;
+        setIsDragging(false);
+        const file = e.dataTransfer.files?.[0];
+        if (!file) return;
+        const ext = file.name.split('.').pop()?.toLowerCase();
+        if (ext !== 'json' && ext !== 'geojson') return;
+        if (file.size > 25 * 1024 * 1024) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const text = ev.target?.result;
+            if (typeof text !== 'string') return;
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const data = JSON.parse(text) as any;
+                let fc: FeatureCollection | null = null;
+                if (data.type === 'FeatureCollection') {
+                    fc = data as FeatureCollection;
+                } else if (data.type === 'Feature') {
+                    fc = { type: 'FeatureCollection', features: [data] } as FeatureCollection;
+                }
+                if (fc) {
+                    actions.loadGeoJson(fc);
+                    actions.setFileName(file.name);
+                    const center = mapRef.current?.getCenter();
+                    posthog.capture('geojson_uploaded', {
+                        source: 'drag_and_drop',
+                        file_name: file.name,
+                        file_size_bytes: file.size,
+                        feature_count: fc.features?.length ?? 0,
+                        map_center_lat: center?.lat ?? null,
+                        map_center_lng: center?.lng ?? null,
+                    });
+                }
+            } catch { /* ignore invalid JSON */ }
+        };
+        reader.readAsText(file);
+    }, [actions, posthog, mapRef]);
+
+    const isGlobe = state.mapSettings.projection === 'globe';
+
     return (
-        <div className="map-wrap">
+        <div
+            className="map-wrap"
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+        >
+            {isGlobe && (
+                <div
+                    ref={starfieldRef}
+                    className="starfield"
+                    style={{ backgroundImage: STARFIELD_BG, backgroundColor: '#0a0e1a' }}
+                />
+            )}
             <div
                 ref={mapContainer}
                 className="map"
-                style={{ backgroundColor: state.mapSettings.projection === "globe" ? "#0a0e1a" : undefined }}
+                style={{ backgroundColor: isGlobe ? 'transparent' : undefined }}
             />
+            {isDragging && (
+                <div className="drop-overlay">
+                    <div className="drop-overlay-inner">Drop GeoJSON file to load</div>
+                </div>
+            )}
         </div>
     );
 }
