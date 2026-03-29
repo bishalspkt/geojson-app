@@ -19,7 +19,7 @@ function AppContent() {
         {!embed.enabled && <MapLabel />}
         <Map />
         {(!embed.enabled || embed.controls) && <MapControls />}
-        {!embed.enabled && <ContextMenu />}
+        {(!embed.enabled || (embed.interactive)) && <ContextMenu />}
         {embed.enabled && <EmbedGeoJsonLoader />}
       </MapInstanceProvider>
     </GeoJsonProvider>

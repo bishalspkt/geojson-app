@@ -1,20 +1,22 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Import, Layers, Locate } from "lucide-react";
+import { Import, Layers, Locate, Ruler } from "lucide-react";
 import LayersPanel from "./panels/layers-panel.js";
 import UploadPanel from "./panels/upload-panel.js";
 import MeasurePanel from "./panels/measure-panel.js";
 import { PanelStatus, PanelType } from "@/types";
 import { getCurrentPosition } from "../../lib/map-utils.js";
 import { useGeoJson, createGeoJsonActions } from "@/services";
+import { useEmbed } from "@/services/embed-context";
 
 export default function MapControls() {
     const { state, dispatch } = useGeoJson();
     const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
+    const embed = useEmbed();
 
     const [uploadPanelStatus, setUploadPanelStatus] =
-        useState<PanelStatus>("maximized");
+        useState<PanelStatus>(embed.enabled ? "hidden" : "maximized");
     const [layersPanelStatus, setLayersPanelStatus] =
-        useState<PanelStatus>("hidden");
+        useState<PanelStatus>(embed.enabled && embed.controls ? "maximized" : "hidden");
     const [measurePanelStatus, setMeasurePanelStatus] =
         useState<PanelStatus>("hidden");
 
@@ -86,11 +88,16 @@ export default function MapControls() {
         }
     };
 
-    const toolbarButtons: { panel?: PanelType; icon: React.ReactNode; label: string; onClick?: () => void }[] = [
-        { panel: "upload", icon: <Import className="h-4 w-4" />, label: "Import" },
-        { panel: "layers", icon: <Layers className="h-4 w-4" />, label: "Features" },
-        { icon: <Locate className="h-4 w-4" />, label: "Locate", onClick: locateUserAndSetMapFocus },
-    ];
+    const toolbarButtons: { panel?: PanelType; icon: React.ReactNode; label: string; onClick?: () => void }[] = embed.enabled
+        ? [
+            { panel: "layers", icon: <Layers className="h-4 w-4" />, label: "Features" },
+        ]
+        : [
+            { panel: "upload", icon: <Import className="h-4 w-4" />, label: "Import" },
+            { panel: "layers", icon: <Layers className="h-4 w-4" />, label: "Features" },
+            { panel: "measure", icon: <Ruler className="h-4 w-4" />, label: "Measure" },
+            { icon: <Locate className="h-4 w-4" />, label: "Locate", onClick: locateUserAndSetMapFocus },
+        ];
 
     const activePanels: Record<string, PanelStatus> = {
         upload: uploadPanelStatus,
@@ -121,13 +128,13 @@ export default function MapControls() {
                 })}
             </div>
 
-            {uploadPanelStatus !== "hidden" && (
+            {!embed.enabled && uploadPanelStatus !== "hidden" && (
                 <UploadPanel togglePanel={togglePanel} />
             )}
             {layersPanelStatus !== "hidden" && (
                 <LayersPanel togglePanel={togglePanel} />
             )}
-            {measurePanelStatus !== "hidden" && (
+            {!embed.enabled && measurePanelStatus !== "hidden" && (
                 <MeasurePanel togglePanel={togglePanel} />
             )}
         </>

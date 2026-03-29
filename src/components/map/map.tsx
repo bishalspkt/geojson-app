@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, ElementRef, useCallback, useMemo } from 'r
 import maplibregl, { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
-import { addBlueDot, addGeoJSONLayer, applyVisibilityFilters, getBoundingBox, initHighlightLayers, removeGeoJSONLayers, updateHighlight } from '../../lib/map-utils';
+import { addBlueDot, addGeoJSONLayer, applyVisibilityFilters, getBoundingBox, HIGHLIGHT_LAYERS, initHighlightLayers, removeGeoJSONLayers, updateHighlight } from '../../lib/map-utils';
 import { layers, namedFlavor } from '@protomaps/basemaps';
 import { GeoJSON, FeatureCollection } from 'geojson';
 import { useGeoJson, createGeoJsonActions } from '@/services';
@@ -100,10 +100,9 @@ function customizeBaseLayers(baseLayers: LayerSpecification[], theme: MapTheme):
     });
 }
 
-const BASE_ATTRIBUTION = '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>';
-const EMBED_ATTRIBUTION = '<a href="https://geojson.app" target="_blank" class="geojson-app-attrib">geojson.app</a> | <span class="embed-attrib-extra">' + BASE_ATTRIBUTION + '</span>';
+const ATTRIBUTION = '<a href="https://geojson.app" target="_blank" class="attrib-brand">geojson.app</a><span class="attrib-extra"> - powered by MapLibre, <a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a></span>';
 
-function buildStyle(theme: MapTheme, isEmbed = false): StyleSpecification {
+function buildStyle(theme: MapTheme): StyleSpecification {
     const flavor = namedFlavor(theme);
     const baseLayers = customizeBaseLayers(
         layers("protomaps", flavor, { lang: "en" }) as LayerSpecification[],
@@ -118,7 +117,8 @@ function buildStyle(theme: MapTheme, isEmbed = false): StyleSpecification {
             "protomaps": {
                 type: "vector",
                 url: "https://tiles.geojson.app/20260308.json",
-                attribution: isEmbed ? EMBED_ATTRIBUTION : BASE_ATTRIBUTION,
+                attribution: ATTRIBUTION,
+
             }
         },
         layers: baseLayers,
@@ -188,6 +188,15 @@ function addOverlayLayers(m: maplibregl.Map) {
         });
     }
     initHighlightLayers(m);
+}
+
+// Raise overlay layers (measure + highlight) above data layers to ensure correct z-order
+function raiseOverlayLayers(m: maplibregl.Map) {
+    for (const id of Object.values(HIGHLIGHT_LAYERS)) {
+        if (m.getLayer(id)) m.moveLayer(id);
+    }
+    if (m.getLayer(MEASURE_LINE_LAYER)) m.moveLayer(MEASURE_LINE_LAYER);
+    if (m.getLayer(MEASURE_POINTS_LAYER)) m.moveLayer(MEASURE_POINTS_LAYER);
 }
 
 // Build a legacy-compatible GeoJSON FeatureCollection from identified features
@@ -295,11 +304,17 @@ export default function Map() {
 
         mapRef.current = new maplibregl.Map({
             container: mapContainer.current!,
-            style: buildStyle(embed.enabled ? embed.theme : state.mapSettings.theme, embed.enabled),
+            style: buildStyle(embed.enabled ? embed.theme : state.mapSettings.theme),
             center: embed.enabled ? embed.center : [105, -5],
             zoom: embed.enabled ? embed.zoom : 2.8,
             interactive: embed.interactive,
+            attributionControl: false,
         });
+
+        mapRef.current.addControl(new maplibregl.AttributionControl({
+            compact: true,
+            customAttribution: '',
+        }));
 
         mapRef.current.on('load', () => {
             if (!mapRef.current) return;
@@ -325,7 +340,7 @@ export default function Map() {
         const bearing = m.getBearing();
         const pitch = m.getPitch();
 
-        m.setStyle(buildStyle(state.mapSettings.theme, embed.enabled));
+        m.setStyle(buildStyle(state.mapSettings.theme));
 
         m.once('style.load', () => {
             m.jumpTo({ center, zoom, bearing, pitch });
@@ -335,6 +350,7 @@ export default function Map() {
             if (geojsonRef.current) {
                 addGeoJSONLayer(m, geojsonRef.current, 'uploaded-geojson');
                 applyVisibilityFilters(m, 'uploaded-geojson', hiddenFeaturesRef.current);
+                raiseOverlayLayers(m);
             }
 
             updateMeasureLayers(m, measurePointsRef.current);
@@ -387,8 +403,12 @@ export default function Map() {
         prevCollectionRef.current = geojson;
         addGeoJSONLayer(m, geojson, 'uploaded-geojson');
         applyVisibilityFilters(m, 'uploaded-geojson', hiddenFeaturesRef.current);
+        raiseOverlayLayers(m);
         if (isNewData) {
-            m.fitBounds(getBoundingBox(geojson), { padding: 100 });
+            const padding = embed.enabled && embed.controls
+                ? { top: 100, right: 100, bottom: 100, left: 100 + 280 }
+                : 100;
+            m.fitBounds(getBoundingBox(geojson), { padding });
         }
     }, [mapReady, geojson])
 
@@ -479,6 +499,7 @@ export default function Map() {
     }, [mapReady, geojson, state.isMeasuring, state.features, state.selectedFeatureId, actions]);
 
     // Right-click context menu (works with or without features)
+    // In embed+interactive mode, also trigger on click for features
     useEffect(() => {
         if (!mapRef.current || !mapReady) return;
         const m = mapRef.current;
@@ -490,10 +511,9 @@ export default function Map() {
             'uploaded-geojson-points-symbol',
         ];
 
-        const onContextMenu = (e: maplibregl.MapMouseEvent) => {
+        const dispatchContextMenu = (e: maplibregl.MapMouseEvent, featureOnly = false) => {
             if (state.isMeasuring) return;
 
-            // Try to find a feature at the click point
             const activeLayers = CONTEXT_LAYERS.filter(l => m.getLayer(l));
             const features = activeLayers.length > 0
                 ? m.queryRenderedFeatures(e.point, { layers: activeLayers })
@@ -505,6 +525,9 @@ export default function Map() {
                     storeFeature = state.features.find((f) => f.id === fid) ?? null;
                 }
             }
+
+            // If featureOnly mode (embed click), skip if no feature was clicked
+            if (featureOnly && !storeFeature) return;
 
             e.preventDefault();
 
@@ -523,9 +546,21 @@ export default function Map() {
             window.dispatchEvent(event);
         };
 
+        const onContextMenu = (e: maplibregl.MapMouseEvent) => dispatchContextMenu(e);
         m.on('contextmenu', onContextMenu);
-        return () => { m.off('contextmenu', onContextMenu); };
-    }, [mapReady, state.isMeasuring, state.features, actions]);
+
+        // In embed+interactive mode, also open context menu on click for features
+        let onEmbedClick: ((e: maplibregl.MapMouseEvent) => void) | null = null;
+        if (embed.enabled && embed.interactive) {
+            onEmbedClick = (e: maplibregl.MapMouseEvent) => dispatchContextMenu(e, true);
+            m.on('click', onEmbedClick);
+        }
+
+        return () => {
+            m.off('contextmenu', onContextMenu);
+            if (onEmbedClick) m.off('click', onEmbedClick);
+        };
+    }, [mapReady, state.isMeasuring, state.features, actions, embed.enabled, embed.interactive]);
 
     // Apply visibility filters when hidden features change
     useEffect(() => {
@@ -545,12 +580,15 @@ export default function Map() {
     useEffect(() => {
         if (mapRef.current && state.mapFocus) {
             const focus = state.mapFocus;
+            const focusPadding = embed.enabled && embed.controls
+                ? { top: 60, right: 60, bottom: 60, left: 60 + 280 }
+                : 60;
             if ("featureId" in focus) {
                 // New-style focus by feature ID
                 const feature = state.features.find((f) => f.id === focus.featureId);
                 if (feature) {
                     const bbox = getBoundingBox(feature);
-                    mapRef.current.fitBounds(bbox, { padding: 60, maxZoom: 15, maxDuration: 5000 });
+                    mapRef.current.fitBounds(bbox, { padding: focusPadding, maxZoom: 15, maxDuration: 5000 });
                 }
             } else if ("idx" in focus && "type" in focus) {
                 // Legacy-style focus by type+idx
@@ -558,7 +596,7 @@ export default function Map() {
                 const feature = filterGeojsonFeatures(geojson, focus.type)[focus.idx];
                 if (feature) {
                     const bbox = getBoundingBox(feature);
-                    mapRef.current.fitBounds(bbox, { padding: 60, maxZoom: 15, maxDuration: 5000 });
+                    mapRef.current.fitBounds(bbox, { padding: focusPadding, maxZoom: 15, maxDuration: 5000 });
                 }
             } else if ("longitude" in focus) {
                 mapRef.current.flyTo({
@@ -588,29 +626,23 @@ export default function Map() {
         return () => { m.off('move', onMove); };
     }, [mapReady]);
 
-    // Embed: collapse extra attribution on map interaction, restore on idle
+    // Collapse attribution to just "geojson.app" on map interaction; hover restores it
     useEffect(() => {
-        if (!embed.enabled || !mapRef.current || !mapReady) return;
+        if (!mapRef.current || !mapReady) return;
         const m = mapRef.current;
-        let idleTimer: ReturnType<typeof setTimeout>;
 
         const collapseAttrib = () => {
             const attrib = m.getContainer().querySelector('.maplibregl-ctrl-attrib-inner');
-            if (attrib) attrib.classList.add('embed-attrib-collapsed');
-            clearTimeout(idleTimer);
-            idleTimer = setTimeout(() => {
-                if (attrib) attrib.classList.remove('embed-attrib-collapsed');
-            }, 3000);
+            if (attrib) attrib.classList.add('attrib-collapsed');
         };
 
         m.on('movestart', collapseAttrib);
         m.on('zoomstart', collapseAttrib);
         return () => {
-            clearTimeout(idleTimer);
             m.off('movestart', collapseAttrib);
             m.off('zoomstart', collapseAttrib);
         };
-    }, [embed.enabled, mapReady]);
+    }, [mapReady]);
 
     // Drag-and-drop GeoJSON files
     const [isDragging, setIsDragging] = useState(false);

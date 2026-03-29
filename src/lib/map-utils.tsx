@@ -218,7 +218,7 @@ export function applyVisibilityFilters(
 // -- Highlight system --
 
 const HIGHLIGHT_SOURCE = 'highlight-source';
-const HIGHLIGHT_LAYERS = {
+export const HIGHLIGHT_LAYERS = {
     fillGlow:   'highlight-fill-glow',
     fill:       'highlight-fill',
     outline:    'highlight-outline',

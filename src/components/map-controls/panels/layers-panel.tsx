@@ -7,6 +7,7 @@ import { ChevronDown, ChevronRight, Eye, EyeOff, MapPin, RotateCcw, Shapes, Wayp
 import { useEffect, useMemo, useState } from "react";
 import { length } from "@turf/length";
 import { area } from "@turf/area";
+import { useEmbed } from "@/services/embed-context";
 
 function formatNumber(value: number): string {
     if (value >= 1e9) return `${(value / 1e9).toFixed(1)}B`;
@@ -30,6 +31,7 @@ interface LayersPanelProps {
 export default function LayersPanel({ togglePanel }: LayersPanelProps) {
     const { state, dispatch } = useGeoJson();
     const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
+    const embed = useEmbed();
 
     const polygons = useMemo(() => selectFeaturesByCategory(state.features, "polygon"), [state.features]);
     const lines = useMemo(() => selectFeaturesByCategory(state.features, "line"), [state.features]);
@@ -123,11 +125,15 @@ export default function LayersPanel({ togglePanel }: LayersPanelProps) {
             <>
                 {!hasData &&
                     <div className="p-3">
-                        <p className="text-sm font-bold text-gray-900">No features added</p>
-                        <p className="text-gray-500 text-xs mt-0.5">Import GeoJSON to see features here</p>
-                        <div className="pt-3">
-                            <Button className="rounded-xl text-xs font-bold h-8" onClick={() => togglePanel("upload")}>Import GeoJSON</Button>
-                        </div>
+                        <p className="text-sm font-bold text-gray-900">No features</p>
+                        {!embed.enabled && (
+                            <>
+                                <p className="text-gray-500 text-xs mt-0.5">Import GeoJSON to see features here</p>
+                                <div className="pt-3">
+                                    <Button className="rounded-xl text-xs font-bold h-8" onClick={() => togglePanel("upload")}>Import GeoJSON</Button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 }
                 {hasData &&
@@ -222,15 +228,17 @@ export default function LayersPanel({ togglePanel }: LayersPanelProps) {
                                 </div>
                             );
                         })}
-                        <div className="flex justify-end px-2 pt-1 border-t border-white/30">
-                            <button
-                                onClick={handleReset}
-                                className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-semibold text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                            >
-                                <RotateCcw className="h-3 w-3" />
-                                Reset
-                            </button>
-                        </div>
+                        {!embed.enabled && (
+                            <div className="flex justify-end px-2 pt-1 border-t border-white/30">
+                                <button
+                                    onClick={handleReset}
+                                    className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-semibold text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                                >
+                                    <RotateCcw className="h-3 w-3" />
+                                    Reset
+                                </button>
+                            </div>
+                        )}
                     </div>
                 }
             </>
