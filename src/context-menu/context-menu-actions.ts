@@ -15,6 +15,7 @@ export function registerBuiltinActions(): void {
     label: 'Add Marker',
     group: 'edit',
     order: 0,
+    isVisible: (ctx) => !ctx.isEmbed,
     execute: (ctx: ContextMenuContext) => {
       const name = `Marker_${formatDatetime()}`;
       ctx.actions.addFeature({
@@ -57,7 +58,7 @@ export function registerBuiltinActions(): void {
     label: 'Copy Properties',
     group: 'data',
     order: 0,
-    isVisible: (ctx) => ctx.feature !== null,
+    isVisible: (ctx) => ctx.feature !== null && !ctx.isEmbed,
     execute: (ctx: ContextMenuContext) => {
       if (!ctx.feature) return;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,7 +74,7 @@ export function registerBuiltinActions(): void {
     label: 'Copy as GeoJSON',
     group: 'data',
     order: 1,
-    isVisible: (ctx) => ctx.feature !== null,
+    isVisible: (ctx) => ctx.feature !== null && !ctx.isEmbed,
     execute: (ctx: ContextMenuContext) => {
       if (!ctx.feature) return;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,7 +95,7 @@ export function registerBuiltinActions(): void {
     label: 'Delete Feature',
     group: 'danger',
     order: 0,
-    isVisible: (ctx) => ctx.feature !== null,
+    isVisible: (ctx) => ctx.feature !== null && !ctx.isEmbed,
     execute: (ctx: ContextMenuContext) => {
       if (!ctx.feature) return;
       ctx.actions.removeFeature(ctx.feature.id);

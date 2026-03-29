@@ -405,8 +405,9 @@ export default function Map() {
         applyVisibilityFilters(m, 'uploaded-geojson', hiddenFeaturesRef.current);
         raiseOverlayLayers(m);
         if (isNewData) {
+            const containerWidth = m.getContainer().clientWidth;
             const padding = embed.enabled && embed.controls
-                ? { top: 100, right: 100, bottom: 100, left: 100 + 280 }
+                ? { top: 100, right: 100, bottom: 100, left: 100 + Math.min(280, containerWidth * 0.4) }
                 : 100;
             m.fitBounds(getBoundingBox(geojson), { padding });
         }
@@ -540,6 +541,7 @@ export default function Map() {
                         lngLat: { lng: e.lngLat.lng, lat: e.lngLat.lat },
                         mapInstance: m,
                         actions,
+                        isEmbed: embed.enabled,
                     },
                 },
             });
@@ -580,8 +582,9 @@ export default function Map() {
     useEffect(() => {
         if (mapRef.current && state.mapFocus) {
             const focus = state.mapFocus;
+            const containerWidth = mapRef.current.getContainer().clientWidth;
             const focusPadding = embed.enabled && embed.controls
-                ? { top: 60, right: 60, bottom: 60, left: 60 + 280 }
+                ? { top: 60, right: 60, bottom: 60, left: 60 + Math.min(280, containerWidth * 0.4) }
                 : 60;
             if ("featureId" in focus) {
                 // New-style focus by feature ID

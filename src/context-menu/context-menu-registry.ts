@@ -6,6 +6,7 @@ export interface ContextMenuContext {
   lngLat: { lng: number; lat: number };
   mapInstance: maplibregl.Map | null;
   actions: GeoJsonActions;
+  isEmbed?: boolean;
 }
 
 export interface ContextMenuItem {

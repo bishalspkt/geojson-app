@@ -19,9 +19,9 @@ function formatNumber(value: number): string {
 }
 
 const CATEGORY_CONFIG: { type: GeometryCategory; label: string; icon: typeof MapPin }[] = [
+    { type: "point", label: "Markers", icon: MapPin },
+    { type: "line", label: "LineStrings", icon: Waypoints },
     { type: "polygon", label: "Polygons", icon: Shapes },
-    { type: "line", label: "Lines", icon: Waypoints },
-    { type: "point", label: "Points", icon: MapPin },
 ];
 
 interface LayersPanelProps {

@@ -15,7 +15,7 @@ export default function Panel({ type, children, className, onToggle }: PanelProp
 
     if (embed.enabled) {
         return (
-            <div className="fixed left-0 top-0 bottom-0 w-[260px] z-20 bg-white/50 backdrop-blur-xl border-r border-white/20 shadow-lg shadow-black/5">
+            <div className="fixed left-0 top-0 bottom-12 w-[260px] z-20 bg-white/50 backdrop-blur-xl border-r border-white/20 shadow-lg shadow-black/5">
                 <div
                     className="flex items-center gap-2 px-3 py-2 border-b border-white/20 cursor-pointer hover:bg-white/30 transition-colors duration-150"
                     onClick={() => onToggle(type)}
@@ -29,7 +29,7 @@ export default function Panel({ type, children, className, onToggle }: PanelProp
                         <X className="h-3 w-3 text-gray-400" />
                     </button>
                 </div>
-                <div className={`flex flex-col gap-1 text-left max-h-[calc(100vh-40px)] overflow-y-auto ${className}`}>
+                <div className={`flex flex-col gap-1 text-left max-h-[calc(100vh-88px)] overflow-y-auto ${className}`}>
                     {children}
                 </div>
             </div>
