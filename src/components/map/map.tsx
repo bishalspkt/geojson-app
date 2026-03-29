@@ -100,7 +100,10 @@ function customizeBaseLayers(baseLayers: LayerSpecification[], theme: MapTheme):
     });
 }
 
-function buildStyle(theme: MapTheme): StyleSpecification {
+const BASE_ATTRIBUTION = '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>';
+const EMBED_ATTRIBUTION = '<a href="https://geojson.app" target="_blank" class="geojson-app-attrib">geojson.app</a> | <span class="embed-attrib-extra">' + BASE_ATTRIBUTION + '</span>';
+
+function buildStyle(theme: MapTheme, isEmbed = false): StyleSpecification {
     const flavor = namedFlavor(theme);
     const baseLayers = customizeBaseLayers(
         layers("protomaps", flavor, { lang: "en" }) as LayerSpecification[],
@@ -115,7 +118,7 @@ function buildStyle(theme: MapTheme): StyleSpecification {
             "protomaps": {
                 type: "vector",
                 url: "https://tiles.geojson.app/20260308.json",
-                attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>'
+                attribution: isEmbed ? EMBED_ATTRIBUTION : BASE_ATTRIBUTION,
             }
         },
         layers: baseLayers,
@@ -292,7 +295,7 @@ export default function Map() {
 
         mapRef.current = new maplibregl.Map({
             container: mapContainer.current!,
-            style: buildStyle(embed.enabled ? embed.theme : state.mapSettings.theme),
+            style: buildStyle(embed.enabled ? embed.theme : state.mapSettings.theme, embed.enabled),
             center: embed.enabled ? embed.center : [105, -5],
             zoom: embed.enabled ? embed.zoom : 2.8,
             interactive: embed.interactive,
@@ -322,7 +325,7 @@ export default function Map() {
         const bearing = m.getBearing();
         const pitch = m.getPitch();
 
-        m.setStyle(buildStyle(state.mapSettings.theme));
+        m.setStyle(buildStyle(state.mapSettings.theme, embed.enabled));
 
         m.once('style.load', () => {
             m.jumpTo({ center, zoom, bearing, pitch });
@@ -584,6 +587,30 @@ export default function Map() {
         m.on('move', onMove);
         return () => { m.off('move', onMove); };
     }, [mapReady]);
+
+    // Embed: collapse extra attribution on map interaction, restore on idle
+    useEffect(() => {
+        if (!embed.enabled || !mapRef.current || !mapReady) return;
+        const m = mapRef.current;
+        let idleTimer: ReturnType<typeof setTimeout>;
+
+        const collapseAttrib = () => {
+            const attrib = m.getContainer().querySelector('.maplibregl-ctrl-attrib-inner');
+            if (attrib) attrib.classList.add('embed-attrib-collapsed');
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                if (attrib) attrib.classList.remove('embed-attrib-collapsed');
+            }, 3000);
+        };
+
+        m.on('movestart', collapseAttrib);
+        m.on('zoomstart', collapseAttrib);
+        return () => {
+            clearTimeout(idleTimer);
+            m.off('movestart', collapseAttrib);
+            m.off('zoomstart', collapseAttrib);
+        };
+    }, [embed.enabled, mapReady]);
 
     // Drag-and-drop GeoJSON files
     const [isDragging, setIsDragging] = useState(false);

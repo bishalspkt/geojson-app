@@ -47,3 +47,22 @@
     font-size: 1rem;
     text-align: center;
   }
+
+  /* Embed attribution: geojson.app branding in the native MapLibre attribution bar */
+  .geojson-app-attrib {
+    font-weight: 700;
+  }
+
+  .embed-attrib-extra {
+    display: inline;
+    transition: opacity 0.3s ease, max-width 0.3s ease;
+    overflow: hidden;
+    max-width: 500px;
+    opacity: 1;
+    vertical-align: baseline;
+  }
+
+  .embed-attrib-collapsed .embed-attrib-extra {
+    max-width: 0;
+    opacity: 0;
+  }
