@@ -9,7 +9,7 @@ const panelDict: Record<PanelType, { title: string; icon: React.ReactNode }> = {
     "measure": { title: "Measure", icon: <Ruler className="h-4 w-4" /> },
     "create": { title: "Create", icon: <Pencil className="h-4 w-4" /> },
     "animate": { title: "Animate", icon: <Play className="h-4 w-4" /> },
-    "developers": { title: "Embed Maps", icon: <Code2 className="h-4 w-4" /> },
+    "developers": { title: "Embed", icon: <Code2 className="h-4 w-4" /> },
 }
 export default function Panel({ type, children, className, onToggle }: PanelProps) {
     const embed = useEmbed();
