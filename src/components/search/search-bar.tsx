@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Loader2, MapPin, Search, X } from 'lucide-react';
+import { usePostHog } from '@posthog/react';
 import { useSearch } from '@/hooks/use-search';
 import { createGeoJsonActions, useGeoJson } from '@/services';
+import { useMapInstance } from '@/services/map';
 import type { PhotonFeature, PhotonProperties } from '@/types/search';
 import type { Feature } from 'geojson';
 
@@ -199,6 +201,8 @@ export default function SearchBar() {
   const { query, results, isLoading, search, clear } = useSearch();
   const { state, dispatch } = useGeoJson();
   const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
+  const mapRef = useMapInstance();
+  const posthog = usePostHog();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -239,10 +243,32 @@ export default function SearchBar() {
     actions.setMapFocus({ featureId: id });
     activeSearchIdRef.current = id;
 
+    const props = feature.properties;
+    const [lon, lat] = feature.geometry.coordinates;
+    const center = mapRef.current?.getCenter();
+    posthog.capture('search_result_selected', {
+      search_term: query,
+      result_name: props.name,
+      result_lat: lat,
+      result_lng: lon,
+      result_type: props.type,
+      osm_key: props.osm_key,
+      osm_value: props.osm_value,
+      osm_type: props.osm_type,
+      osm_id: props.osm_id,
+      country: props.country ?? null,
+      state: props.state ?? null,
+      county: props.county ?? null,
+      city: props.city ?? null,
+      postcode: props.postcode ?? null,
+      map_center_lat: center?.lat ?? null,
+      map_center_lng: center?.lng ?? null,
+    });
+
     setIsOpen(false);
     setIsExpanded(false);
     inputRef.current?.blur();
-  }, [actions, removeActiveSearchFeature]);
+  }, [actions, removeActiveSearchFeature, mapRef, posthog, query]);
 
   const closeMobileSearch = useCallback(() => {
     setIsExpanded(false);

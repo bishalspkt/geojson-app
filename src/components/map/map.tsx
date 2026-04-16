@@ -390,6 +390,24 @@ export default function Map() {
         }
     }, [state.measurePoints, mapReady]);
 
+    // Track when a new measurement starts (first point added)
+    const prevMeasureCountRef = useRef(0);
+    useEffect(() => {
+        const prevCount = prevMeasureCountRef.current;
+        const currCount = state.measurePoints.length;
+        if (prevCount === 0 && currCount === 1) {
+            const start = state.measurePoints[0];
+            const center = mapRef.current?.getCenter();
+            posthog.capture('measure_started', {
+                start_lat: start.lat,
+                start_lng: start.lng,
+                map_center_lat: center?.lat ?? null,
+                map_center_lng: center?.lng ?? null,
+            });
+        }
+        prevMeasureCountRef.current = currCount;
+    }, [state.measurePoints, posthog, mapRef]);
+
     // Update uploaded GeoJson Layer
     useEffect(() => {
         if (!mapReady || !mapRef.current) return;
