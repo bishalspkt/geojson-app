@@ -51,6 +51,6 @@
   /* Push attribution above full-width toolbar on mobile */
   @media (max-width: 639px) {
     .maplibregl-ctrl-bottom-right {
-      bottom: 52px;
+      bottom: 68px;
     }
   }

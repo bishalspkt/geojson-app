@@ -221,7 +221,7 @@ export default function SearchBar() {
         onFocus={() => setIsOpen(true)}
         onKeyDown={handleKeyDown}
         placeholder="Search places..."
-        className="flex-1 bg-transparent text-sm text-gray-900 placeholder:text-gray-400 outline-none"
+        className="flex-1 bg-transparent text-base sm:text-sm text-gray-900 placeholder:text-gray-400 outline-none"
         autoComplete="off"
         spellCheck={false}
       />
