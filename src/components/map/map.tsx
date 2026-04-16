@@ -100,7 +100,7 @@ function customizeBaseLayers(baseLayers: LayerSpecification[], theme: MapTheme):
     });
 }
 
-const ATTRIBUTION = '<a href="https://geojson.app" target="_blank" class="attrib-brand">geojson.app</a><span class="attrib-extra"> - powered by MapLibre, <a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a></span>';
+const ATTRIBUTION = '<a href="https://protomaps.com" target="_blank">Protomaps</a> | © <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>';
 
 function buildStyle(theme: MapTheme): StyleSpecification {
     const flavor = namedFlavor(theme);
@@ -629,23 +629,6 @@ export default function Map() {
         return () => { m.off('move', onMove); };
     }, [mapReady]);
 
-    // Collapse attribution to just "geojson.app" on map interaction; hover restores it
-    useEffect(() => {
-        if (!mapRef.current || !mapReady) return;
-        const m = mapRef.current;
-
-        const collapseAttrib = () => {
-            const attrib = m.getContainer().querySelector('.maplibregl-ctrl-attrib-inner');
-            if (attrib) attrib.classList.add('attrib-collapsed');
-        };
-
-        m.on('movestart', collapseAttrib);
-        m.on('zoomstart', collapseAttrib);
-        return () => {
-            m.off('movestart', collapseAttrib);
-            m.off('zoomstart', collapseAttrib);
-        };
-    }, [mapReady]);
 
     // Drag-and-drop GeoJSON files
     const [isDragging, setIsDragging] = useState(false);

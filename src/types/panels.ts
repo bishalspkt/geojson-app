@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type PanelType = 'upload' | 'layers' | 'measure' | 'create' | 'animate';
+export type PanelType = 'upload' | 'layers' | 'measure' | 'create' | 'animate' | 'developers';
 export type PanelStatus = 'maximized' | 'hidden';
 
 export type PanelProps = {

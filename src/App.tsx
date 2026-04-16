@@ -6,6 +6,7 @@ import { MapInstanceProvider } from './services/map'
 import { ContextMenu, registerBuiltinActions } from './context-menu'
 import { EmbedProvider, useEmbed } from './services/embed-context'
 import { EmbedGeoJsonLoader } from './components/embed/geojson-loader'
+import SearchBar from './components/search/search-bar'
 
 // Register built-in context menu actions once at app init
 registerBuiltinActions();
@@ -17,6 +18,7 @@ function AppContent() {
     <GeoJsonProvider>
       <MapInstanceProvider>
         {!embed.enabled && <MapLabel />}
+        {!embed.enabled && <SearchBar />}
         <Map />
         {(!embed.enabled || embed.controls) && <MapControls />}
         {(!embed.enabled || (embed.interactive)) && <ContextMenu />}

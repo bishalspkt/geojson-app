@@ -48,38 +48,9 @@
     text-align: center;
   }
 
-
-  .attrib-extra {
-    display: inline;
-    transition: opacity 0.3s ease, max-width 0.3s ease;
-    overflow: hidden;
-    max-width: 600px;
-    opacity: 1;
-    vertical-align: baseline;
-  }
-
-  .attrib-collapsed .attrib-extra {
-    max-width: 0;
-    opacity: 0;
-    display: none;
-  }
-
-  .attrib-collapsed:hover .attrib-extra {
-    max-width: 600px;
-    opacity: 1;
-  }
-
-  /* Keep "geojson.app" visible when compact attribution is closed */
-  .maplibregl-compact:not([open]) .maplibregl-ctrl-attrib-inner {
-    display: block !important;
-  }
-
-  .maplibregl-compact:not([open]) .attrib-extra {
-    display: none;
-  }
-
-  .maplibregl-compact:not([open]):hover .attrib-extra {
-    display: inline;
-    max-width: 600px;
-    opacity: 1;
+  /* Push attribution above full-width toolbar on mobile */
+  @media (max-width: 639px) {
+    .maplibregl-ctrl-bottom-right {
+      bottom: 52px;
+    }
   }

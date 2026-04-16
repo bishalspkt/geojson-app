@@ -12,7 +12,7 @@ export default function AnimationSubtitle({ info }: AnimationSubtitleProps) {
     const useDots = info.totalRoutes <= 10;
 
     return (
-        <div className="fixed bottom-20 right-4 z-30 pointer-events-none">
+        <div className="fixed bottom-16 right-2 sm:bottom-20 sm:right-4 z-30 pointer-events-none">
             <div
                 className="bg-black/50 backdrop-blur-sm text-white rounded-xl px-4 py-3 w-[260px] shadow-lg border border-white/5"
                 style={{ animation: "subtitle-fade-in 0.3s ease-out" }}

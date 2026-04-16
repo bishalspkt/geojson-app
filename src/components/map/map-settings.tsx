@@ -50,7 +50,7 @@ export default function MapSettingsButton() {
             </button>
 
             {open && (
-                <div className="absolute top-full right-0 sm:left-0 sm:right-auto mt-2.5 w-[calc(100vw-24px)] sm:w-64 rounded-2xl bg-white/70 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/10 p-4 flex flex-col gap-4 z-50">
+                <div className="fixed left-3 right-3 top-16 sm:absolute sm:left-0 sm:right-auto sm:top-full sm:mt-2.5 sm:w-64 rounded-2xl bg-white/70 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/10 p-4 flex flex-col gap-4 z-50">
                     <div>
                         <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">Theme</p>
                         <div className="grid grid-cols-5 gap-2">
