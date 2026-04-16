@@ -100,7 +100,7 @@ function customizeBaseLayers(baseLayers: LayerSpecification[], theme: MapTheme):
     });
 }
 
-const ATTRIBUTION = '<a href="https://protomaps.com" target="_blank">Protomaps</a> | © <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>';
+const ATTRIBUTION = '<a href="https://protomaps.com" target="_blank">Protomaps</a> © <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>';
 
 function buildStyle(theme: MapTheme): StyleSpecification {
     const flavor = namedFlavor(theme);

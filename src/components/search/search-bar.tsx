@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Loader2, MapPin, Search, X } from 'lucide-react';
 import { useSearch } from '@/hooks/use-search';
-import { useMapInstance } from '@/services/map';
+import { createGeoJsonActions, useGeoJson } from '@/services';
 import type { PhotonFeature, PhotonProperties } from '@/types/search';
-import maplibregl from 'maplibre-gl';
+import type { Feature } from 'geojson';
 
 function formatResult(props: PhotonProperties): { primary: string; secondary: string } {
   const primary = props.name;
@@ -30,7 +30,110 @@ function getTypeLabel(props: PhotonProperties): string {
   return map[props.type] ?? props.type;
 }
 
-const MARKER_COLOR = '#7c3aed';
+// OSM tags whose geometries are inherently linear (streets, rivers, railways).
+// Photon doesn't return line geometry, so we approximate with a diagonal
+// across the bbox when an extent is available.
+const LINE_KEYS = new Set(['highway', 'railway', 'waterway']);
+
+function isLineLike(props: PhotonProperties): boolean {
+    if (LINE_KEYS.has(props.osm_key)) return true;
+    return props.type === 'street' || props.type === 'road';
+}
+
+/**
+ * Picks a faint, randomised colour palette for a search-result feature.
+ * The stroke uses baked-in alpha so it stays soft even where the style
+ * resolver doesn't honour stroke-opacity (polygon outlines).
+ */
+function pickSearchPalette(): { fill: string; stroke: string; marker: string } {
+    const hue = Math.floor(Math.random() * 360);
+    return {
+        fill: `hsl(${hue}, 65%, 55%)`,
+        stroke: `hsla(${hue}, 70%, 45%, 0.5)`,
+        marker: `hsla(${hue}, 70%, 50%, 0.65)`,
+    };
+}
+
+function photonToGeoJsonFeature(pf: PhotonFeature, id: string): Feature {
+    const props = pf.properties;
+    const [lon, lat] = pf.geometry.coordinates;
+    const extent = props.extent;
+    const palette = pickSearchPalette();
+
+    const baseProperties: Record<string, unknown> = {
+        _fid: id,
+        _search_result: true,
+        name: props.name,
+        osm_id: props.osm_id,
+        osm_type: props.osm_type,
+        osm_key: props.osm_key,
+        osm_value: props.osm_value,
+        type: props.type,
+    };
+    if (props.country) baseProperties.country = props.country;
+    if (props.state) baseProperties.state = props.state;
+    if (props.county) baseProperties.county = props.county;
+    if (props.city) baseProperties.city = props.city;
+    if (props.postcode) baseProperties.postcode = props.postcode;
+    if (props.street) baseProperties.street = props.street;
+    if (props.housenumber) baseProperties.housenumber = props.housenumber;
+
+    // Linear feature with bbox → approximate LineString across the extent
+    if (extent && isLineLike(props)) {
+        const [minLon, maxLat, maxLon, minLat] = extent;
+        return {
+            type: 'Feature',
+            id,
+            geometry: {
+                type: 'LineString',
+                coordinates: [[minLon, maxLat], [maxLon, minLat]],
+            },
+            properties: {
+                ...baseProperties,
+                stroke: palette.stroke,
+                'stroke-width': 3,
+                'stroke-opacity': 0.5,
+            },
+        };
+    }
+
+    // Areal feature with bbox → Polygon rectangle
+    if (extent) {
+        const [minLon, maxLat, maxLon, minLat] = extent;
+        return {
+            type: 'Feature',
+            id,
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                    [minLon, minLat],
+                    [maxLon, minLat],
+                    [maxLon, maxLat],
+                    [minLon, maxLat],
+                    [minLon, minLat],
+                ]],
+            },
+            properties: {
+                ...baseProperties,
+                fill: palette.fill,
+                'fill-opacity': 0.08,
+                stroke: palette.stroke,
+                'stroke-width': 1.5,
+            },
+        };
+    }
+
+    // Fallback: single point
+    return {
+        type: 'Feature',
+        id,
+        geometry: { type: 'Point', coordinates: [lon, lat] },
+        properties: {
+            ...baseProperties,
+            'marker-color': palette.marker,
+        },
+    };
+}
 
 function ResultsList({
   results,
@@ -94,58 +197,58 @@ function ResultsList({
 
 export default function SearchBar() {
   const { query, results, isLoading, search, clear } = useSearch();
-  const mapRef = useMapInstance();
+  const { state, dispatch } = useGeoJson();
+  const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const desktopContainerRef = useRef<HTMLDivElement>(null);
   const mobileOverlayRef = useRef<HTMLDivElement>(null);
-  const markerRef = useRef<maplibregl.Marker | null>(null);
+  // Track the currently pinned search-result feature id so we can replace it
+  // when a new result is picked, or clean it up on unmount.
+  const activeSearchIdRef = useRef<string | null>(null);
 
   const showDropdown = isOpen && (results.length > 0 || isLoading);
 
-  const removeMarker = useCallback(() => {
-    markerRef.current?.remove();
-    markerRef.current = null;
-  }, []);
-
-  const flyTo = useCallback((feature: PhotonFeature) => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    const [lon, lat] = feature.geometry.coordinates;
-    const extent = feature.properties.extent;
-
-    removeMarker();
-
-    if (extent) {
-      map.fitBounds(
-        [[extent[0], extent[3]], [extent[2], extent[1]]],
-        { padding: 60, maxZoom: 16, duration: 1200 },
-      );
-    } else {
-      map.flyTo({ center: [lon, lat], zoom: 15, duration: 1200 });
+  // Keep track of whether the pinned search feature still exists in the store —
+  // the user can delete it via context menu and we must forget it.
+  useEffect(() => {
+    const id = activeSearchIdRef.current;
+    if (id && !state.features.some((f) => f.id === id)) {
+      activeSearchIdRef.current = null;
     }
+  }, [state.features]);
 
-    markerRef.current = new maplibregl.Marker({ color: MARKER_COLOR })
-      .setLngLat([lon, lat])
-      .addTo(map);
-  }, [mapRef, removeMarker]);
+  const removeActiveSearchFeature = useCallback(() => {
+    const id = activeSearchIdRef.current;
+    if (id) {
+      actions.removeFeature(id);
+      activeSearchIdRef.current = null;
+    }
+  }, [actions]);
 
   const selectResult = useCallback((feature: PhotonFeature) => {
-    flyTo(feature);
+    // Replace any prior search-result feature with the new one.
+    removeActiveSearchFeature();
+
+    const id = `search-${feature.properties.osm_id}-${Date.now()}`;
+    const geoFeature = photonToGeoJsonFeature(feature, id);
+    actions.addFeature(geoFeature);
+    actions.selectFeature(id);
+    actions.setMapFocus({ featureId: id });
+    activeSearchIdRef.current = id;
+
     setIsOpen(false);
     setIsExpanded(false);
     inputRef.current?.blur();
-  }, [flyTo]);
+  }, [actions, removeActiveSearchFeature]);
 
   const closeMobileSearch = useCallback(() => {
     setIsExpanded(false);
     setIsOpen(false);
     clear();
-    removeMarker();
-  }, [clear, removeMarker]);
+  }, [clear]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!showDropdown) {
@@ -203,8 +306,6 @@ export default function SearchBar() {
     }
   }, [isExpanded]);
 
-  // Clean up marker on unmount
-  useEffect(() => removeMarker, [removeMarker]);
 
   const searchInput = (
     <>
@@ -232,7 +333,6 @@ export default function SearchBar() {
         <button
           onClick={() => {
             clear();
-            removeMarker();
             inputRef.current?.focus();
           }}
           className="h-5 w-5 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors duration-150"

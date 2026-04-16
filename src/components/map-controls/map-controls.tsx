@@ -4,7 +4,7 @@ import LayersPanel from "./panels/layers-panel.js";
 import UploadPanel from "./panels/upload-panel.js";
 import MeasurePanel from "./panels/measure-panel.js";
 import DevelopersPanel from "./panels/developers-panel.js";
-import { PanelStatus, PanelType } from "@/types";
+import { GeometryCategory, PanelStatus, PanelType } from "@/types";
 import { getCurrentPosition } from "../../lib/map-utils.js";
 import { useGeoJson, createGeoJsonActions } from "@/services";
 import { useMapInstance } from "@/services/map";
@@ -60,6 +60,12 @@ export default function MapControls() {
         useState<PanelStatus>("hidden");
     const [developersPanelStatus, setDevelopersPanelStatus] =
         useState<PanelStatus>("hidden");
+
+    // Layers-panel category collapse state, lifted here so it survives panel dismiss/reopen.
+    // Categories start collapsed ("toggle hidden") by default.
+    const [collapsedCategories, setCollapsedCategories] = useState<Set<GeometryCategory>>(
+        () => new Set<GeometryCategory>(["point", "line", "polygon"])
+    );
 
     const togglePanel = (panel: PanelType) => {
         switch (panel) {
@@ -150,7 +156,7 @@ export default function MapControls() {
             { panel: "upload", icon: <Import className="h-4 w-4" />, label: "Import" },
             { panel: "layers", icon: <Layers className="h-4 w-4" />, label: "Layers" },
             { panel: "measure", icon: <Ruler className="h-4 w-4" />, label: "Measure" },
-            { panel: "developers", icon: <Code2 className="h-4 w-4" />, label: "Embed Maps" },
+            { panel: "developers", icon: <Code2 className="h-4 w-4" />, label: "Embed" },
         ];
 
     const activePanels: Record<string, PanelStatus> = {
@@ -213,7 +219,11 @@ export default function MapControls() {
                 <UploadPanel togglePanel={togglePanel} />
             )}
             {layersPanelStatus !== "hidden" && (
-                <LayersPanel togglePanel={togglePanel} />
+                <LayersPanel
+                    togglePanel={togglePanel}
+                    collapsedCategories={collapsedCategories}
+                    setCollapsedCategories={setCollapsedCategories}
+                />
             )}
             {!embed.enabled && measurePanelStatus !== "hidden" && (
                 <MeasurePanel togglePanel={togglePanel} />

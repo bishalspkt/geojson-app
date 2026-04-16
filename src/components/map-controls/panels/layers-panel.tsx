@@ -4,7 +4,7 @@ import { PanelType } from "@/types";
 import { GeometryCategory, categorizeGeometry, IdentifiedFeature } from "@/types";
 import { useGeoJson, createGeoJsonActions, selectFeaturesByCategory } from "@/services";
 import { ChevronDown, ChevronRight, Eye, EyeOff, MapPin, RotateCcw, Shapes, Waypoints } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 import { length } from "@turf/length";
 import { area } from "@turf/area";
 import { useEmbed } from "@/services/embed-context";
@@ -26,9 +26,11 @@ const CATEGORY_CONFIG: { type: GeometryCategory; label: string; icon: typeof Map
 
 interface LayersPanelProps {
     togglePanel: (panel: PanelType) => void;
+    collapsedCategories: Set<GeometryCategory>;
+    setCollapsedCategories: Dispatch<SetStateAction<Set<GeometryCategory>>>;
 }
 
-export default function LayersPanel({ togglePanel }: LayersPanelProps) {
+export default function LayersPanel({ togglePanel, collapsedCategories, setCollapsedCategories }: LayersPanelProps) {
     const { state, dispatch } = useGeoJson();
     const actions = useMemo(() => createGeoJsonActions(dispatch), [dispatch]);
     const embed = useEmbed();
@@ -43,27 +45,24 @@ export default function LayersPanel({ togglePanel }: LayersPanelProps) {
         point: points,
     }), [polygons, lines, points]);
 
-    const [collapsed, setCollapsed] = useState<Set<GeometryCategory>>(new Set());
-
     // Auto-expand section when a feature is selected
     useEffect(() => {
         if (state.selectedFeatureId) {
             const feature = state.features.find((f) => f.id === state.selectedFeatureId);
             if (feature) {
                 const cat = categorizeGeometry(feature.geometry.type);
-                if (collapsed.has(cat)) {
-                    setCollapsed((prev) => {
-                        const next = new Set(prev);
-                        next.delete(cat);
-                        return next;
-                    });
-                }
+                setCollapsedCategories((prev) => {
+                    if (!prev.has(cat)) return prev;
+                    const next = new Set(prev);
+                    next.delete(cat);
+                    return next;
+                });
             }
         }
-    }, [state.selectedFeatureId, state.features]);
+    }, [state.selectedFeatureId, state.features, setCollapsedCategories]);
 
     const toggleCollapse = (cat: GeometryCategory) => {
-        setCollapsed((prev) => {
+        setCollapsedCategories((prev) => {
             const next = new Set(prev);
             if (next.has(cat)) next.delete(cat);
             else next.add(cat);
@@ -141,7 +140,7 @@ export default function LayersPanel({ togglePanel }: LayersPanelProps) {
                         {CATEGORY_CONFIG.map(({ type: cat, label, icon: Icon }) => {
                             const features = featuresByCategory[cat];
                             if (features.length === 0) return null;
-                            const isCollapsed = collapsed.has(cat);
+                            const isCollapsed = collapsedCategories.has(cat);
                             const catIds = features.map((f) => f.id);
                             const allCatHidden = catIds.every((id) => state.hiddenFeatureIds.has(id));
                             const someCatHidden = catIds.some((id) => state.hiddenFeatureIds.has(id));

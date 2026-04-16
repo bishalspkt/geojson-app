@@ -110,7 +110,15 @@ function geojsonReducer(state: GeoJsonState, action: GeoJsonAction): GeoJsonStat
         fileName: null,
       };
     case 'ADD_FEATURE': {
-      const newFeature = assignSingleFeatureId(action.payload);
+      const payload = action.payload;
+      const presetId = typeof payload.id === 'string' ? (payload.id as FeatureId) : undefined;
+      const newFeature: IdentifiedFeature = presetId
+        ? ({
+            ...payload,
+            id: presetId,
+            properties: { ...payload.properties, _fid: presetId },
+          } as IdentifiedFeature)
+        : assignSingleFeatureId(payload);
       const features = [...state.features, newFeature];
       return { ...state, features, collection: rebuildCollection(features) };
     }

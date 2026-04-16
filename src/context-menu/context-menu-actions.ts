@@ -1,4 +1,5 @@
 import { contextMenuRegistry, ContextMenuContext } from './context-menu-registry';
+import { openPropertiesDialog } from './feature-details';
 import { getBoundingBox } from '@/lib/map-utils';
 
 function formatDatetime(): string {
@@ -54,18 +55,14 @@ export function registerBuiltinActions(): void {
   });
 
   contextMenuRegistry.register({
-    id: 'copy-properties',
-    label: 'Copy Properties',
+    id: 'view-properties',
+    label: 'View Properties',
     group: 'data',
     order: 0,
-    isVisible: (ctx) => ctx.feature !== null && !ctx.isEmbed,
+    isVisible: (ctx) => ctx.feature !== null,
     execute: (ctx: ContextMenuContext) => {
       if (!ctx.feature) return;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const props: Record<string, any> = { ...ctx.feature.properties };
-      delete props._fid;
-      delete props._featureIndex;
-      navigator.clipboard.writeText(JSON.stringify(props, null, 2));
+      openPropertiesDialog(ctx.feature);
     },
   });
 

@@ -1,9 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { contextMenuRegistry, ContextMenuContext, ContextMenuItem } from './context-menu-registry';
-import { ZoomIn, Copy, Trash2, FileJson, MapPin, Minus, Pentagon, Plus, Ruler } from 'lucide-react';
-import type { Feature, Position } from 'geojson';
-import { area } from '@turf/area';
-import { length } from '@turf/length';
+import { Eye, FileJson, MapPin, Minus, Pentagon, Plus, Ruler, Trash2, ZoomIn } from 'lucide-react';
+import { getFeatureDetails } from './feature-details';
 
 interface ContextMenuState {
   visible: boolean;
@@ -14,7 +12,7 @@ interface ContextMenuState {
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   'zoom-to-feature': ZoomIn,
-  'copy-properties': Copy,
+  'view-properties': Eye,
   'copy-geojson': FileJson,
   'delete-feature': Trash2,
   'add-marker': Plus,
@@ -32,72 +30,6 @@ const GEOMETRY_ICONS: Record<string, React.ComponentType<{ className?: string }>
   LineString: Minus, MultiLineString: Minus,
   Polygon: Pentagon, MultiPolygon: Pentagon,
 };
-
-const NAME_KEYS = ['name', 'Name', 'NAME', 'title', 'Title', 'TITLE', 'label', 'Label', 'LABEL', 'description'];
-
-function countCoordinatePoints(geometry: Feature['geometry']): number {
-  const count = (coords: Position[] | Position[][] | Position[][][]): number => {
-    if (coords.length === 0) return 0;
-    if (typeof coords[0] === 'number') return 1;
-    if (typeof (coords[0] as Position[])[0] === 'number') return coords.length;
-    return (coords as (Position[] | Position[][])[]).reduce((sum, c) => sum + count(c as Position[] | Position[][]), 0);
-  };
-
-  switch (geometry.type) {
-    case 'Point': return 1;
-    case 'MultiPoint': return geometry.coordinates.length;
-    case 'LineString': return geometry.coordinates.length;
-    case 'MultiLineString': return geometry.coordinates.reduce((s, c) => s + c.length, 0);
-    case 'Polygon': return geometry.coordinates.reduce((s, c) => s + c.length, 0);
-    case 'MultiPolygon': return geometry.coordinates.reduce((s, rings) => s + rings.reduce((s2, c) => s2 + c.length, 0), 0);
-    default: return 0;
-  }
-}
-
-function formatArea(sqm: number): string {
-  if (sqm >= 1e6) return `${(sqm / 1e6).toFixed(2)} km²`;
-  return `${sqm.toFixed(0)} m²`;
-}
-
-function formatLength(km: number): string {
-  if (km < 1) return `${(km * 1000).toFixed(0)} m`;
-  return `${km.toFixed(2)} km`;
-}
-
-function getFeatureDetails(feature: Feature) {
-  const props = feature.properties || {};
-  let name: string | null = null;
-  for (const key of NAME_KEYS) {
-    if (typeof props[key] === 'string' && props[key].length > 0) {
-      name = props[key];
-      break;
-    }
-  }
-
-  const geomType = feature.geometry.type;
-  const numPoints = countCoordinatePoints(feature.geometry);
-
-  // Geometry-specific info
-  let detail: string | null = null;
-  if (geomType === 'Polygon' || geomType === 'MultiPolygon') {
-    detail = `${formatArea(area(feature))} · ${numPoints} pts`;
-  } else if (geomType === 'LineString' || geomType === 'MultiLineString') {
-    detail = `${formatLength(length(feature))} · ${numPoints} pts`;
-  } else if (geomType === 'Point') {
-    const coords = (feature.geometry as GeoJSON.Point).coordinates;
-    if (coords.length >= 3 && coords[2] != null) {
-      detail = `alt ${coords[2].toFixed(1)} m`;
-    }
-  } else if (geomType === 'MultiPoint') {
-    const coords = (feature.geometry as GeoJSON.MultiPoint).coordinates;
-    const alts = coords.filter(c => c.length >= 3 && c[2] != null);
-    if (alts.length > 0) {
-      detail = `alt ${alts[0][2].toFixed(1)} m${alts.length > 1 ? ` (+${alts.length - 1})` : ''}`;
-    }
-  }
-
-  return { name, geomType, detail };
-}
 
 export default function ContextMenu() {
   const [menu, setMenu] = useState<ContextMenuState>({
