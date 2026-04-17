@@ -1,0 +1,396 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Great Wall of China",
+        "country": "China",
+        "location": "Mutianyu, Beijing",
+        "era": "Ancient",
+        "built": "7th century BC – 17th century AD",
+        "category": "New Seven Wonders",
+        "length_km": 21196,
+        "description": "The longest structure ever built. Built over many dynasties to protect against northern invasions. You cannot actually see it from space — that's a myth.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [116.5704, 40.4319] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Christ the Redeemer",
+        "country": "Brazil",
+        "location": "Rio de Janeiro",
+        "era": "Modern",
+        "built": "1931",
+        "category": "New Seven Wonders",
+        "height_m": 38,
+        "description": "The iconic Art Deco statue atop Corcovado mountain. Its arms stretch 28 metres wide. Lightning strikes it about 6 times per year.",
+        "marker-color": "#3b82f6",
+        "marker-symbol": "religious",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [-43.2105, -22.9519] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Machu Picchu",
+        "country": "Peru",
+        "location": "Cusco Region",
+        "era": "Ancient",
+        "built": "c. 1450 AD",
+        "category": "New Seven Wonders",
+        "elevation_m": 2430,
+        "description": "The Inca citadel lost in the clouds. The Spanish conquistadors never found it. It was brought to international attention by Hiram Bingham in 1911.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [-72.5450, -13.1631] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chichen Itza",
+        "country": "Mexico",
+        "location": "Yucatán",
+        "era": "Ancient",
+        "built": "c. 600 AD",
+        "category": "New Seven Wonders",
+        "description": "The Mayan pyramid El Castillo has 365 steps — one per day of the year. At the spring equinox a serpent of light descends the staircase.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [-88.5676, 20.6843] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Roman Colosseum",
+        "country": "Italy",
+        "location": "Rome",
+        "era": "Ancient",
+        "built": "70–80 AD",
+        "category": "New Seven Wonders",
+        "capacity": 80000,
+        "description": "The largest amphitheatre ever built. It once hosted gladiatorial contests, animal hunts, and mock naval battles. It could be flooded.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [12.4922, 41.8902] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Taj Mahal",
+        "country": "India",
+        "location": "Agra",
+        "era": "Medieval",
+        "built": "1631–1653",
+        "category": "New Seven Wonders",
+        "description": "Emperor Shah Jahan built this white marble mausoleum for his beloved wife Mumtaz. The entire complex took 22 years and 20,000 workers to complete.",
+        "marker-color": "#db2777",
+        "marker-symbol": "religious",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [78.0421, 27.1751] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Petra",
+        "country": "Jordan",
+        "location": "Ma'an Governorate",
+        "era": "Ancient",
+        "built": "c. 312 BC",
+        "category": "New Seven Wonders",
+        "description": "The 'Rose City' carved directly into rose-red sandstone cliffs by the Nabataeans. It was unknown to the Western world until 1812.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [35.4444, 30.3285] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Great Pyramid of Giza",
+        "country": "Egypt",
+        "location": "Giza",
+        "era": "Ancient",
+        "built": "c. 2560 BC",
+        "category": "Ancient Seven Wonders",
+        "height_m": 138,
+        "description": "The only surviving wonder of the ancient world. Built as a tomb for Pharaoh Khufu, it was the tallest structure on Earth for over 3,800 years.",
+        "marker-color": "#b45309",
+        "marker-symbol": "monument",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [31.1342, 29.9792] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Angkor Wat",
+        "country": "Cambodia",
+        "location": "Siem Reap",
+        "era": "Medieval",
+        "built": "c. 1150 AD",
+        "category": "UNESCO World Heritage",
+        "description": "The world's largest religious monument — originally Hindu, later converted to Buddhism. It appears on Cambodia's national flag.",
+        "marker-color": "#db2777",
+        "marker-symbol": "religious",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [103.8670, 13.4125] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Eiffel Tower",
+        "country": "France",
+        "location": "Paris",
+        "era": "Modern",
+        "built": "1889",
+        "category": "Icon",
+        "height_m": 330,
+        "description": "Designed by Gustave Eiffel for the 1889 World Fair, the French public initially hated it. It is now the most visited paid monument on Earth.",
+        "marker-color": "#3b82f6",
+        "marker-symbol": "tower",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [2.2945, 48.8584] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Acropolis of Athens",
+        "country": "Greece",
+        "location": "Athens",
+        "era": "Ancient",
+        "built": "447–432 BC",
+        "category": "UNESCO World Heritage",
+        "description": "The Parthenon sat undamaged for 2,000 years until a Venetian shell exploded stored gunpowder inside it in 1687. Restoration work continues today.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [23.7257, 37.9715] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sagrada Família",
+        "country": "Spain",
+        "location": "Barcelona",
+        "era": "Modern",
+        "built": "1882 – present",
+        "category": "UNESCO World Heritage",
+        "description": "Antoni Gaudí's unfinished masterpiece — under construction for over 140 years. The main building finally received a construction permit in 2019.",
+        "marker-color": "#3b82f6",
+        "marker-symbol": "religious",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [2.1744, 41.4036] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hagia Sophia",
+        "country": "Turkey",
+        "location": "Istanbul",
+        "era": "Medieval",
+        "built": "537 AD",
+        "category": "UNESCO World Heritage",
+        "description": "For nearly 1,000 years it was the world's largest cathedral. It has been a church, mosque, museum, and mosque again. Its dome inspired the design of St. Peter's Basilica.",
+        "marker-color": "#db2777",
+        "marker-symbol": "religious",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [28.9800, 41.0086] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stonehenge",
+        "country": "United Kingdom",
+        "location": "Wiltshire, England",
+        "era": "Ancient",
+        "built": "c. 3000–1500 BC",
+        "category": "UNESCO World Heritage",
+        "description": "A prehistoric monument whose purpose remains debated. The largest stones weigh 25 tonnes and were transported 240 km from Wales — how is still a mystery.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-1.8262, 51.1789] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mont Saint-Michel",
+        "country": "France",
+        "location": "Normandy",
+        "era": "Medieval",
+        "built": "709 AD",
+        "category": "UNESCO World Heritage",
+        "description": "A tidal island topped by a medieval abbey. At high tide it becomes completely surrounded by sea. It was used as a prison during the French Revolution.",
+        "marker-color": "#db2777",
+        "marker-symbol": "castle",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-1.5115, 48.6361] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Alhambra",
+        "country": "Spain",
+        "location": "Granada",
+        "era": "Medieval",
+        "built": "c. 1238–1358 AD",
+        "category": "UNESCO World Heritage",
+        "description": "A Moorish palace complex with intricate Islamic geometry carved in plaster. Washington Irving wrote Tales of the Alhambra while living inside it in 1829.",
+        "marker-color": "#db2777",
+        "marker-symbol": "castle",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-3.5921, 37.1760] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Easter Island Moai",
+        "country": "Chile",
+        "location": "Rapa Nui",
+        "era": "Ancient",
+        "built": "c. 1250–1500 AD",
+        "category": "UNESCO World Heritage",
+        "description": "900 giant stone statues carved by the Rapa Nui people. The famous heads have full bodies buried underground. How they were moved remains hotly debated.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-109.3497, -27.1127] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Borobudur",
+        "country": "Indonesia",
+        "location": "Central Java",
+        "era": "Medieval",
+        "built": "c. 800 AD",
+        "category": "UNESCO World Heritage",
+        "description": "The world's largest Buddhist temple, abandoned and covered by jungle for centuries. Its rediscovery was aided by Stamford Raffles in 1814.",
+        "marker-color": "#db2777",
+        "marker-symbol": "religious",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [110.2036, -7.6079] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sydney Opera House",
+        "country": "Australia",
+        "location": "Sydney",
+        "era": "Modern",
+        "built": "1973",
+        "category": "UNESCO World Heritage",
+        "description": "Designed by Danish architect Jørn Utzon, who won a competition at 38. He resigned midway through construction and never saw it completed.",
+        "marker-color": "#3b82f6",
+        "marker-symbol": "music",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [151.2153, -33.8568] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Statue of Liberty",
+        "country": "USA",
+        "location": "New York Harbor",
+        "era": "Modern",
+        "built": "1886",
+        "category": "UNESCO World Heritage",
+        "height_m": 93,
+        "description": "A gift from France to the United States. The copper statue has turned green due to oxidation. Her torch was closed to visitors after a bombing in 1916.",
+        "marker-color": "#3b82f6",
+        "marker-symbol": "star",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-74.0445, 40.6892] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Neuschwanstein Castle",
+        "country": "Germany",
+        "location": "Bavaria",
+        "era": "Modern",
+        "built": "1869–1886",
+        "category": "Icon",
+        "description": "The fairytale castle that inspired Disney's Sleeping Beauty castle. Built by the eccentric King Ludwig II, it was opened to the public just 7 weeks after his death.",
+        "marker-color": "#7c3aed",
+        "marker-symbol": "castle",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [10.7498, 47.5576] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tikal",
+        "country": "Guatemala",
+        "location": "Petén Department",
+        "era": "Ancient",
+        "built": "c. 200 BC – 900 AD",
+        "category": "UNESCO World Heritage",
+        "description": "One of the most powerful Mayan city-states, with temples towering above the jungle canopy. Temple IV was used as the Rebel base in Star Wars: A New Hope.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-89.6237, 17.2220] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Persepolis",
+        "country": "Iran",
+        "location": "Fars Province",
+        "era": "Ancient",
+        "built": "c. 515 BC",
+        "category": "UNESCO World Heritage",
+        "description": "The ceremonial capital of the Achaemenid Empire. Alexander the Great burned it to the ground in 330 BC — historians still debate whether it was deliberate or an accident.",
+        "marker-color": "#d97706",
+        "marker-symbol": "monument",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [52.8921, 29.9353] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pompeii",
+        "country": "Italy",
+        "location": "Campania",
+        "era": "Ancient",
+        "built": "c. 7th century BC",
+        "category": "UNESCO World Heritage",
+        "description": "Buried by Vesuvius in 79 AD, Pompeii was perfectly preserved under ash. Plaster casts of the victims reveal their final moments in haunting detail.",
+        "marker-color": "#d97706",
+        "marker-symbol": "museum",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [14.4877, 40.7489] }
+    }
+  ]
+}

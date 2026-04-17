@@ -1,0 +1,286 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Trans-Siberian Railway",
+        "route": "Moscow → Vladivostok",
+        "countries": "Russia",
+        "length_km": 9289,
+        "duration_days": 7,
+        "opened": 1916,
+        "description": "The world's longest railway line. Crosses 8 time zones and passes Lake Baikal — the deepest lake on Earth.",
+        "stroke": "#dc2626",
+        "stroke-width": 4,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [37.6173, 55.7558], [43.9381, 56.3269], [49.1221, 55.7963],
+          [60.6454, 56.8389], [65.5272, 57.1522], [73.3686, 54.9885],
+          [82.9357, 55.0084], [85.9603, 56.0180], [92.8672, 56.0153],
+          [104.2890, 52.2869], [107.5943, 51.8335], [113.5006, 52.0339],
+          [122.7285, 53.5490], [127.5250, 50.2727], [135.0794, 48.4814],
+          [131.8869, 43.1198]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Venice Simplon-Orient-Express",
+        "route": "London → Venice",
+        "countries": "UK, France, Switzerland, Italy",
+        "length_km": 1750,
+        "duration_days": 2,
+        "opened": 1883,
+        "description": "The most romantic train in the world, inspiration for Agatha Christie's novel. Restored vintage 1920s carriages with fine dining.",
+        "stroke": "#7c3aed",
+        "stroke-width": 3.5,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.1276, 51.5074], [1.4437, 50.7264], [2.3522, 48.8566],
+          [7.7521, 48.5734], [8.5417, 47.3769], [8.9511, 46.0207],
+          [9.0800, 45.8081], [12.3155, 45.4408]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rocky Mountaineer",
+        "route": "Vancouver → Banff",
+        "countries": "Canada",
+        "length_km": 945,
+        "duration_days": 2,
+        "opened": 1990,
+        "description": "Daylight-only journey through the Canadian Rockies with glass-domed carriages. Passes Pyramid Falls and Spiral Tunnels.",
+        "stroke": "#2563eb",
+        "stroke-width": 3.5,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-123.1207, 49.2827], [-121.9486, 49.1666], [-120.7397, 50.6745],
+          [-119.2750, 50.6833], [-118.9661, 51.1784], [-117.5700, 51.1784],
+          [-116.1777, 51.4280], [-115.5708, 51.1784]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "California Zephyr",
+        "route": "Chicago → San Francisco",
+        "countries": "USA",
+        "length_km": 3924,
+        "duration_days": 2.5,
+        "opened": 1949,
+        "description": "Often called the most beautiful train ride in America. Crosses the Rockies and the Sierra Nevada with panoramic sightseer lounges.",
+        "stroke": "#f59e0b",
+        "stroke-width": 3.5,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-87.6298, 41.8781], [-90.1994, 41.5236], [-93.6091, 41.5868],
+          [-95.9345, 41.2565], [-104.9903, 39.7392], [-106.8175, 39.5501],
+          [-108.5506, 39.0639], [-111.8910, 40.7608], [-115.7634, 40.8324],
+          [-119.8138, 39.5296], [-121.4944, 38.5816], [-122.4194, 37.7749]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Glacier Express",
+        "route": "Zermatt → St. Moritz",
+        "countries": "Switzerland",
+        "length_km": 291,
+        "duration_days": 0.35,
+        "opened": 1930,
+        "description": "The world's slowest express train. Takes 8 hours to cross 291 Alpine bridges and tunnels, with panoramic windows and onboard dining.",
+        "stroke": "#16a34a",
+        "stroke-width": 4,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [7.7491, 46.0207], [7.9833, 46.3167], [8.2500, 46.5833],
+          [8.6167, 46.6333], [9.0333, 46.6500], [9.3333, 46.6000],
+          [9.6833, 46.6167], [9.8374, 46.4983]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Ghan",
+        "route": "Adelaide → Darwin",
+        "countries": "Australia",
+        "length_km": 2979,
+        "duration_days": 2,
+        "opened": 1929,
+        "description": "Crosses Australia from south to north through the Red Centre. Named after Afghan cameleers who pioneered the Outback route.",
+        "stroke": "#ea580c",
+        "stroke-width": 3.5,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [138.6007, -34.9285], [137.7170, -32.4972], [136.2092, -30.7437],
+          [134.7550, -29.0127], [134.2000, -27.5000], [133.8807, -25.2744],
+          [133.5350, -23.6980], [133.5880, -21.5200], [134.1903, -19.6500],
+          [134.1500, -17.5500], [133.3700, -15.8000], [131.8276, -14.4650],
+          [130.8456, -12.4634]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Qinghai-Tibet Railway",
+        "route": "Xining → Lhasa",
+        "countries": "China",
+        "length_km": 1956,
+        "duration_days": 1,
+        "opened": 2006,
+        "description": "The world's highest railway, peaking at 5,072m. Oxygen is pumped into carriages, and 960 km of track rests on permafrost.",
+        "stroke": "#db2777",
+        "stroke-width": 3.5,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [101.7782, 36.6171], [100.1392, 36.5840], [98.4854, 37.3781],
+          [97.3681, 37.3714], [94.9000, 36.4167], [92.1000, 34.8500],
+          [91.1000, 33.0000], [91.1000, 31.4800], [91.1322, 29.6500]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Flåm Railway",
+        "route": "Myrdal → Flåm",
+        "countries": "Norway",
+        "length_km": 20,
+        "duration_days": 0.04,
+        "opened": 1940,
+        "description": "Descends 863m in just 20km through 20 tunnels — one of the world's steepest standard-gauge railways. Passes the thundering Kjosfossen waterfall.",
+        "stroke": "#0891b2",
+        "stroke-width": 4,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [7.1247, 60.7426], [7.1300, 60.7700], [7.1500, 60.8000],
+          [7.1200, 60.8300], [7.1131, 60.8632]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tazara Railway",
+        "route": "Dar es Salaam → Kapiri Mposhi",
+        "countries": "Tanzania, Zambia",
+        "length_km": 1860,
+        "duration_days": 2,
+        "opened": 1975,
+        "description": "Built by China in the 1970s. Passes through Selous Game Reserve — giraffes and elephants are regularly spotted from the window.",
+        "stroke": "#84cc16",
+        "stroke-width": 3.5,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [39.2833, -6.8000], [37.6833, -7.9500], [36.7167, -8.9167],
+          [34.7667, -9.3000], [33.4500, -10.4667], [32.0833, -12.0167],
+          [30.2167, -12.7667], [28.7333, -13.9667], [28.2986, -13.9830]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Reunification Express",
+        "route": "Hanoi → Ho Chi Minh City",
+        "countries": "Vietnam",
+        "length_km": 1726,
+        "duration_days": 1.4,
+        "opened": 1936,
+        "description": "Runs the length of Vietnam's S-shaped coast. The dramatic Hai Van Pass section offers jungle and ocean views in equal measure.",
+        "stroke": "#f97316",
+        "stroke-width": 3.5,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [105.8542, 21.0285], [105.7833, 20.2500], [105.9000, 19.8000],
+          [106.0167, 18.6500], [107.5953, 16.4637], [108.2208, 16.0678],
+          [109.1833, 13.7833], [109.2333, 12.2500], [108.4500, 11.9500],
+          [106.6297, 10.8231]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Shinkansen Tōkaidō",
+        "route": "Tokyo → Shin-Osaka",
+        "countries": "Japan",
+        "length_km": 515,
+        "duration_days": 0.1,
+        "opened": 1964,
+        "description": "The world's first high-speed rail line. Trains run at 285 km/h with average delays measured in seconds per year.",
+        "stroke": "#0ea5e9",
+        "stroke-width": 4,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [139.6917, 35.6895], [139.1500, 35.3333], [138.3833, 34.9667],
+          [137.7167, 34.9667], [136.8816, 35.1709], [136.2000, 35.3500],
+          [135.7556, 35.0116], [135.5023, 34.6937]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bernina Express",
+        "route": "Chur → Tirano",
+        "countries": "Switzerland, Italy",
+        "length_km": 144,
+        "duration_days": 0.17,
+        "opened": 1910,
+        "description": "A UNESCO World Heritage rail journey. Crosses the spiral Landwasser Viaduct and the Bernina Pass at 2,253m — without needing cogwheels.",
+        "stroke": "#6366f1",
+        "stroke-width": 3.5,
+        "stroke-opacity": 0.9
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [9.5329, 46.8508], [9.7000, 46.6833], [9.8833, 46.5000],
+          [10.0167, 46.3333], [10.1500, 46.4167], [10.1679, 46.2194]
+        ]
+      }
+    }
+  ]
+}

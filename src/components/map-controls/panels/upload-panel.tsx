@@ -3,8 +3,10 @@ import { UploadGeoJSONButton } from "..";
 import { PanelType } from "@/types";
 import Panel from "./panel";
 import { useMemo } from "react";
-import example1 from "../../../assets/samples/example1.json";
-import example2 from "../../../assets/samples/example2.json";
+import volcanoes from "../../../assets/samples/volcanoes.json";
+import wonders from "../../../assets/samples/wonders.json";
+import trainRoutes from "../../../assets/samples/train-routes.json";
+import nationalParks from "../../../assets/samples/national-parks.json";
 import { useGeoJson, createGeoJsonActions } from "@/services";
 import { useMapInstance } from "@/services/map";
 import { usePostHog } from "@posthog/react";
@@ -40,21 +42,29 @@ export default function UploadPanel({ togglePanel }: UploadPanelProps) {
         trackUpload('file_upload', geoJson, fileName, fileSize);
     };
 
-    const importSampleGeoJson = (num: number) => {
-        return () => {
-            const sample = num === 1 ? example1 as GeoJSON : example2 as GeoJSON;
-            const sampleName = num === 1 ? 'Regions' : 'Landmarks';
+    const importSample = (sample: GeoJSON, name: string) => {
+        return (e: React.MouseEvent) => {
+            e.preventDefault();
             togglePanel("layers");
             actions.loadGeoJson(sample as FeatureCollection);
             actions.setFileName(null);
-            trackUpload('sample', sample, sampleName);
+            trackUpload('sample', sample, name);
         }
     }
 
     return (
         <Panel type="upload" onToggle={togglePanel} className="p-3">
             <UploadGeoJSONButton setGeoJSON={loadGeoJsonAndSwitch} />
-            <p className="text-xs text-gray-500">Try a demo GeoJSON: <a href="#" className="font-bold text-gray-700 hover:text-gray-900 underline underline-offset-2 transition-colors duration-150" onClick={importSampleGeoJson(2)}>Landmarks</a> or <a href="#" className="font-bold text-gray-700 hover:text-gray-900 underline underline-offset-2 transition-colors duration-150" onClick={importSampleGeoJson(1)}>Regions</a></p>
+            <p className="text-xs">
+                Try a demo:{" "}
+                <a href="#" className="font-bold text-primary hover:text-primary-dark underline underline-offset-2 transition-colors duration-150" onClick={importSample(volcanoes as GeoJSON, 'Volcanoes')}>Volcanoes</a>
+                {", "}
+                <a href="#" className="font-bold text-primary hover:text-primary-dark underline underline-offset-2 transition-colors duration-150" onClick={importSample(wonders as GeoJSON, 'Wonders')}>Wonders</a>
+                {", "}
+                <a href="#" className="font-bold text-primary hover:text-primary-dark underline underline-offset-2 transition-colors duration-150" onClick={importSample(trainRoutes as GeoJSON, 'Train Routes')}>Train Routes</a>
+                {" or "}
+                <a href="#" className="font-bold text-primary hover:text-primary-dark underline underline-offset-2 transition-colors duration-150" onClick={importSample(nationalParks as GeoJSON, 'National Parks')}>National Parks</a>
+            </p>
         </Panel>
     )
 }

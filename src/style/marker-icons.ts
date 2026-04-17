@@ -1,8 +1,8 @@
 import maplibregl from 'maplibre-gl';
 
 const MAKI_CDN = 'https://cdn.jsdelivr.net/npm/@mapbox/maki@8.0.1/icons';
-const ICON_SIZE = 15;
-const SDF_BUFFER = 3;
+const ICON_SIZE = 12;
+const SDF_BUFFER = 5;
 const CANVAS_SIZE = ICON_SIZE + SDF_BUFFER * 2;
 const ICON_PREFIX = 'maki-';
 

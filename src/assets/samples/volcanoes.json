@@ -1,0 +1,430 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kīlauea",
+        "country": "USA",
+        "region": "Hawaii",
+        "elevation_m": 1222,
+        "last_eruption": "2023",
+        "status": "Very Active",
+        "type": "Shield",
+        "description": "One of Earth's most active volcanoes, erupting almost continuously since 1983. Its slow lava flows have added new land to the Big Island.",
+        "marker-color": "#ef4444",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [-155.2885, 19.4073] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stromboli",
+        "country": "Italy",
+        "region": "Aeolian Islands",
+        "elevation_m": 924,
+        "last_eruption": "2024",
+        "status": "Very Active",
+        "type": "Stratovolcano",
+        "description": "Known as the 'Lighthouse of the Mediterranean', Stromboli has been erupting almost continuously for over 2,000 years.",
+        "marker-color": "#ef4444",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [15.2131, 38.7894] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Etna",
+        "country": "Italy",
+        "region": "Sicily",
+        "elevation_m": 3357,
+        "last_eruption": "2024",
+        "status": "Very Active",
+        "type": "Stratovolcano",
+        "description": "Europe's tallest active volcano. Ancient Greeks believed it to be the forge of Hephaestus, god of fire.",
+        "marker-color": "#ef4444",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [15.0000, 37.7500] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sakurajima",
+        "country": "Japan",
+        "region": "Kyushu",
+        "elevation_m": 1117,
+        "last_eruption": "2024",
+        "status": "Very Active",
+        "type": "Stratovolcano",
+        "description": "Erupts hundreds of times per year. Nearby Kagoshima city distributes free ashfall bags to residents.",
+        "marker-color": "#ef4444",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [130.6572, 31.5814] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Merapi",
+        "country": "Indonesia",
+        "region": "Java",
+        "elevation_m": 2910,
+        "last_eruption": "2023",
+        "status": "Very Active",
+        "type": "Stratovolcano",
+        "description": "The most active volcano in Indonesia. One million people live within dangerous proximity, making evacuation plans a constant necessity.",
+        "marker-color": "#ef4444",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [110.4461, -7.5407] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Erta Ale",
+        "country": "Ethiopia",
+        "region": "Afar Triangle",
+        "elevation_m": 613,
+        "last_eruption": "2021",
+        "status": "Very Active",
+        "type": "Shield",
+        "description": "One of only a handful of volcanoes with a persistent lava lake. Its name means 'smoking mountain' in the Afar language.",
+        "marker-color": "#ef4444",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [40.6800, 13.6000] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Piton de la Fournaise",
+        "country": "France",
+        "region": "Réunion Island",
+        "elevation_m": 2632,
+        "last_eruption": "2024",
+        "status": "Very Active",
+        "type": "Shield",
+        "description": "One of the world's most active volcanoes, erupting roughly three times per year. Lava flows sometimes reach the Indian Ocean.",
+        "marker-color": "#ef4444",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [55.7100, -21.2400] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Popocatépetl",
+        "country": "Mexico",
+        "region": "Central Mexico",
+        "elevation_m": 5426,
+        "last_eruption": "2024",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "Nicknamed 'El Popo', it looms over 25 million people in Mexico City. Its name means 'Smoking Mountain' in Nahuatl.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-98.6222, 19.0232] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cotopaxi",
+        "country": "Ecuador",
+        "region": "Andes",
+        "elevation_m": 5897,
+        "last_eruption": "2023",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "One of the world's highest active volcanoes. Its nearly perfect cone shape makes it one of the most photographed mountains in South America.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-78.4360, -0.6844] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Villarrica",
+        "country": "Chile",
+        "region": "Patagonia",
+        "elevation_m": 2847,
+        "last_eruption": "2024",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "One of South America's most active volcanoes, it has a visible lava lake at its summit and ski slopes on its flanks.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-71.9428, -39.4205] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nyiragongo",
+        "country": "DR Congo",
+        "region": "East Africa",
+        "elevation_m": 3470,
+        "last_eruption": "2021",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "Home to the world's largest and most active lava lake. Its exceptionally fluid lava can flow at up to 100 km/h.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [29.2500, -1.5200] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ol Doinyo Lengai",
+        "country": "Tanzania",
+        "region": "East Africa",
+        "elevation_m": 2962,
+        "last_eruption": "2023",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "The only active volcano that erupts natrocarbonatite lava — the world's coolest and least viscous lava, appearing black and looking like motor oil.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [35.9043, -2.7524] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mayon",
+        "country": "Philippines",
+        "region": "Luzon",
+        "elevation_m": 2462,
+        "last_eruption": "2023",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "Famous for its near-perfect cone shape. The Philippines' most active volcano has erupted over 50 times in the past 400 years.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [123.6853, 13.2575] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "White Island (Whakaari)",
+        "country": "New Zealand",
+        "region": "Bay of Plenty",
+        "elevation_m": 321,
+        "last_eruption": "2019",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "New Zealand's most active volcano, it is 70% submerged. A tragic eruption in 2019 led to strict no-go regulations.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [177.1833, -37.5167] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Krakatau",
+        "country": "Indonesia",
+        "region": "Sunda Strait",
+        "elevation_m": 813,
+        "last_eruption": "2022",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "The 1883 eruption was one of history's loudest sounds, heard 5,000 km away. Its child volcano Anak Krakatau emerged from the sea in 1927.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [105.4230, -6.1020] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Soufrière Hills",
+        "country": "UK",
+        "region": "Montserrat",
+        "elevation_m": 1050,
+        "last_eruption": "2013",
+        "status": "Active",
+        "type": "Stratovolcano",
+        "description": "An eruption beginning in 1995 buried the island's capital Plymouth under ash and lava. Half the island remains uninhabitable.",
+        "marker-color": "#f97316",
+        "marker-symbol": "volcano",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-62.1775, 16.7167] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Fuji",
+        "country": "Japan",
+        "region": "Honshu",
+        "elevation_m": 3776,
+        "last_eruption": "1707",
+        "status": "Dormant",
+        "type": "Stratovolcano",
+        "description": "Japan's highest mountain and a UNESCO World Heritage Site. Over 200,000 people climb it each year, despite scientists warning it may be overdue for an eruption.",
+        "marker-color": "#eab308",
+        "marker-symbol": "mountain",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [138.7274, 35.3606] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Vesuvius",
+        "country": "Italy",
+        "region": "Campania",
+        "elevation_m": 1281,
+        "last_eruption": "1944",
+        "status": "Dormant",
+        "type": "Stratovolcano",
+        "description": "The only active volcano in mainland Europe. Its 79 AD eruption buried Pompeii under 6 metres of ash, preserving the city for archaeology.",
+        "marker-color": "#eab308",
+        "marker-symbol": "mountain",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [14.4260, 40.8210] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Eyjafjallajökull",
+        "country": "Iceland",
+        "region": "South Iceland",
+        "elevation_m": 1666,
+        "last_eruption": "2010",
+        "status": "Dormant",
+        "type": "Stratovolcano",
+        "description": "Its 2010 eruption grounded 100,000+ flights across Europe. It became the world's most mispronounced volcano overnight.",
+        "marker-color": "#eab308",
+        "marker-symbol": "mountain",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-19.6122, 63.6308] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount St. Helens",
+        "country": "USA",
+        "region": "Washington State",
+        "elevation_m": 2549,
+        "last_eruption": "2008",
+        "status": "Dormant",
+        "type": "Stratovolcano",
+        "description": "Its catastrophic 1980 eruption was the deadliest in US history, removing 400 metres from its summit and flattening 600 km² of forest.",
+        "marker-color": "#eab308",
+        "marker-symbol": "mountain",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [-122.1944, 46.1912] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ruapehu",
+        "country": "New Zealand",
+        "region": "North Island",
+        "elevation_m": 2797,
+        "last_eruption": "2007",
+        "status": "Dormant",
+        "type": "Stratovolcano",
+        "description": "New Zealand's highest peak on the North Island, with a warm acidic crater lake at its summit. It doubled as Mount Doom in Lord of the Rings.",
+        "marker-color": "#eab308",
+        "marker-symbol": "mountain",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [175.5700, -39.2800] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Santorini (Nea Kameni)",
+        "country": "Greece",
+        "region": "Aegean Sea",
+        "elevation_m": 127,
+        "last_eruption": "1950",
+        "status": "Dormant",
+        "type": "Caldera",
+        "description": "The caldera formed by a massive Bronze Age eruption around 1600 BC may have inspired the legend of Atlantis. Today it's a top tourist destination.",
+        "marker-color": "#eab308",
+        "marker-symbol": "mountain",
+        "marker-size": "medium"
+      },
+      "geometry": { "type": "Point", "coordinates": [25.3964, 36.4049] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yellowstone",
+        "country": "USA",
+        "region": "Wyoming",
+        "elevation_m": 2805,
+        "last_eruption": "640000 years ago",
+        "status": "Supervolcano",
+        "type": "Caldera",
+        "description": "A supervolcano sitting atop a massive magma hotspot. Its last full eruption was 640,000 years ago and ejected 1,000 km³ of material.",
+        "marker-color": "#dc2626",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [-110.6818, 44.4280] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Campi Flegrei",
+        "country": "Italy",
+        "region": "Naples",
+        "elevation_m": 458,
+        "last_eruption": "1538",
+        "status": "Supervolcano",
+        "type": "Caldera",
+        "description": "A supervolcano hidden beneath the city of Naples and the Bay of Pozzuoli. 500,000 people live within its caldera. The ground has been rising in recent years.",
+        "marker-color": "#dc2626",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [14.1400, 40.8200] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Erebus",
+        "country": "Antarctica",
+        "region": "Ross Island",
+        "elevation_m": 3794,
+        "last_eruption": "Ongoing",
+        "status": "Very Active",
+        "type": "Stratovolcano",
+        "description": "The world's southernmost active volcano. It has a persistent convecting lava lake in its summit crater and erupts gas and steam daily.",
+        "marker-color": "#ef4444",
+        "marker-symbol": "volcano",
+        "marker-size": "large"
+      },
+      "geometry": { "type": "Point", "coordinates": [167.1533, -77.5329] }
+    }
+  ]
+}
