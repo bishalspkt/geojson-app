@@ -30,7 +30,7 @@ export default function Panel({ type, children, className, onToggle }: PanelProp
                         <X className="h-3 w-3 text-gray-400" />
                     </button>
                 </div>
-                <div className={`flex flex-col gap-1 text-left max-h-[calc(100vh-88px)] overflow-y-auto ${className}`}>
+                <div data-scroll-container className={`flex flex-col gap-1 text-left max-h-[calc(100vh-88px)] overflow-y-auto ${className}`}>
                     {children}
                 </div>
             </div>
@@ -52,7 +52,7 @@ export default function Panel({ type, children, className, onToggle }: PanelProp
                     <X className="h-4 w-4 sm:h-3.5 sm:w-3.5 text-gray-400" />
                 </button>
             </div>
-            <div className={`flex flex-col gap-2 text-left overflow-y-auto min-h-0 ${className}`}>
+            <div data-scroll-container className={`flex flex-col gap-2 text-left overflow-y-auto min-h-0 ${className}`}>
                 {children}
             </div>
         </div>

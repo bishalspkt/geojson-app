@@ -600,9 +600,17 @@ export default function Map() {
     useEffect(() => {
         if (mapRef.current && state.mapFocus) {
             const focus = state.mapFocus;
-            const containerWidth = mapRef.current.getContainer().clientWidth;
+            const container = mapRef.current.getContainer();
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            const isMobile = containerWidth < 640;
+
+            // On mobile the layers panel occupies the bottom 50 vh, so we push the
+            // feature into the top third of the screen by adding extra bottom padding.
             const focusPadding = embed.enabled && embed.controls
                 ? { top: 60, right: 60, bottom: 60, left: 60 + Math.min(280, containerWidth * 0.4) }
+                : isMobile
+                ? { top: 60, right: 40, bottom: Math.round(containerHeight * 0.5) + 60, left: 40 }
                 : 60;
             if ("featureId" in focus) {
                 // New-style focus by feature ID
