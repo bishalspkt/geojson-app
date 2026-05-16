@@ -1,6 +1,6 @@
 # Embedding geojson.app Maps
 
-geojson.app provides a lightweight JavaScript SDK (`embed.js`) that lets you add interactive maps with GeoJSON data to any website.
+geojson.app provides a lightweight JavaScript SDK (`embed.js`) that lets you add interactive maps with GeoJSON data to any website. As of v2 the SDK also exposes an **imperative API** for driving the map after it's mounted — fly to new locations, switch themes, swap data — without re-mounting the iframe.
 
 ## Quick Start
 
@@ -25,9 +25,9 @@ Add the SDK script to your page. It can be placed anywhere — the SDK processes
 <script src="https://geojson.app/embed.js"></script>
 ```
 
-### Async Loading (Recommended)
+### Async Loading
 
-For non-blocking loading, queue commands before the SDK loads:
+For non-blocking loading, queue commands before the SDK loads. Note that the queued form cannot return the imperative `EmbedInstance` — if you need to control the map after creation, load the SDK synchronously.
 
 ```html
 <script>
@@ -44,13 +44,11 @@ For non-blocking loading, queue commands before the SDK loads:
 </script>
 ```
 
-## API
+## Create Options
 
 ### `GeoJSONApp("create", options)`
 
-Creates a new map instance inside the specified element.
-
-#### Options
+Creates a new map instance inside the specified element and returns an `EmbedInstance`.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
@@ -58,23 +56,128 @@ Creates a new map instance inside the specified element.
 | `geojson` | `string` | — | URL to a GeoJSON file (`FeatureCollection` or `Feature`). |
 | `center` | `[lng, lat]` | `[105, -5]` | Initial map center as `[longitude, latitude]`. |
 | `zoom` | `number` | `2.8` | Initial zoom level (0–22). |
-| `theme` | `string` | `"light"` | Map theme: `"light"`, `"dark"`, `"white"`, `"grayscale"`, `"black"`. |
-| `projection` | `string` | `"mercator"` | Map projection: `"mercator"` or `"globe"`. |
+| `theme` | `string` | `"light"` | `"light"`, `"dark"`, `"white"`, `"grayscale"`, `"black"`. |
+| `projection` | `string` | `"mercator"` | `"mercator"` or `"globe"`. |
 | `interactive` | `boolean` | `true` | Enable map pan, zoom, and click interactions. |
-| `controls` | `boolean` | `false` | Show the features toolbar. |
+| `chrome` | `string` | `"minimal"` | `"full"`, `"minimal"`, or `"none"`. See below. |
+| `attribution` | `string` | (see below) | `"visible"` or `"compact"`. Default `"visible"`; `"compact"` when `chrome: "none"`. |
+| `controls` | `boolean` | `false` | **Deprecated** — `true` is equivalent to `chrome: "full"`. |
 | `width` | `string` | `"100%"` | CSS width for the iframe. |
 | `height` | `string` | `"100%"` | CSS height for the iframe. |
 
-#### Return Value
+### Chrome Modes
 
-The `create` command stores an instance internally. Each instance has:
+| `chrome` | Layer panel | Context menu | Attribution |
+|----------|-------------|--------------|-------------|
+| `"full"` | ✓ | ✓ | full |
+| `"minimal"` _(default)_ | ✗ | ✓ (when `interactive`) | full |
+| `"none"` | ✗ | ✗ | compact pill |
 
-- `iframe` — the `HTMLIFrameElement` created
-- `destroy()` — removes the iframe and cleans up observers
+Use `"none"` when your host page provides its own UI and only wants a basemap canvas to drive programmatically. Attribution always renders in some form to keep OSM compliance.
+
+## Imperative API
+
+`GeoJSONApp("create", ...)` returns an `EmbedInstance`. All methods are async — they round-trip through `postMessage` and reject with a typed error if the iframe doesn't ack within **5 seconds**. Commands issued before `ready()` resolves are queued and dispatched once the map's `load` event fires.
+
+```ts
+type EmbedInstance = {
+  iframe: HTMLIFrameElement;
+  destroy(): void;
+
+  ready(): Promise<void>;
+
+  // Camera
+  flyTo(opts: { center?: [lng, lat]; zoom?: number; bearing?: number;
+                pitch?: number; duration?: number }): Promise<void>;
+  jumpTo(opts: { center?: [lng, lat]; zoom?: number; bearing?: number;
+                 pitch?: number }): Promise<void>;
+  fitBounds(bounds: [[lng, lat], [lng, lat]],
+            opts?: { padding?: number; duration?: number; maxZoom?: number }): Promise<void>;
+
+  // State
+  setTheme(theme: 'light' | 'dark' | 'white' | 'grayscale' | 'black'): Promise<void>;
+  setProjection(projection: 'mercator' | 'globe'): Promise<void>;
+
+  // Data
+  setGeoJSON(data: string | GeoJSON.FeatureCollection | GeoJSON.Feature): Promise<void>;
+  addLayer(spec: { id: string;
+                   data: GeoJSON.FeatureCollection | GeoJSON.Feature;
+                   paint?: Record<string, unknown> }): Promise<void>;
+  removeLayer(id: string): Promise<void>;
+  clearLayers(): Promise<void>;
+
+  // Inspection
+  getCenter(): Promise<[lng, lat]>;
+  getZoom(): Promise<number>;
+  getBearing(): Promise<number>;
+  getBounds(): Promise<[[lng, lat], [lng, lat]]>;
+
+  // Events
+  on(event: EmbedEvent, cb: (payload: unknown) => void): () => void; // returns unsubscribe
+  off(event: EmbedEvent, cb: (payload: unknown) => void): void;
+};
+```
+
+### Events
+
+| Event | Payload | Notes |
+|-------|---------|-------|
+| `load` | _none_ | Fires once when the map is initialised. |
+| `move` | `{ center, zoom, bearing, pitch }` | Throttled to ~60fps. |
+| `moveend` | `{ center, zoom, bearing, pitch, bounds }` | Fires after camera settles. |
+| `click` | `{ lngLat, features }` | `features` are the GeoJSON features at the click point (basemap excluded). |
+| `theme:change` | `{ theme }` | Fires when the active theme changes. |
+| `projection:change` | `{ projection }` | Fires when the active projection changes. |
+| `error` | `{ code, message, where }` | Fires for failed commands. |
+
+Method errors are also rejections of the corresponding Promise, so listening on `error` is optional.
 
 ## Examples
 
-### Basic Map
+### Headless map driven from your app
+
+```html
+<div id="map" style="width: 100%; height: 500px;"></div>
+<script src="https://geojson.app/embed.js"></script>
+<script>
+  const map = GeoJSONApp("create", {
+    element: "#map",
+    center: [85.32, 27.71],
+    zoom: 11,
+    theme: "dark",
+    projection: "globe",
+    chrome: "none",
+  });
+
+  (async () => {
+    await map.ready();
+
+    // Fly somewhere new without re-mounting.
+    await map.flyTo({ center: [83.99, 28.21], zoom: 11, duration: 800 });
+
+    // Switch themes; camera state is preserved.
+    await map.setTheme("light");
+
+    // Drop your own data on the map.
+    await map.setGeoJSON({
+      type: "FeatureCollection",
+      features: [
+        { type: "Feature",
+          geometry: { type: "Point", coordinates: [83.99, 28.21] },
+          properties: { name: "Pokhara" } },
+      ],
+    });
+
+    // React to user interactions.
+    const off = map.on("click", ({ lngLat, features }) => {
+      console.log("Clicked", lngLat, features);
+    });
+    // Later: off();
+  })();
+</script>
+```
+
+### Static one-shot embed (legacy)
 
 ```html
 <div id="map" style="width: 100%; height: 400px;"></div>
@@ -83,87 +186,72 @@ The `create` command stores an instance internally. Each instance has:
   GeoJSONApp("create", {
     element: "#map",
     geojson: "https://example.com/regions.geojson",
-  });
-</script>
-```
-
-### Dark Theme with Globe Projection
-
-```html
-<div id="map-globe" style="width: 100%; height: 500px; border-radius: 12px; overflow: hidden;"></div>
-<script src="https://geojson.app/embed.js"></script>
-<script>
-  GeoJSONApp("create", {
-    element: "#map-globe",
-    geojson: "https://example.com/flights.geojson",
     theme: "dark",
     projection: "globe",
   });
 </script>
 ```
 
-### Centered on a Specific Location
+### Dashboard updating in real time
 
-```html
-<div id="map-nyc" style="width: 100%; height: 450px; border-radius: 8px; overflow: hidden;"></div>
-<script src="https://geojson.app/embed.js"></script>
-<script>
-  GeoJSONApp("create", {
-    element: "#map-nyc",
-    geojson: "https://example.com/parks.geojson",
-    center: [-73.98, 40.75],
-    zoom: 12,
-    theme: "white",
-  });
-</script>
+```js
+const map = GeoJSONApp("create", { element: "#map", chrome: "none" });
+await map.ready();
+
+setInterval(async () => {
+  const fc = await fetchLatestSnapshot();
+  await map.setGeoJSON(fc);
+}, 5000);
 ```
 
-### Static (Non-Interactive) Map
+### Multiple maps on one page
 
-```html
-<div id="map-static" style="width: 600px; height: 400px;"></div>
-<script src="https://geojson.app/embed.js"></script>
-<script>
-  GeoJSONApp("create", {
-    element: "#map-static",
-    geojson: "https://example.com/boundaries.geojson",
-    interactive: false,
-    center: [2.35, 48.86],
-    zoom: 10,
-  });
-</script>
+```js
+const a = GeoJSONApp("create", { element: "#map-a", geojson: "/a.geojson" });
+const b = GeoJSONApp("create", { element: "#map-b", geojson: "/b.geojson", theme: "dark" });
 ```
 
-### Multiple Maps on One Page
+## postMessage Protocol (v1)
 
-```html
-<div id="map-a" style="width: 100%; height: 300px;"></div>
-<div id="map-b" style="width: 100%; height: 300px;"></div>
-<script src="https://geojson.app/embed.js"></script>
-<script>
-  GeoJSONApp("create", {
-    element: "#map-a",
-    geojson: "https://example.com/rivers.geojson",
-    theme: "light",
-  });
-  GeoJSONApp("create", {
-    element: "#map-b",
-    geojson: "https://example.com/mountains.geojson",
-    theme: "dark",
-    projection: "globe",
-  });
-</script>
+The SDK is a thin wrapper around a postMessage protocol. If you can't or don't want to use `embed.js`, you can target the protocol directly.
+
+**Host → iframe (command):**
+```js
+iframe.contentWindow.postMessage({
+  source: "geojson.app.embed",
+  v: 1,
+  id: "<uuid>",
+  method: "flyTo",
+  args: { center: [85.3, 27.7], zoom: 11, duration: 800 },
+}, "https://geojson.app");
 ```
+
+**Iframe → host (response):**
+```js
+// success
+{ source: "geojson.app.embed", v: 1, replyTo: "<uuid>", ok: true, result: undefined }
+// failure
+{ source: "geojson.app.embed", v: 1, replyTo: "<uuid>", ok: false,
+  error: { code: "method_failed", message: "..." } }
+```
+
+**Iframe → host (event push):**
+```js
+{ source: "geojson.app.embed", v: 1, event: "click",
+  payload: { lngLat: [85.3, 27.7], features: [...] } }
+```
+
+Method names are the same as the imperative API: `flyTo`, `jumpTo`, `fitBounds`, `setTheme`, `setProjection`, `setGeoJSON`, `addLayer`, `removeLayer`, `clearLayers`, `getCenter`, `getZoom`, `getBearing`, `getBounds`.
 
 ## Embed Behavior
 
 When a map is embedded:
 
-- **No top bar**: The geojson.app logo, title, search bar, and settings button are hidden.
-- **Minimal toolbar**: Only a "Features" button is shown by default.
-- **Controls**: When `controls: true`, additional toolbar buttons appear and the Features panel renders as a 260px left sidebar.
-- **Context menu**: Right-click context menu is available when `interactive: true`.
-- **Auto-load**: The GeoJSON URL is fetched and rendered automatically.
+- **Top bar**: The geojson.app logo and search bar are always hidden in embed mode.
+- **Layer panel & toolbar**: Shown only when `chrome: "full"`.
+- **Context menu**: Available when `interactive: true` and `chrome` is `"full"` or `"minimal"`.
+- **Auto-load**: A `geojson` URL is fetched and rendered automatically.
+- **Imperative updates**: `flyTo`, `setTheme`, `setGeoJSON`, etc. take effect in place — no iframe re-mount, no flicker.
 
 ## CORS Requirements
 

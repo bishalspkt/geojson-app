@@ -1,5 +1,8 @@
 import { MapTheme, MapProjection } from '@/types';
 
+export type EmbedChrome = 'full' | 'minimal' | 'none';
+export type EmbedAttribution = 'visible' | 'compact';
+
 export interface EmbedConfig {
   enabled: boolean;
   center: [number, number]; // [lng, lat]
@@ -9,10 +12,14 @@ export interface EmbedConfig {
   geojsonUrl: string | null;
   interactive: boolean;
   controls: boolean;
+  chrome: EmbedChrome;
+  attribution: EmbedAttribution;
 }
 
 const VALID_THEMES: MapTheme[] = ['light', 'dark', 'white', 'grayscale', 'black'];
 const VALID_PROJECTIONS: MapProjection[] = ['mercator', 'globe'];
+const VALID_CHROME: EmbedChrome[] = ['full', 'minimal', 'none'];
+const VALID_ATTRIBUTION: EmbedAttribution[] = ['visible', 'compact'];
 
 const DEFAULT_CENTER: [number, number] = [105, -5];
 const DEFAULT_ZOOM = 2.8;
@@ -31,6 +38,8 @@ export function parseEmbedParams(): EmbedConfig {
       geojsonUrl: null,
       interactive: true,
       controls: true,
+      chrome: 'full',
+      attribution: 'visible',
     };
   }
 
@@ -75,9 +84,30 @@ export function parseEmbedParams(): EmbedConfig {
   const interactiveParam = params.get('interactive');
   const interactive = interactiveParam !== 'false' && interactiveParam !== '0';
 
-  // Parse controls (default false in embed mode)
+  // Parse legacy `controls` flag (default false in embed mode)
   const controlsParam = params.get('controls');
-  const controls = controlsParam === 'true' || controlsParam === '1';
+  const legacyControls = controlsParam === 'true' || controlsParam === '1';
+
+  // Parse `chrome` — preferred over `controls`. Falls back to legacy mapping.
+  const chromeParam = params.get('chrome');
+  let chrome: EmbedChrome;
+  if (chromeParam && VALID_CHROME.includes(chromeParam as EmbedChrome)) {
+    chrome = chromeParam as EmbedChrome;
+  } else {
+    chrome = legacyControls ? 'full' : 'minimal';
+  }
+  // Keep `controls` synced with chrome so legacy consumers stay correct.
+  const controls = chrome === 'full';
+
+  // Parse attribution
+  let attribution: EmbedAttribution = 'visible';
+  const attrParam = params.get('attribution');
+  if (attrParam && VALID_ATTRIBUTION.includes(attrParam as EmbedAttribution)) {
+    attribution = attrParam as EmbedAttribution;
+  } else if (chrome === 'none') {
+    // Sensible default for headless: compact pill.
+    attribution = 'compact';
+  }
 
   return {
     enabled,
@@ -88,5 +118,7 @@ export function parseEmbedParams(): EmbedConfig {
     geojsonUrl,
     interactive,
     controls,
+    chrome,
+    attribution,
   };
 }

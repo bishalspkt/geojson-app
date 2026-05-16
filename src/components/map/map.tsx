@@ -312,7 +312,7 @@ export default function Map() {
         });
 
         mapRef.current.addControl(new maplibregl.AttributionControl({
-            compact: true,
+            compact: embed.enabled ? embed.attribution === 'compact' : true,
             customAttribution: '',
         }));
 

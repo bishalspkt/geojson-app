@@ -75,7 +75,8 @@ export default function DevelopersPanel({ togglePanel }: DevelopersPanelProps) {
                             { param: "theme", desc: "light, dark, white, grayscale, black" },
                             { param: "projection", desc: "mercator or globe" },
                             { param: "interactive", desc: "Enable pan/zoom (default: true)" },
-                            { param: "controls", desc: "Show toolbar (default: false)" },
+                            { param: "chrome", desc: "full, minimal, or none (default: minimal)" },
+                            { param: "attribution", desc: "visible or compact" },
                         ].map(({ param, desc }) => (
                             <div key={param} className="flex items-baseline gap-2">
                                 <code className="text-[11px] font-mono font-bold text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded shrink-0">{param}</code>
