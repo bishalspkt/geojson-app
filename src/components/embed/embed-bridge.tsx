@@ -217,7 +217,18 @@ export function EmbedBridge() {
           if (typeof a.zoom === 'number') opts.zoom = a.zoom;
           if (typeof a.bearing === 'number') opts.bearing = a.bearing;
           if (typeof a.pitch === 'number') opts.pitch = a.pitch;
-          if (typeof a.duration === 'number') opts.duration = a.duration;
+          if (typeof a.duration === 'number') {
+            opts.duration = a.duration;
+          } else if (opts.center) {
+            // Scale duration with distance so long-distance flyovers don't whizz by
+            // too fast to make sense of. Sqrt curve ramps quickly from a 1.5s floor
+            // to a 3.5s cap for intercontinental jumps.
+            const from = m.getCenter();
+            const to = maplibregl.LngLat.convert(opts.center);
+            const meters = from.distanceTo(to);
+            const t = Math.sqrt(Math.min(1, meters / 10_000_000));
+            opts.duration = 1500 + t * 2000;
+          }
           m.flyTo(opts);
           return undefined;
         }
