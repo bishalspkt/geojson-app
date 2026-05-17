@@ -57,6 +57,21 @@ function isLngLat(v: unknown): v is LngLat {
   return Array.isArray(v) && v.length === 2 && typeof v[0] === 'number' && typeof v[1] === 'number';
 }
 
+// Great-circle distance in meters. Matches what maplibre's LngLat.distanceTo
+// would return; written out so we don't depend on maplibregl statics at runtime.
+function haversineMeters(lng1: number, lat1: number, lng2: number, lat2: number): number {
+  const R = 6371008.8;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const phi1 = toRad(lat1);
+  const phi2 = toRad(lat2);
+  const dPhi = toRad(lat2 - lat1);
+  const dLambda = toRad(lng2 - lng1);
+  const s =
+    Math.sin(dPhi / 2) ** 2 +
+    Math.cos(phi1) * Math.cos(phi2) * Math.sin(dLambda / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(s)));
+}
+
 function isBounds(v: unknown): v is Bounds {
   return Array.isArray(v) && v.length === 2 && isLngLat(v[0]) && isLngLat(v[1]);
 }
@@ -224,8 +239,8 @@ export function EmbedBridge() {
             // too fast to make sense of. Sqrt curve ramps quickly from a 1.5s floor
             // to a 3.5s cap for intercontinental jumps.
             const from = m.getCenter();
-            const to = maplibregl.LngLat.convert(opts.center);
-            const meters = from.distanceTo(to);
+            const [tgtLng, tgtLat] = opts.center as [number, number];
+            const meters = haversineMeters(from.lng, from.lat, tgtLng, tgtLat);
             const t = Math.sqrt(Math.min(1, meters / 10_000_000));
             opts.duration = 1500 + t * 2000;
           }
