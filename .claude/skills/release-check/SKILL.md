@@ -5,16 +5,17 @@ description: Run geojson.app's full pre-merge/pre-deploy verification — build,
 
 # Release check
 
-The project has no test framework (yet) — this pipeline is the quality gate. Run all of it; report results honestly.
+This pipeline mirrors CI (`.github/workflows/ci.yml`) plus the browser checklist CI can't run. Run all of it; report results honestly.
 
-## 1. Static gates (must both pass)
+## 1. Static gates (all must pass)
 
 ```bash
-npm run build     # tsc + app build + embed SDK build
 npm run lint      # zero-warnings policy — a single warning fails
+npm test          # Vitest — stores, executor, ingestion, params
+npm run build     # tsc + app build + embed SDK build
 ```
 
-Also eyeball the reported `dist/embed.js` size: ~5 kB raw / ~2 kB gzip. A jump means a dependency crept into the SDK — investigate.
+Also eyeball the reported `dist/embed.js` size: ~5 kB raw / ~2 kB gzip. CI enforces a 6 KB gzip ceiling; a jump means a dependency crept into the SDK — investigate.
 
 ## 2. Browser checklist (dev server or preview build)
 

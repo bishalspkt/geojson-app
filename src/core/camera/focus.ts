@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type maplibregl from 'maplibre-gl';
 import { bbox } from '@turf/bbox';
 import { Feature, GeoJSON } from 'geojson';
 import { MapFocusTarget } from '@/types';

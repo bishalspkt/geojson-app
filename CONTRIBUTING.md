@@ -16,11 +16,16 @@ No env vars are required for local development. Analytics (PostHog) only activat
 ## Before you open a PR
 
 ```bash
-npm run build      # tsc type-check + app build + embed SDK build — must pass
 npm run lint       # ESLint 10 flat config — zero warnings policy
+npm test           # Vitest — stores, executor, ingestion, params (all React-free)
+npm run build      # tsc type-check + app build + embed SDK build — must pass
 ```
 
-Then verify by hand in the dev server (there is no test framework yet — adding Vitest for `core/` and `state/` is a welcome contribution, see docs/roadmap.md):
+CI runs the same three gates plus an embed-size guard on every push/PR (`.github/workflows/ci.yml`).
+
+**Testing**: unit tests live next to their modules (`*.test.ts`) and run in Node with no mocks — the `core/`/`state/`/`integrations/` layers are framework-free by design. New store logic, executor commands, and source providers should land with tests; UI components are currently covered by the manual checklist below (`npm run test:watch` for TDD).
+
+Then verify by hand in the dev server:
 
 1. Import a sample dataset (Import panel → "Volcanoes") — features render, camera fits.
 2. Click a feature on the map — it highlights and the Layers panel selects it.
@@ -38,8 +43,9 @@ Then verify by hand in the dev server (there is no test framework yet — adding
 | Map rendering / interactions / overlays | `src/core/` (framework-agnostic — no React imports) |
 | App state | `src/state/` zustand stores (no MapLibre objects in state) |
 | UI | `src/features/` (reads stores via hooks; never touches MapLibre directly) |
-| Basemap / themes | `src/core/basemap/style.ts` |
-| Feature styling (simplestyle) | `src/style/` |
+| Basemap / themes | `src/core/basemap/style.ts` + [docs/styling.md](docs/styling.md) |
+| Feature styling (simplestyle) | `src/style/` + [docs/styling.md](docs/styling.md) |
+| Deploy / tiles / env vars | [docs/deployment.md](docs/deployment.md) |
 
 The architecture, layer model, and invariants: [docs/architecture.md](docs/architecture.md). **Read the invariants section before touching `core/` or `state/`** — namespaced layer ids, `_fid`-only addressing, frozen embed protocol.
 
@@ -60,4 +66,4 @@ The architecture, layer model, and invariants: [docs/architecture.md](docs/archi
 
 ## Deployment (maintainers)
 
-Cloudflare Pages serves `dist/` (app + `embed.js`) from `main`. Vector tiles are a PMTiles archive behind a Cloudflare Worker configured in `secrets/wrangler.toml` (see `secrets/README.md`); tile archive updates change the dated URL in `src/core/basemap/style.ts` (`DEFAULT_TILES_URL`).
+See [docs/deployment.md](docs/deployment.md) — Pages auto-deploys `main`; the tile worker deploys manually via wrangler; tile archives rotate through dated URLs.

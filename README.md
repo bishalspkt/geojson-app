@@ -42,12 +42,13 @@ Full reference — options, methods, events, the underlying postMessage protocol
 ```bash
 npm install
 npm run dev        # Vite dev server
+npm test           # Vitest unit tests (stores, executor, ingestion — no mocks)
 npm run build      # type-check + app build + embed SDK build
 npm run lint       # ESLint, zero-warnings policy
 npm run preview    # preview the production build
 ```
 
-Requires Node ≥ 20.19.
+Requires Node ≥ 20.19. CI runs lint + test + build + an embed-size guard on every PR. All docs are indexed in **[docs/](docs/README.md)**; changes are tracked in the **[CHANGELOG](CHANGELOG.md)**.
 
 ## Architecture in one paragraph
 

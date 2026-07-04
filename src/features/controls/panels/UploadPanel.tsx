@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { FeatureCollection } from 'geojson';
 import { usePostHog } from '@posthog/react';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ const SAMPLES: { name: string; data: unknown }[] = [
 export default function UploadPanel() {
   const posthog = usePostHog();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const track = (source: string, featureCount: number, fileName?: string, fileSize?: number) => {
     const center = useMapStore.getState().map?.getCenter();
@@ -38,12 +39,19 @@ export default function UploadPanel() {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
+    setError(null);
     try {
       const result = await ingest({ kind: 'file', file }, { replace: true, origin: 'upload' });
       setPanelWithPolicy('layers');
       track('file_upload', result.featureCount, file.name, file.size);
-    } catch (error) {
-      console.error('Error loading GeoJSON file:', error);
+    } catch (err) {
+      console.error('Error loading GeoJSON file:', err);
+      const detail = err instanceof Error ? err.message : String(err);
+      setError(
+        detail.includes('No source provider')
+          ? `Couldn't load "${file.name}" — use a .json or .geojson file under 25 MB.`
+          : `Couldn't load "${file.name}": ${detail}`,
+      );
     }
   };
 
@@ -62,6 +70,11 @@ export default function UploadPanel() {
     <Panel panelId="upload" className="p-3">
       <p>Upload a GeoJSON file to get started</p>
       <p className="text-gray-600 text-sm">You may select a .json or .geojson file that is less than 25MB in size.</p>
+      {error && (
+        <p className="text-xs font-semibold text-red-600 bg-red-50 rounded-lg px-2.5 py-1.5 mt-1" role="alert">
+          {error}
+        </p>
+      )}
       <div className="py-2 mr-auto">
         <Button onClick={() => fileInputRef.current?.click()}>Upload GeoJSON</Button>
       </div>

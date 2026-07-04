@@ -1,14 +1,16 @@
 {
   "name": "geojson-app",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && vite build --config vite.embed.config.ts",
     "build:embed": "vite build --config vite.embed.config.ts",
     "lint": "eslint . --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@posthog/react": "^1.8.2",
@@ -45,6 +47,7 @@
     "tailwindcss": "^4.1.18",
     "typescript": "6.0.3",
     "typescript-eslint": "^8.62.1",
-    "vite": "^8.1.3"
+    "vite": "^8.1.3",
+    "vitest": "^4.1.9"
   }
 }

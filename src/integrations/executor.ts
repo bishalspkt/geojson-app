@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type maplibregl from 'maplibre-gl';
 import { LayerId, MAP_THEMES, MapProjection, MapTheme } from '@/types';
 import { getMap } from '@/state/map-store';
 import { useLayersStore } from '@/state/layers-store';
@@ -14,8 +14,12 @@ import {
   isLngLat,
 } from './commands';
 
-/** Stable id for the primary dataset (`setGeoJSON`, `?geojson=` in embeds). */
-export const PRIMARY_LAYER_ID: LayerId = 'sdk-primary';
+/**
+ * Stable id for the primary dataset (`setGeoJSON`, `?geojson=` in embeds).
+ * Contains ':' so it can never collide with sanitized caller ids
+ * (sanitizeExternalLayerId maps ':' to '_').
+ */
+export const PRIMARY_LAYER_ID: LayerId = 'sdk:primary';
 
 const VALID_PROJECTIONS: MapProjection[] = ['mercator', 'globe'];
 

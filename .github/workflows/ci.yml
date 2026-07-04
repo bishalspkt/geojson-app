@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint (zero warnings)
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build (type-check + app + embed SDK)
+        run: npm run build
+
+      # embed.js ships on third-party pages — keep it small. Hard ceiling 6 KB gzipped.
+      - name: Embed SDK size guard
+        run: |
+          SIZE=$(gzip -c dist/embed.js | wc -c)
+          echo "embed.js gzipped: ${SIZE} bytes"
+          if [ "$SIZE" -gt 6144 ]; then
+            echo "::error::embed.js exceeds the 6 KB gzip budget (${SIZE} bytes)"
+            exit 1
+          fi

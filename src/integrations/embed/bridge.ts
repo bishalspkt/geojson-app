@@ -19,27 +19,38 @@ import {
 type LngLat = [number, number];
 type Bounds = [LngLat, LngLat];
 
-function send(target: Window, message: ProtocolResponse | ProtocolEvent) {
+/**
+ * Once the host page sends its first valid command we know its origin and
+ * target all subsequent messages at it. Until then (the initial `load`/`move`
+ * events), fall back to '*' — those payloads contain no host data.
+ */
+let hostOrigin = '*';
+
+function send(target: Window, message: ProtocolResponse | ProtocolEvent, origin = hostOrigin) {
   try {
-    target.postMessage(message, '*');
+    target.postMessage(message, origin);
   } catch (err) {
     // Most likely the parent went away. Nothing useful to do.
     console.warn('[geojson.app embed] postMessage failed:', err);
   }
 }
 
-function respondOk(target: Window, replyTo: string, result?: unknown) {
-  send(target, { source: PROTOCOL_SOURCE, v: PROTOCOL_VERSION, replyTo, ok: true, result });
+function respondOk(target: Window, replyTo: string, result: unknown, origin: string) {
+  send(target, { source: PROTOCOL_SOURCE, v: PROTOCOL_VERSION, replyTo, ok: true, result }, origin);
 }
 
-function respondErr(target: Window, replyTo: string, code: string, message: string) {
-  send(target, {
-    source: PROTOCOL_SOURCE,
-    v: PROTOCOL_VERSION,
-    replyTo,
-    ok: false,
-    error: { code, message },
-  });
+function respondErr(target: Window, replyTo: string, code: string, message: string, origin: string) {
+  send(
+    target,
+    {
+      source: PROTOCOL_SOURCE,
+      v: PROTOCOL_VERSION,
+      replyTo,
+      ok: false,
+      error: { code, message },
+    },
+    origin,
+  );
 }
 
 function emit(target: Window, event: EmbedEventName, payload?: unknown) {
@@ -136,12 +147,18 @@ export function startEmbedBridge(): () => void {
 
   // ---- Command handling ----
   const onMessage = (ev: MessageEvent) => {
+    // Only the embedding window may drive this map.
+    if (ev.source !== parent) return;
     if (!isProtocolMessage(ev.data)) return;
     const msg = ev.data as ProtocolCommand;
     if (typeof msg.id !== 'string' || typeof msg.method !== 'string') return;
 
+    // Pin replies (and future events) to the host page's origin.
+    const origin = ev.origin && ev.origin !== 'null' ? ev.origin : '*';
+    hostOrigin = origin;
+
     const fail = (message: string) => {
-      respondErr(parent, msg.id, 'method_failed', message);
+      respondErr(parent, msg.id, 'method_failed', message, origin);
       emit(parent, 'error', { code: 'method_failed', message, where: msg.method });
     };
 
@@ -151,7 +168,7 @@ export function startEmbedBridge(): () => void {
     }
 
     executeCommand(msg.method, msg.args)
-      .then((value) => respondOk(parent, msg.id, value))
+      .then((value) => respondOk(parent, msg.id, value, origin))
       .catch((err: unknown) => fail(err instanceof Error ? err.message : String(err)));
   };
 

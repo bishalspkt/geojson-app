@@ -7,12 +7,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm install          # Install dependencies (Node ≥ 20.19)
 npm run dev          # Vite dev server
+npm test             # Vitest — colocated *.test.ts, Node env, no mocks (core/state/integrations)
 npm run build        # tsc type-check + app build + embed SDK build (all must pass)
 npm run lint         # ESLint 10 flat config, zero-warnings policy
 npm run preview      # Preview production build
 ```
 
-No test framework yet — verification is build + lint + manual preview (checklist in CONTRIBUTING.md).
+Verification = lint + test + build (same as CI, `.github/workflows/ci.yml`, which adds a 6 KB gzip guard on dist/embed.js) + the manual browser checklist in CONTRIBUTING.md. New store/executor/provider logic lands with tests. Docs index: docs/README.md; ops/deploy: docs/deployment.md; styling: docs/styling.md.
 
 ## What this is
 

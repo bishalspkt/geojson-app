@@ -12,7 +12,7 @@ Where geojson.app is heading, in rough priority order. The philosophy behind eve
 
 ## Near term
 
-- **Vitest for `core/` and `state/`** — both are React-free by design; regression tests for the renderer diffing, store mutations, and executor validation are cheap and high-value now.
+- ~~Vitest for `core/` and `state/`~~ — **landed**: 49 tests over stores, executor, ingestion, params + CI (lint/test/build/size-guard). Next testing frontier: renderer diffing against a mocked map.
 - **Layer reordering UI** — the store's layer order is z-order; expose drag-to-reorder in the layers panel.
 - **Import by URL / paste UI** — the source providers exist (`url`, `text`); give them panel affordances.
 - **Export** — download the current layer (or all layers) as GeoJSON; "copy all" beyond single features.

@@ -19,15 +19,29 @@ if (embedConfig.enabled) {
 
 registerBuiltinExtensions();
 
+// Analytics only runs when a token is configured (production). Local dev and
+// forks get a clean console; usePostHog() still works via the provider.
+const posthogToken: string | undefined = import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const posthogOptions = {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
   defaults: '2026-01-30',
 } as const;
 
+const app = <App embedConfig={embedConfig} />;
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <PostHogProvider apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN} options={posthogOptions}>
-      <App embedConfig={embedConfig} />
-    </PostHogProvider>
+    {posthogToken ? (
+      <PostHogProvider apiKey={posthogToken} options={posthogOptions}>
+        {app}
+      </PostHogProvider>
+    ) : (
+      <PostHogProvider
+        apiKey="dev-disabled"
+        options={{ ...posthogOptions, opt_out_capturing_by_default: true, autocapture: false }}
+      >
+        {app}
+      </PostHogProvider>
+    )}
   </React.StrictMode>,
 );
