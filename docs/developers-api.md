@@ -369,6 +369,31 @@ Removes **all** layers added via `addLayer`. Does not touch the primary data set
 await map.clearLayers();
 ```
 
+#### `listLayers(): Promise<LayerInfo[]>`
+
+_Additive to protocol v1 (2026)._ Lists every data layer on the map — the primary dataset, `addLayer` layers (reported under the id you supplied), and layers the user created in-app (uploads, search pins).
+
+```ts
+const layers = await map.listLayers();
+// [{ id: "route", name: "route", origin: "sdk", featureCount: 12, visible: true }, …]
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Your id for `addLayer` layers; internal id otherwise. |
+| `name` | `string` | Display name (file name, layer name). |
+| `origin` | `string` | `'sdk' \| 'upload' \| 'url' \| 'paste' \| 'sample' \| 'search' \| 'draw'`. |
+| `featureCount` | `number` | Features in the layer. |
+| `visible` | `boolean` | Layer visibility. |
+
+#### `setLayerVisibility(id, visible): Promise<void>`
+
+_Additive to protocol v1 (2026)._ Shows/hides a layer without removing it. Accepts `addLayer` ids or ids from `listLayers`.
+
+```ts
+await map.setLayerVisibility("route", false);
+```
+
 ##### Layer paint spec
 
 `addLayer` picks the MapLibre layer type from the first feature's geometry:
@@ -508,7 +533,7 @@ iframe.contentWindow.postMessage({
 
 ### Method names
 
-`flyTo`, `jumpTo`, `fitBounds`, `setTheme`, `setProjection`, `setGeoJSON`, `addLayer`, `removeLayer`, `clearLayers`, `getCenter`, `getZoom`, `getBearing`, `getBounds`.
+`flyTo`, `jumpTo`, `fitBounds`, `setTheme`, `setProjection`, `setGeoJSON`, `addLayer`, `removeLayer`, `clearLayers`, `listLayers`, `setLayerVisibility`, `getCenter`, `getZoom`, `getBearing`, `getBounds`.
 
 Argument shapes match the imperative API exactly. See [`EmbedInstance` Reference](#embedinstance-reference) above.
 

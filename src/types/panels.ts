@@ -1,11 +1,13 @@
-import React from 'react';
+/**
+ * Panels are an open set — any string registered via `extensions/panels`.
+ * Built-ins: 'upload' | 'layers' | 'measure' | 'developers'.
+ */
+export type PanelType = string;
 
-export type PanelType = 'upload' | 'layers' | 'measure' | 'create' | 'animate' | 'developers';
 export type PanelStatus = 'maximized' | 'hidden';
 
 export type PanelProps = {
-  type: PanelType;
+  panelId: PanelType;
   children: React.ReactNode;
-  onToggle: (panel: PanelType) => void;
   className?: string;
 };

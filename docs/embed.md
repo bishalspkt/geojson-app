@@ -105,6 +105,10 @@ type EmbedInstance = {
                    paint?: Record<string, unknown> }): Promise<void>;
   removeLayer(id: string): Promise<void>;
   clearLayers(): Promise<void>;
+  // Additive to protocol v1 (2026):
+  listLayers(): Promise<{ id: string; name: string; origin: string;
+                          featureCount: number; visible: boolean }[]>;
+  setLayerVisibility(id: string, visible: boolean): Promise<void>;
 
   // Inspection
   getCenter(): Promise<[lng, lat]>;
@@ -241,7 +245,7 @@ iframe.contentWindow.postMessage({
   payload: { lngLat: [85.3, 27.7], features: [...] } }
 ```
 
-Method names are the same as the imperative API: `flyTo`, `jumpTo`, `fitBounds`, `setTheme`, `setProjection`, `setGeoJSON`, `addLayer`, `removeLayer`, `clearLayers`, `getCenter`, `getZoom`, `getBearing`, `getBounds`.
+Method names are the same as the imperative API: `flyTo`, `jumpTo`, `fitBounds`, `setTheme`, `setProjection`, `setGeoJSON`, `addLayer`, `removeLayer`, `clearLayers`, `listLayers`, `setLayerVisibility`, `getCenter`, `getZoom`, `getBearing`, `getBounds`.
 
 ## Embed Behavior
 

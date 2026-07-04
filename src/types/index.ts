@@ -1,7 +1,9 @@
 export type {
   FeatureId,
+  LayerId,
+  LayerOrigin,
+  DataLayer,
   GeoJsonPrimaryFeatureTypes,
-  GeoJsonPrimaryFetureTypes,
   GeometryCategory,
   IdentifiedFeature,
 } from './geojson';
@@ -9,14 +11,14 @@ export type {
 export { categorizeGeometry } from './geojson';
 
 export type {
-  MapFocus,
-  MapFeatureTypeAndId,
-  MapFeatureFocus,
+  MapFocusTarget,
   MeasurePoint,
   MapTheme,
   MapProjection,
   MapSettings,
 } from './map';
+
+export { MAP_THEMES } from './map';
 
 export type {
   PanelType,

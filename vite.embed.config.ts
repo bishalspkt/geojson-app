@@ -9,13 +9,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/embed/sdk.ts'),
+      entry: path.resolve(__dirname, 'src/integrations/embed/sdk.ts'),
       name: 'GeoJSONApp',
       formats: ['iife'],
       fileName: () => 'embed.js',
     },
     outDir: 'dist',
     emptyOutDir: false,
-    minify: 'esbuild',
   },
 })

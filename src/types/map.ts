@@ -1,15 +1,10 @@
 import { FeatureId } from './geojson';
 
-export type MapFeatureTypeAndId = {
-  type: string;
-  idx: number;
-};
-
-export type MapFeatureFocus = {
-  featureId: FeatureId;
-};
-
-export type MapFocus = MapFeatureTypeAndId | MapFeatureFocus | GeolocationCoordinates;
+/** One-shot camera focus targets, consumed by the camera engine. */
+export type MapFocusTarget =
+  | { kind: 'feature'; featureId: FeatureId }
+  | { kind: 'bounds'; bounds: [[number, number], [number, number]]; maxZoom?: number }
+  | { kind: 'location'; longitude: number; latitude: number; showDot?: boolean };
 
 export type MeasurePoint = {
   lng: number;
@@ -18,6 +13,8 @@ export type MeasurePoint = {
 
 export type MapTheme = 'light' | 'dark' | 'white' | 'grayscale' | 'black';
 export type MapProjection = 'mercator' | 'globe';
+
+export const MAP_THEMES: MapTheme[] = ['light', 'dark', 'white', 'grayscale', 'black'];
 
 export type MapSettings = {
   theme: MapTheme;
