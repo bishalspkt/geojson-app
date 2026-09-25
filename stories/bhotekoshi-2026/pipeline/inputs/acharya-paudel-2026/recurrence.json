@@ -1,0 +1,128 @@
+{
+ "_meta": {
+  "description": "Reconstruction cycle and outburst recurrence for the Bhote Koshi (Trishuli) corridor, Rasuwa. Created to bring Section 3.5 of the manuscript under the same provenance discipline as the rest of the package; these figures were previously uncited in the text and absent from data/.",
+  "timezone": "NPT = UTC+05:45",
+  "retrieved": "2026-08-28",
+  "grades": "A1 machine-readable primary instrument record | A2 named agency document | B1 named domain scientist | B2 government figures via wire | C media",
+  "_last_verified": "2026-09-01",
+  "_verification_note": "Re-verified 30 Aug, unchanged."
+ },
+ "_river_disambiguation": {
+  "_critical": "TWO different Nepali rivers are called Bhote Koshi. They are in different basins and must not be merged.",
+  "this_study": {
+   "name": "Bhote Koshi (Rasuwa)",
+   "upstream_name": "Kyirong Tsangpo / Lhende Khola",
+   "flows_to": "Trishuli -> Narayani (Gandaki basin)",
+   "border_crossing": "Rasuwagadhi, Rasuwa district",
+   "events_documented_here": [
+    "2025-07-08",
+    "2026-08-26"
+   ]
+  },
+  "the_other_one": {
+   "name": "Bhote Koshi (Sindhupalchok)",
+   "upstream_name": "Poiqu",
+   "flows_to": "Sun Koshi -> Koshi basin",
+   "border_crossing": "Kodari / Tatopani, Araniko Highway",
+   "events_documented_there": [
+    "1935",
+    "1964",
+    "1981",
+    "2016"
+   ],
+   "separation_from_rasuwagadhi_km": 68,
+   "_note": "Great-circle Rasuwagadhi to Kodari is about 68 km. The 1935/1964/1981/2016 outburst record and Cook et al. (2018) belong to THIS corridor, not to the study corridor. An earlier draft merged the two records; the merge is withdrawn."
+  }
+ },
+ "event_2025": {
+  "date": "2025-07-08",
+  "mechanism": "Outburst from a previously uncatalogued supraglacial lake at about 5,150 m in Tibet",
+  "distance_upstream_of_rasuwagadhi_km": 36,
+  "_distance_grade": "B2",
+  "_distance_caveat": "Reported figure. DHM's distance table for this corridor contains at least one geometrically impossible value, so treat as approximate.",
+  "lake_area_km2_june_2025": [
+   0.64,
+   0.75
+  ],
+  "lake_origin": "Small pond in December 2023/2024",
+  "_source": "DHM and ICIMOD joint assessment of the 8 July 2025 Lhende Khola event",
+  "_grade": "A2",
+  "damage": {
+   "miteri_bridge": "destroyed",
+   "rasuwagadhi_dry_port": "destroyed",
+   "hydropower_projects_damaged": 7
+  },
+  "_source_ref": [
+   "icimod",
+   "dhm_sitrep"
+  ]
+ },
+ "closure_and_reopening": {
+  "border_closed_days": 177,
+  "reopened": "2026-01-01",
+  "reopening_structure": "91 m Bailey bridge, built with Chinese support",
+  "operational_days_to_2026_08_26": 237,
+  "interval_between_events_days": 414,
+  "lost_import_revenue_npr": 22000000000,
+  "_revenue_note": "Reported as exceeding NPR 22 bn in lost import revenue during the closure.",
+  "_source": "The Himalayan Times on the reopening and OnlineKhabar on the customs point after the 2026 flood, which carries the post-reopening trade values and the revenue shortfall.",
+  "_grade": "B2",
+  "_arithmetic": "8 Jul 2025 to 26 Aug 2026 is 414 days. 177 days closed + 237 days operational = 414. Verified by analysis/validate.py.",
+  "crossing_destroyed_again": {
+   "date": "2026-08-26",
+   "_source": "Nepali press reporting of the 26 August event: the Rasuwagadhi crossing, its Bailey bridge and the adjacent dry-port area were destroyed again when the cascade re-entered Nepal at Rasuwagadhi. Consistent with the DHM chronology (flood entering the Bhote Koshi from Tibet at the border) and the 40-42 km of road destroyed.",
+   "_grade": "B2",
+   "_note": "The claim 'destroyed on first re-exposure' in the manuscript rests on this field.",
+   "_source_ref": [
+    "press_relay",
+    "copernicus_ems"
+   ]
+  },
+  "closed_fraction_of_interval": 0.428,
+  "_source_ref": [
+   "press_border_reopening"
+  ],
+  "trade_after_reopening_npr": {
+   "imports_six_months": 45730000000,
+   "exports_six_months": 894600000,
+   "imports_fy2024_25": 85230000000,
+   "exports_fy2024_25": 2040000000,
+   "_note": "Six months from the 1 January 2026 reopening, against the previous full fiscal year. The revenue shortfall of over 22 billion rupees already recorded here is the import-revenue comparison against that year."
+  }
+ },
+ "event_2026_infrastructure": {
+  "hydropower_projects_damaged": 14,
+  "hydropower_capacity_mw": 748,
+  "road_destroyed_km": [
+   40,
+   42
+  ],
+  "road_description": "The only overland Kathmandu-Tibet road via Rasuwagadhi",
+  "_source": "Nepal Electricity Authority and Department of Roads figures as reported by the Kathmandu Post, 30 August 2026.",
+  "_grade": "B2",
+  "_caveat": "Provisional damage assessment two days after the event. Figures were still being revised at the time of writing.",
+  "_source_ref": [
+   "press_hydropower_damage"
+  ],
+  "_press_crosscheck": "The same report itemises the affected plants and gives about 281 MW of operational capacity crippled and about 700 MW under construction. Its itemised list sums to roughly 296 MW operational and 395 MW under construction, so the article is not internally consistent, and the 748 MW carried here sits between its two readings. No figure is changed on the strength of it; the disagreement is recorded and the capacity stays graded accordingly."
+ },
+ "trade_context": {
+  "_note": "Rasuwagadhi is one of two operating Nepal-China land crossings. Claims about its share of bilateral trade circulate widely but could not be verified against a primary customs source and are therefore NOT used in the manuscript."
+ },
+ "exposure": {
+  "resettled_households_destroyed": 250,
+  "district": "Rasuwa",
+  "description": "A community of about 250 households, displaced by the 2015 Gorkha earthquake and resettled on the low-lying banks of the Trishuli, reported destroyed in its entirety on 26 August 2026",
+  "_source": "CARE International's own reporting on its emergency response.",
+  "_grade": "B2",
+  "_note": "Three independent outlets carry the same figure and description.",
+  "_source_ref": [
+   "care_nepal"
+  ]
+ },
+ "_known_gaps": [
+  "No documented outburst record exists for the Trishuli Bhote Koshi corridor before 2025. Absence of record is not absence of events: this corridor was ungauged and lightly reported before the dry port was built.",
+  "The 2025 lake was uncatalogued in standard glacial lake inventories before it drained, which is itself the finding.",
+  "Economic and infrastructure figures are provisional press reports (B2), not audited government accounts."
+ ]
+}

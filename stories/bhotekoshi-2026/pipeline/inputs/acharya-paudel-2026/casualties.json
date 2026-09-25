@@ -1,0 +1,407 @@
+{
+ "_meta": {
+  "description": "Casualty and recovery figures. These were still diverging across official sources on 28 August 2026 and are recorded as a spread with timestamps, never as a single number. The analysis uses only the SPATIAL DISTRIBUTION, which is stable across revisions.",
+  "warning": "PROVISIONAL. Figures were still rising on 29 August 2026 and must be re-verified on the day of submission. Only the spatial distribution is used in the analysis, and it has held its shape across every revision so far.",
+  "privacy_note": "Named-individual registries exist (missing-persons directories, hospital lists, rescue manifests). They are deliberately NOT ingested into this dataset. Only aggregate counts are used.",
+  "_last_verified": "2026-09-09",
+  "_verification_note": "Revised 31 Aug: 903 dead and 4247 missing. Rasuwa moved off 13 for the first time, to 24.",
+  "_source": "Agency situation reports and wire relays; each entry in reported_totals names its own source.",
+  "_grade": "B2 throughout",
+  "_conflicting_figures": "Two figures circulated on 29-30 August. A wire report of 675 dead at 21:35 on 29 August was superseded by the NDRRMA figure of 734 at 09:00 on 30 August, which several outlets carry with an identical district breakdown. The later 781 is a single-source relay. The analysis uses the district distribution, which is stable across all of them.",
+  "_source_ref": [
+   "ndrrma",
+   "press_relay"
+  ]
+ },
+ "reported_totals": [
+  {
+   "as_of_npt": "2026-08-27",
+   "nepal_dead": 270,
+   "nepal_missing": null,
+   "source": "Kathmandu Post",
+   "grade": "B2",
+   "source_ref": [
+    "press_relay",
+    "ndrrma"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-27",
+   "nepal_dead": 359,
+   "nepal_missing": 1000,
+   "source": "CBC / Al Jazeera",
+   "note": "'more than 1,000'",
+   "grade": "B2",
+   "source_ref": [
+    "press_relay",
+    "ndrrma"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-28",
+   "nepal_dead": 389,
+   "nepal_missing": 910,
+   "source": "Sakil786/Nepal-Flood-Intelligence toll-data.json, citing NDRRMA via Nepal Police",
+   "note": "File timestamp 2026-08-28T16:00Z is inconsistent with the higher NDRRMA figures earlier the same day. Treat the timestamp as a page-update time, not a data currency time. NOT USED.",
+   "grade": "B2",
+   "source_ref": [
+    "sakil",
+    "ndrrma"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-28T15:00",
+   "nepal_dead": 538,
+   "nepal_missing": 977,
+   "source": "NDRRMA via ANI",
+   "grade": "B2",
+   "source_ref": [
+    "ndrrma",
+    "press_relay"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-28",
+   "nepal_dead": 547,
+   "nepal_missing": null,
+   "source": "Nepal Police",
+   "grade": "B2",
+   "source_ref": [
+    "ndrrma",
+    "press_relay"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-28",
+   "nepal_dead": 579,
+   "nepal_missing": 1924,
+   "source": "NDRRMA via AP/ABC",
+   "grade": "B2",
+   "source_ref": [
+    "ndrrma",
+    "press_relay"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-29T06:00",
+   "nepal_dead": 616,
+   "nepal_missing": 1924,
+   "source": "NDRRMA via wire reporting, 29 August 2026",
+   "note": "Latest figures at the time of the source review. Missing includes 86 security personnel, 517 foreign nationals and 127 Nepali travellers as reported.",
+   "grade": "B2",
+   "source_ref": [
+    "ndrrma",
+    "press_relay"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-29T14:00",
+   "nepal_dead": 626,
+   "nepal_missing": 2426,
+   "source": "Nepal Police bulletin and NDRRMA, 29 August 2026 afternoon",
+   "note": "NDRRMA lists 2426 out of contact, up from 1924 the previous evening. Out of contact is not the same as dead: damaged phones, power and internet still prevent families reaching people in the flood zone. 4451 rescued, 101 in hospital.",
+   "grade": "B2",
+   "source_ref": [
+    "ndrrma",
+    "press_relay"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-30T09:00",
+   "nepal_dead": 734,
+   "nepal_missing": 2498,
+   "source": "NDRRMA situation update, 30 August 2026 09:00",
+   "note": "Missing include 933 workers from underground hydropower projects, 589 foreign citizens and 127 Nepalis travelling with them. 261 helicopter sorties flown, 227 foreign nationals airlifted and 279 workers rescued from flooded hydropower tunnels. Wire reports the same morning carried 675, superseded by the NDRRMA figure.",
+   "grade": "B2",
+   "source_ref": [
+    "ndrrma"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-30T18:00",
+   "nepal_dead": 781,
+   "nepal_missing": null,
+   "grade": "B2",
+   "source": "NDRRMA 18:00 bulletin of 14 Bhadra, relayed by the rasuwa-flood-bulletin mirror",
+   "note": "Single-source relay, not yet corroborated by a second outlet at the time of recording. The 734 figure of the same morning is corroborated by NDRRMA directly and by several outlets, and remains the value used for the district distribution. Also relayed: 9435 rescued and 3321 helicopter movements.",
+   "source_ref": [
+    "ndrrma",
+    "rasuwa_bulletin"
+   ]
+  },
+  {
+   "as_of_npt": "2026-08-31T09:00",
+   "nepal_dead": 903,
+   "nepal_missing": 4247,
+   "grade": "B2",
+   "source": "NDRRMA 09:00 bulletin, 31 August 2026, carried by multiple outlets",
+   "note": "Missing nearly doubled from 2498, which the agency attributes to registration of previously unreported cases rather than new losses. 592 foreign nationals among the missing, including 288 Indian, 90 American, 53 Ukrainian, 51 Malaysian, 35 Australian and 33 UK. Tibet: 16 dead, 546 missing.",
+   "source_ref": [
+    "ndrrma",
+    "press_relay"
+   ]
+  },
+  {
+   "as_of_npt": "2026-09-01T09:00",
+   "nepal_dead": 987,
+   "nepal_missing": 3916,
+   "grade": "A2",
+   "source": "NDRRMA 09:00 bulletin, 1 September 2026, as tabulated in Situation Report #01",
+   "note": "Missing fell from 4247 as people were identified or traced. Includes 25 Nepal Police, 45 Nepali Army, 13 Armed Police Force, 15 customs and 3 immigration staff, 583 foreign nationals and 164 Nepali guides. Over 20,800 security personnel deployed.",
+   "preferred": false,
+   "source_ref": [
+    "ndrrma_sitrep_01",
+    "ndrrma"
+   ]
+  },
+  {
+   "as_of_npt": "2026-09-01T15:00",
+   "recovered_nepal_and_india": 1056,
+   "missing": 4606,
+   "scope": "Nepal and India combined",
+   "grade": "C",
+   "source": "Press reporting of the afternoon position, 1 September 2026",
+   "source_ref": [
+    "press_mortuary_capacity"
+   ],
+   "preferred": false,
+   "_note": "Recorded for completeness and not adopted. Its scope is Nepal and India combined rather than Nepal alone, so it is not comparable with the NDRRMA series above, and the missing count moves the opposite way to that series on the same day. The analysis uses the 09:00 NDRRMA bulletin, and the manuscript says 'by the morning of 1 September' for that reason."
+  },
+  {
+   "as_of_npt": "2026-09-03T12:00",
+   "nepal_dead": 1252,
+   "nepal_missing": 4216,
+   "grade": "B2",
+   "source": "NDRRMA search, rescue and relief update of 3 September 2026, figures to 12 noon",
+   "source_ref": [
+    "press_ndrrma_3sep",
+    "ndrrma"
+   ],
+   "preferred": false,
+   "note": "Only 95 bodies had been identified and released to relatives at this point, which is why identification rather than recovery is now the binding constraint."
+  },
+  {
+   "as_of_npt": "2026-09-04T12:00",
+   "nepal_dead": 1294,
+   "nepal_missing": 4216,
+   "rescued": 11993,
+   "grade": "B2",
+   "source": "NDRRMA bulletin, 4 September 2026, via wire reporting",
+   "source_ref": [
+    "ndrrma",
+    "press_relay"
+   ],
+   "preferred": false,
+   "_note": "Nine further bodies recovered in India are counted separately by the authority."
+  },
+  {
+   "as_of_npt": "2026-09-08T12:00",
+   "nepal_dead": 1357,
+   "nepal_missing": 5326,
+   "rescued": 13583,
+   "injured_treated": 6827,
+   "bodies_identified": 102,
+   "grade": "B2",
+   "source": "NDRRMA figures, 8 September 2026, via wire reporting",
+   "source_ref": [
+    "press_ndrrma_8sep",
+    "ndrrma"
+   ],
+   "preferred": true,
+   "_note": "The missing count rose from 4216 to 5326 as further reports were registered. Injured treated breaks down as 327 in ten hospitals, 3404 through the Nepali Army and 3096 through the Armed Police Force."
+  }
+ ],
+ "tibet": {
+  "dead": [
+   3,
+   5
+  ],
+  "missing": 558,
+  "foreign_nationals_missing": 260,
+  "source": "Xinhua, via Al Jazeera and NBC News wire reporting",
+  "grade": "B2",
+  "source_ref": [
+   "press_crossborder_toll"
+  ],
+  "_later_figures_not_adopted": "Higher Xinhua-attributed figures for the Tibet side, around seven dead and 554 missing, appear in secondary reporting. They are not adopted here because the Xinhua bulletin itself was not retrieved, and nothing in this study depends on the Tibet-side count."
+ },
+ "bodies_recovered_by_district": {
+  "_as_of": "2026-09-04",
+  "_source": "NDRRMA district breakdown. The 1 September 09:00 figures are confirmed against the authority's own Situation Report #01, which tabulates them; later revisions are still carried through wire reporting of the daily bulletins.",
+  "_note": "Recovery location, NOT mortality location. Bodies swept from Rasuwa and Nuwakot were retrieved 100-250 km downstream.",
+  "version_a_total_489": {
+   "Chitwan": 186,
+   "Nawalparasi East": 112,
+   "Gorkha": 44,
+   "Dhading": 40,
+   "Nuwakot": 37,
+   "Tanahun": 29,
+   "Nawalparasi West": 28,
+   "Rasuwa": 13
+  },
+  "version_b_total_538": {
+   "Chitwan": 221,
+   "Nawalparasi East": 134,
+   "Nuwakot": 37,
+   "Rasuwa": 12
+  },
+  "used_in_analysis": "version_h_total_1287",
+  "narayani_river_alone": 121,
+  "version_c_total_616": {
+   "Chitwan": 233,
+   "Nawalparasi East": 158,
+   "Gorkha": 48,
+   "Nawalparasi West": 47,
+   "Dhading": 45,
+   "Nuwakot": 41,
+   "Tanahun": 31,
+   "Rasuwa": 13
+  },
+  "_stability_note": "Seven revisions: 489, 616, 626, 734, 903, 987, 1252. Rasuwa held at 13 for the first four, then moved to 24, 27 and now 127. The Chitwan to Rasuwa ratio has run 14, 18, 18, 20, 11, 12 and now 2.8 to one, so it widened for three days and has narrowed sharply as recovery reached the upper corridor. That is the behaviour the manuscript predicted and the reason it rests the spatial claim on the bridge gradient rather than on this ratio. A snapshot of recoveries measures where retrieval had reached on the day it was taken, not where people died. The 4 September revision takes Rasuwa to 140 and Chitwan to 359, a ratio of 2.6 to one. The contrast has narrowed from 20 to one to under 3 to one as recovery reached the upper corridor, exactly as the manuscript said it would, which is why the spatial claim rests on the mechanism and not on the ratio.",
+  "version_d_total_626": {
+   "Chitwan": 233,
+   "Nawalparasi East": 158,
+   "Gorkha": 54,
+   "Dhading": 49,
+   "Nawalparasi West": 47,
+   "Nuwakot": 41,
+   "Tanahun": 31,
+   "Rasuwa": 13
+  },
+  "version_e_total_734": {
+   "Chitwan": 259,
+   "Nawalparasi East": 184,
+   "Nawalparasi West": 82,
+   "Gorkha": 58,
+   "Nuwakot": 52,
+   "Dhading": 50,
+   "Tanahun": 36,
+   "Rasuwa": 13
+  },
+  "_grade": "B2",
+  "version_f_total_903": {
+   "Chitwan": 272,
+   "Nawalparasi East": 207,
+   "Nawalparasi West": 151,
+   "Nuwakot": 95,
+   "Gorkha": 62,
+   "Dhading": 55,
+   "Tanahun": 37,
+   "Rasuwa": 24
+  },
+  "version_g_total_987": {
+   "Chitwan": 321,
+   "Nawalparasi East": 216,
+   "Nawalparasi West": 170,
+   "Nuwakot": 95,
+   "Gorkha": 65,
+   "Dhading": 55,
+   "Tanahun": 38,
+   "Rasuwa": 27
+  },
+  "_source_ref": [
+   "ndrrma_sitrep_01",
+   "ndrrma",
+   "press_relay"
+  ],
+  "_version_h_provenance": {
+   "itemised_3_september": [
+    "Chitwan",
+    "Nawalparasi East",
+    "Nawalparasi West",
+    "Nuwakot",
+    "Rasuwa"
+   ],
+   "carried_from_1_september": [
+    "Gorkha",
+    "Dhading",
+    "Tanahun"
+   ],
+   "_note": "The 3 September bulletin itemises only five districts. The other three are carried forward unchanged and flagged, rather than dropped or guessed.",
+   "sum_check": {
+    "itemised_five": 1085,
+    "carried_three": 158,
+    "total_of_eight": 1243,
+    "reported_national_total": 1252,
+    "shortfall": 9,
+    "_note": "The eight fall 9 short of the stated national total, which bounds how much the three carried districts can have risen since 1 September. It is a small residual and it is recorded rather than distributed.",
+    "_label_note": "The version key names the sum of the eight districts, 1243, keeping the invariant that every version's label equals its own arithmetic. The national total announced the same day was 1252, and the 9-body difference is the residual recorded above."
+   }
+  },
+  "version_h_total_1243": {
+   "Chitwan": 355,
+   "Nawalparasi East": 218,
+   "Nawalparasi West": 208,
+   "Nuwakot": 177,
+   "Rasuwa": 127,
+   "Gorkha": 65,
+   "Dhading": 55,
+   "Tanahun": 38
+  },
+  "_primary_confirmation": {
+   "_source_ref": [
+    "ndrrma_sitrep_01"
+   ],
+   "what": "Situation Report #01, 1 September 2026 09:00, tabulates Chitwan 321, Nawalparasi East 216, Nawalparasi West 170, Nuwakot 95, Gorkha 65, Dhading 55, Tanahun 38 and Rasuwa 27, with 987 deaths and 3,916 missing.",
+   "agreement": "Identical to the version this package adopted from wire reporting of the same bulletin, district by district and on both totals. The relayed figures were faithful."
+  },
+  "_india": "Nine further bodies were recovered in India and are not in the district table.",
+  "version_h_total_1287": {
+   "Chitwan": 359,
+   "Nawalparasi East": 219,
+   "Nawalparasi West": 212,
+   "Nuwakot": 184,
+   "Rasuwa": 140,
+   "Gorkha": 72,
+   "Dhading": 63,
+   "Tanahun": 38
+  },
+  "_total_discrepancy_4_sept": "The district table sums to 1287 while the same bulletin's headline figure is 1294, leaving seven recoveries unattributed to a district, and a further nine were recovered in India and counted apart from both. The distribution is what this study uses, so the seven do not affect it, and the discrepancy is carried rather than reconciled by preference."
+ },
+ "mortuary_capacity": {
+  "_source": "Kathmandu Post reporting of named hospital and district officials, with Outlook India and The Tribune carrying the same figures.",
+  "Chitwan_hospital_morgues": [
+   30,
+   50
+  ],
+  "Chitwan_emergency_facility_Bharatpur": 250,
+  "Kaski_combined": 88,
+  "Kaski_received_from_other_districts": 93,
+  "preservation_days_at_2_to_6C": [
+   10,
+   14
+  ],
+  "_grade": "B2/C",
+  "_source_ref": [
+   "press_mortuary_capacity"
+  ]
+ },
+ "exposure": {
+  "_source": "CARE International's own reporting on its emergency response, which carries both the destroyed resettlement community and the shelter caseload.",
+  "_grade": "B2",
+  "resettled_community_destroyed_households": 250,
+  "resettled_community_district": "Rasuwa",
+  "context": "Families displaced by the 2015 Gorkha earthquake resettled on the low-lying banks of the Trishuli. One community of 250 households was destroyed in its entirety on 26 August 2026.",
+  "households_needing_emergency_shelter": 10000,
+  "households_shelter_note": "'More than 10,000 households along the Trishuli corridor need emergency shelter and relief supplies.' Not used in the analysis; recorded for completeness.",
+  "_source_ref": [
+   "care_nepal"
+  ]
+ },
+ "missing_by_district": {
+  "_source": "NDRRMA figures of 8 September 2026, the first breakdown of the missing by district.",
+  "_source_ref": [
+   "press_ndrrma_8sep",
+   "ndrrma"
+  ],
+  "_grade": "B2 (agency figures via wire)",
+  "_as_of": "2026-09-08",
+  "Rasuwa": 2860,
+  "Nuwakot": 1981,
+  "foreign_nationals_approx": 587,
+  "reported_total_missing": 5326,
+  "_sum_check": "The three figures given sum to 5428 against a stated total of 5326, an excess of 102. The relay gives two of them as approximate. The discrepancy is carried, not reconciled by preference.",
+  "_why_this_matters": "Recovery location is not mortality location, and until this breakdown the only district-resolved figure available was bodies recovered, which measures where retrieval had reached. Missing persons are registered against the district they were in, so this is the first district-resolved measure of where people were swept away. Rasuwa and Nuwakot together account for 4841 of 5326, and those are the two districts where lead time was negative or negligible.",
+  "_limitation": "Registration district is not proof of location at the moment of the flood, and the foreign-national figure is not attributed to a district at all. It is a stronger measure than recovery location, not a mortality census."
+ }
+}

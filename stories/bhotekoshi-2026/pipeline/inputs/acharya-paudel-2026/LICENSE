@@ -1,0 +1,20 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+This archive - the data package in data/, the analysis code in analysis/, the
+figures in figures/, and the evidence dossier in evidence/ - is licensed under
+the Creative Commons Attribution 4.0 International License.
+
+You are free to share and adapt this material for any purpose, provided you
+give appropriate credit, link to the license, and indicate if changes were
+made.
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Attribution notice for third-party inputs carried inside the data package:
+- Channel centreline, boundary and settlement coordinates: (c) OpenStreetMap
+  contributors, ODbL, https://www.openstreetmap.org/copyright
+- Seismic parameters: U.S. Geological Survey, public domain
+- Gauge chronology, thresholds and discharge: Department of Hydrology and
+  Meteorology, Government of Nepal, as publicly released
+- Imagery inventory metadata: Vantor Open Data (CC-BY-NC-4.0); metadata only,
+  no imagery is redistributed here

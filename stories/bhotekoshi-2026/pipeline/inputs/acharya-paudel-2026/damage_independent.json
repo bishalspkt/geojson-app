@@ -1,0 +1,409 @@
+{
+ "_meta": {
+  "description": "Independent damage assessments of the 26 August 2026 cascade, held separately from the Copernicus EMS grading in ems_damage.json so that each assessment's method and grade stay visible.",
+  "retrieved": "2026-08-29",
+  "why_separate": "These differ from the EMS grading in method and in what they can support. The bridge inventory is an asset-by-asset status list attributed to districts. The building layer is a model score, not an analyst interpretation, and is graded accordingly. The exposure atlas is a third-party reanalysis whose value here is as a check on figures derived independently in this study.",
+  "_last_verified": "2026-09-01",
+  "_verification_note": "Revised 30 Aug: HOT bridge survey re-pulled and grew from 39 to 59 structures, breaking the monotonic gradient. Keystone atlas re-checked at v7."
+ },
+ "bridges": {
+  "_source": "Humanitarian OpenStreetMap Team, Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli",
+  "_url": "https://data.humdata.org/dataset/hot_flood_npl",
+  "_file": "hot_flood_npl_bridge_damage.geojson",
+  "_licence": "ODC-ODbL",
+  "_grade": "A2",
+  "_note": "Status recorded per named bridge with the original Nepali term retained in the source, so the classification is a reported asset status rather than an image interpretation. Bridges are fixed in place, which makes this a damage measure that cannot be displaced downstream the way body recovery is.",
+  "total_bridges": 59,
+  "by_district": {
+   "Rasuwa": {
+    "washed_out": 23,
+    "damaged": 0,
+    "intact": 4,
+    "total": 27
+   },
+   "Nuwakot": {
+    "washed_out": 11,
+    "damaged": 3,
+    "intact": 6,
+    "total": 20
+   },
+   "Dhading": {
+    "washed_out": 5,
+    "damaged": 1,
+    "intact": 2,
+    "total": 8
+   },
+   "Gorkha": {
+    "washed_out": 0,
+    "damaged": 0,
+    "intact": 3,
+    "total": 3
+   }
+  },
+  "totals": {
+   "washed_out": 39,
+   "damaged": 4,
+   "intact": 16
+  },
+  "districts_downstream_order": [
+   "Rasuwa",
+   "Nuwakot",
+   "Dhading",
+   "Gorkha"
+  ],
+  "washed_out_fraction_downstream_order": [
+   0.852,
+   0.55,
+   0.625,
+   0.0
+  ],
+  "_last_verified": "2026-08-30",
+  "_survey_is_live": "Re-pulled 30 August: the inventory grew from 39 structures to 59 overnight, and four intact bridges were added in Rasuwa that were absent the day before. The earlier reading of 16 of 16 washed out in Rasuwa was an artefact of an incomplete survey, not a real total loss. Counts here will keep moving while the survey continues.",
+  "unattributed": {
+   "washed_out": 0,
+   "damaged": 0,
+   "intact": 1,
+   "total": 1,
+   "_note": "One structure carries no district attribution in the source and is excluded from the per-district figures."
+  },
+  "_gradient_note": "The decline is no longer monotonic. Rasuwa at 0.85 is far above the rest and Gorkha at 0.00 far below, but Nuwakot at 0.55 now sits under Dhading at 0.63, where on 29 August the order was strict. The direction from the impact reach to the downstream districts holds; the ordering of the two middle districts does not, and should not be relied on.",
+  "_source_ref": [
+   "hot_hdx"
+  ]
+ },
+ "buildings_model_scored": {
+  "_source": "Humanitarian OpenStreetMap Team, Nepal Flood 2026: fAIr Damage Assessment, Upper Trishuli and Bhote Koshi",
+  "_url": "https://data.humdata.org/dataset/hot_flood_npl_buildings_damage",
+  "_licence": "CC-BY-4.0",
+  "_grade": "B2",
+  "_grade_reason": "Damage class is assigned by a model scoring each OpenStreetMap building footprint, not by an analyst interpreting the image. It is used here only as a cross-check on the direction of the Copernicus grading, never as a count in its own right.",
+  "_independence_caveat": "Scored on the same Vantor post-event imagery enumerated in imagery.json, so it is an independent analysis of dependent imagery, not an independent observation.",
+  "analyzed_area_km2": 14.0,
+  "footprints_scored": 1053,
+  "classes": {
+   "destroyed": 677,
+   "major_damage": 105,
+   "minor_damage": 155,
+   "no_damage": 113,
+   "no_data": 3
+  },
+  "destroyed_fraction": 0.643,
+  "_source_ref": [
+   "hot_hdx"
+  ]
+ },
+ "exposure_atlas_crosscheck": {
+  "_source": "Keystone GIS, Bhote Koshi flash flood impact and exposure atlas",
+  "_url": "https://keystonegis.com/disasters/nepal-bhotekoshi-flood-20260826.html",
+  "_doi": "10.5281/zenodo.22118798",
+  "_grade": "B1",
+  "_note": "A third-party terrain-envelope reanalysis, re-checked at v7. Its value here is twofold: it extracts the same Copernicus EMS products independently and reaches identical counts, and it publishes an exposure dataset this study does not compute.",
+  "agreements": {
+   "ems_observed_extent_ha": {
+    "theirs": 829.52,
+    "ours": 829.54,
+    "note": "Summed across the three delivered areas of interest."
+   },
+   "aoi_extents_ha": {
+    "theirs": [
+     111.078,
+     129.383,
+     589.079
+    ],
+    "ours": [
+     111.09,
+     129.38,
+     589.07
+    ],
+    "note": "Syapru Besi, Timure and Bidur. Agreement to the second decimal on all three."
+   },
+   "buildings_by_grade": {
+    "theirs": {
+     "destroyed": 2521,
+     "damaged": 285,
+     "possibly_damaged": 401
+    },
+    "ours": {
+     "destroyed": 2521,
+     "damaged": 285,
+     "possibly_damaged": 401
+    },
+    "note": "Exact agreement on all three grades. Two independent extractions of the same vector products."
+   },
+   "bridges_destroyed_ems": {
+    "theirs": 24,
+    "ours": 24,
+    "note": "They additionally record 2 possibly damaged, giving 26 graded."
+   },
+   "_superseded_note": "These agreements were reached on the Copernicus products as they stood on 29 August, and were exact on all three building grades and all three areas. Copernicus delivered a Bidur monitoring product on 31 August that supersedes the original, so both this study and the atlas now carry figures that predate it on that area of interest. The agreement remains a valid check on the parsing of the 29 August products; it is no longer a check on the current totals."
+  },
+  "differences": {
+   "corridor_length_km": {
+    "theirs": 62.4,
+    "ours": 178.15,
+    "note": "Not a disagreement. Their endpoint is Devighat hydropower in Nuwakot; the endpoint used here is Devghat at the Trishuli-Kali Gandaki confluence in Chitwan and Tanahun. The manuscript flags this pair of similar names explicitly."
+   },
+   "front_velocity_ms": {
+    "theirs": 50,
+    "ours": "37 to 51 in the uppermost reach, decaying to 4.0",
+    "note": "Their single corridor value of 50 m s-1 sits inside the 37 to 51 m s-1 bracket derived here for the uppermost reach. This study reports celerity per reach rather than one corridor figure."
+   }
+  },
+  "_version": "v7, 10.5281/zenodo.22152427, published 29 August 2026 under concept DOI 10.5281/zenodo.22118798",
+  "exposure_dataset_not_computed_here": {
+   "_method": "Height-above-channel envelope on Copernicus GLO-30, population from WorldPop 2020.",
+   "_why_recorded": "This study measures the warning chain and does not compute exposure. The figures are recorded because they bear on how casualty counts by district should be read.",
+   "bands": {
+    "80m": {
+     "km2": 39.37,
+     "residents": 17167
+    },
+    "40m": {
+     "km2": 23.07,
+     "residents": 9204
+    },
+    "20m": {
+     "km2": 13.85,
+     "residents": 5396
+    },
+    "10m": {
+     "km2": 8.81,
+     "residents": 3154
+    }
+   },
+   "by_district_within_80m": {
+    "Nuwakot": {
+     "km2": 26.29,
+     "residents": 15850
+    },
+    "Rasuwa": {
+     "km2": 13.08,
+     "residents": 1317
+    }
+   },
+   "_bearing_on_this_study": "Nuwakot carries about twelve times the riverside population of Rasuwa within 80 m of the channel. Absolute casualty and damage counts by district therefore reflect exposed population as well as lead time, which is a third confounder alongside the lead-time and flow-intensity collinearity already stated in the discussion.",
+   "_other_totals": {
+    "bridges_exposed": 63,
+    "bridges_main_stem": 38,
+    "roads_graded_km": 138.77,
+    "roads_no_visible_damage_km": 82.38,
+    "flood_path_km": 62.42
+   }
+  },
+  "_source_ref": [
+   "keystone"
+  ]
+ },
+ "reconstruction_crosscheck": {
+  "_source": "geo-pera, Bhote Koshi 2026 outburst flood reconstruction",
+  "_repo": "https://github.com/geo-pera/bhotekoshi-2026-reconstruction",
+  "_writeup": "https://geopera.com/blog/bhote-koshi-flood-2026-satellite-analysis",
+  "_licence": "MIT code; derived products CC-BY-NC-4.0 from the source imagery",
+  "_grade": "B1",
+  "_grade_reason": "A named, documented rapid reconstruction with published code and derived measurements. Not peer reviewed, and the dense tie-point module its stereo step depends on is not included in the repository, so the parallax pipeline is not reproducible end to end as published.",
+  "_why_it_matters": "Its headwater velocity is derived from trimline superelevation on opposing valley walls, a method wholly independent of the arrival-time chronology used here, so the comparison is not a shared-input artefact. Separately, its traced chainage is what prompted the headwater bound here to be widened on 29 August; see channel.json.",
+  "velocity_headwater_ms": {
+   "theirs": 37,
+   "ours": "25 to 49",
+   "their_method": "trimline superelevation, bend-radius hydraulics",
+   "our_method": "reach-integrated celerity from arrival times over measured channel distance",
+   "note": "Their 37 m s-1 is a local flow velocity from trimline superelevation. The value here is a reach-integrated celerity from arrival times over channel distance, source to Syabrubesi. The two are different quantities, so agreement is not required, but their 37 falls inside the 25 to 49 bracket derived here. Their reported series continues 45 to 52 at the border crossing and about 50 in the gorge, at the top of that bracket, then 11 at the valley opening near Syabrubesi.",
+   "_revised_2026_09_01": "Revised twice on 1 September. The comparison first read the 37 as falling at the lower end of a 37 to 51 bracket that carried the unmeasured headwater. Tracing the headwater on GLO-30 narrowed it to 45 to 50, which put the 37 below it. Retrieving the gauge stage series then showed the front reached Syabrubesi after 08:50 rather than at it, widening the bracket to 25 to 49, inside which the 37 sits."
+  },
+  "other_reported_quantities": {
+   "deposition_volume_m3": null,
+   "deposition_method": "RETRACTED 1 September 2026. See _retraction_2026_09_01.",
+   "trimline_flow_depth_m": [
+    40,
+    134
+   ],
+   "trimline_note": "Peak-stage values including splash and runup, treated by the authors as upper bounds",
+   "total_event_volume_m3": 100000000.0,
+   "total_event_volume_uncertainty_pct": 40,
+   "total_event_volume_note": "Debris-laden water through the upper corridor, calibrated on the Galchhi stage rise and trimlines. Not comparable to the 19.96e6 m3 excess flood volume at Devghat used here, which is a rating-curve quantity 178 km downstream after attenuation and channel storage."
+  },
+  "detachment_volume_estimated": false,
+  "detachment_volume_note": "Decisive for this study. The reconstruction had a pre-event NASA HMA 8 m DEM and post-event WorldView-3 stereo, the best combination anyone has assembled for this event, and still published no detachment volume. Its stereo differencing covers chainage 25 to 47 km, the downstream deposition reach, and does not extend to the source at chainage 0. Known gap 4 therefore stands: no open measurement constrains the detached volume.",
+  "mechanism_test": {
+   "sustained_dam_breach": "excluded",
+   "basis": "Routing a sustained dam-and-breach reaches the border 30 to 60 min late, rises too gradually for the reported wall-like front, and peaks at about a third of the measured trimline heights.",
+   "not_distinguishable": "A direct debris flow and a blockage that failed within a couple of minutes both fit the measurements.",
+   "bearing_on_this_study": "Section 4 of the manuscript argues a minutes-scale breach favours a transient permeable blockage over a sustained landslide dam, and states this is falsifiable against corridor records. This is an independent test of that statement by hydraulic routing against trimline heights, and it agrees."
+  },
+  "terrain_caveats": {
+   "pre_event_dem": "NASA HMA 8 m, built from 2017 imagery, ellipsoidal heights requiring datum correction, about 12 per cent voids near the channel",
+   "pre_event_vhr_baseline": "WorldView-2 of 2021, which predates the July 2025 outburst in the same valley, so any two-epoch comparison there conflates two events",
+   "why_it_matters": "These are the reasons a pre-event elevation surface exists in principle yet still does not support a detachment-volume measurement at the source."
+  },
+  "day_one_cloud": {
+   "range_pct": [
+    62,
+    93
+   ],
+   "zero_clear_stretch_km": 15,
+   "note": "A 15 km stretch of the corridor including Rasuwagadhi had no cloud-free pixels at all on the day of the event. A separate Sentinel-2 attempt found 2.1 per cent joint clear sky with the pre-event pass and none of it over the river."
+  },
+  "_retraction_2026_09_01": {
+   "_source": "geo-pera README, commit 1b3958ab, 1 September 2026",
+   "_grade": "B1",
+   "what_was_retracted": "The parallax elevation-change product and every figure derived from it, including the 10 to 18 m deposition wedge at corridor km 33 to 38 and the deposition and erosion volumes.",
+   "why": "They had assumed the two WorldView-3 looks viewed the valley from opposite azimuths. The pair is in fact same-side in-track stereo, so the conversion from image offset to height was wrong in sign and magnitude, and the map was dominated by registration residuals between the vendor orthographic products.",
+   "how_caught": "By differencing a rigorous 0.5 m photogrammetric DSM, built from the RPC-bearing stereo strips Vantor released on 31 August, against the pre-event DEM, and by re-deriving the viewing geometry from the strips' RPC cameras.",
+   "superseding_findings": "The corrected result reverses the retracted one. The corridor above Syabrubesi is erosional, with 2 to 12 m of floor lowering. The main deposit, 12 to 18 m thick, sits where the valley opens at km 40.5 to 43.6. The river has re-incised 13 to 21 m where it confines again downstream.",
+   "_effect_on_this_study": "The deposition volume previously recorded here from their work is withdrawn and no replacement figure is adopted. The two things this study cites them for are unaffected and they say so explicitly: the headwater velocity comes from trimline superelevation, and the dam-and-breach exclusion comes from routing on the pre-event DEM, which the retraction does not touch.",
+   "_credit": "Their retraction is the reason the stereo release was found at all. It is recorded here in full because a source correcting itself in public is worth more than one that does not.",
+   "_source_ref": [
+    "geopera"
+   ]
+  },
+  "_source_ref": [
+   "geopera"
+  ]
+ },
+ "inundation_extent_crosscheck": {
+  "_source": "Humanitarian OpenStreetMap Team and HDX, Nepal flood 2026 mapping project",
+  "_url": "https://nepal-flood-map.pages.dev/",
+  "_licence": "ODC-ODbL",
+  "_grade": "A2",
+  "water_extent_km2": 31.7,
+  "water_extent_date": "2026-08-27",
+  "water_extent_sensor": "Sentinel-2",
+  "aoi_km2": 90.1,
+  "_note": "Observed water extent, a different quantity from the 8.3 km2 Copernicus EMS observed-event area, which maps the mass-movement deposit within three settlement areas of interest rather than the water surface along the corridor.",
+  "_source_ref": [
+   "hot_hdx"
+  ],
+  "_withdrawn_2026_09_02": {
+   "what": "A corroborating inundation estimate attributed to the Microsoft AI for Good Lab: 37 km2 impacted, 4977 buildings, 10200 people.",
+   "why": "Carried on an attribution with no retrievable primary source. Repeated searches found no publication, dataset or release from that group for this event, so the figures cannot be checked or cited. Nothing in the manuscript rested on them.",
+   "_note": "Withdrawn rather than kept with a caveat, because the package requires every value to lead to something a reader can open. If the group publishes, this can be reinstated with a link."
+  }
+ },
+ "channel_reimplementation_check": {
+  "_source": "asoto59g/Nepal, Manning routing and HAND inundation for the Bhote Koshi corridor",
+  "_repo": "https://github.com/asoto59g/Nepal",
+  "_retrieved": "2026-08-29, after the commit extending the routing to Bharatpur",
+  "_grade": "B2",
+  "_independence_caveat": "This is an independently written implementation of the same method on the same open data: OpenStreetMap waterway=river, shortest path, and the same DHM situation report. It is therefore a check against measurement and coding error in this study, not independent evidence about the event. It is recorded here on that basis and is not cited in the manuscript.",
+  "agreements": {
+   "syabrubesi_to_betrawati_km": {
+    "theirs": 30.0,
+    "ours": 30.885,
+    "diff_pct": 2.9
+   },
+   "syabrubesi_to_betrawati_celerity_ms": {
+    "theirs": 16.67,
+    "ours": 17.16,
+    "diff_pct": 2.9,
+    "note": "Both divide their own channel distance by the same observed 30 min interval, 08:50 to 09:20, so the two differences are the same difference."
+   },
+   "devghat_front_arrival_npt": {
+    "theirs": "15:20",
+    "ours": "15:20"
+   },
+   "public_alert": {
+    "theirs": "09:15-09:16 NPT, 679,295 messages",
+    "ours": "09:16 NPT, 679,295 messages"
+   },
+   "corridor_length_km": {
+    "theirs": 181.44,
+    "ours": 178.147,
+    "note": "Not the same endpoint. Theirs runs Rasuwagadhi to Bharatpur on the Narayani, which lies downstream of Devghat, so a longer value is the expected result."
+   }
+  },
+  "independent_confirmation_of_a_naming_trap": "Their results file carries an explicit note that Devighat hydropower in Nuwakot is an intermediate point and is not Devghat at the Trishuli-Kali Gandaki confluence in Chitwan. The manuscript flags the same pair of names, and this is external confirmation that the confusion is a real hazard for anyone reading the literature on this event.",
+  "counterfactual_alert_comparison": {
+   "theirs": "08:38 NPT, 90 s after the seismic signal",
+   "ours": "architectures C and D assume 5 min and 2 min from detection to public message",
+   "note": "Their hypothetical is tighter than either architecture considered here, so the lead-time gains reported here are not the most optimistic available."
+  },
+  "terrain": "NASA HMA 8 m tile 675 with Copernicus GLO-30 on the western edge, datum offset -48.9 m. Confirms that HMA tile 675 covers this corridor.",
+  "headwater_revised_30_aug": {
+   "_source": "asoto59g/Nepal curva_1km.csv, commit 5922aa10, 30 August 2026",
+   "_grade": "B2",
+   "their_scar_to_rasuwagadhi_km": 19.0,
+   "their_km0": "28.28508 N, 85.51282 E, the Sentinel-2 ice-loss patch centroid, 1.58 km from the USGS hypocentre",
+   "previous_value_km": 23.9,
+   "_bearing": "They revised this segment down from 23.9 to 19.0 km after mapping the scar from Sentinel. This study now measures the segment on GLO-30 at 20.1 to 24.0 km, see channel.json. Their original 23.9 falls inside that range. Their revised 19.0 falls about 1 km below it, and from the same scar-centroid start the calibrated trace here gives 21.2 km, a 10 percent disagreement that remains unresolved. Their polyline is resampled to 1 km spacing, which shortens a sinuous channel, and it rides a different terrain model. A third-party model input that has already moved once is not adopted as a measurement.",
+   "our_range_km": [
+    20.09,
+    24.04
+   ],
+   "_source_ref": [
+    "asoto"
+   ]
+  },
+  "_source_ref": [
+   "asoto"
+  ]
+ },
+ "_rejected": {
+  "nepalflood.wiki": "Aggregator site. No sources cited, no methodology, no licence declaration and no structured download. Its casualty figures, 588 dead in Nepal, conflict with the agency figures recorded in casualties.json for the same date. Not ingested."
+ },
+ "source_scar_detection": {
+  "_source": "asoto59g/Nepal, detectar_origen_sentinel.py and origen_avalancha_report.json, 30 August 2026",
+  "_grade": "B2",
+  "_grade_reason": "Automated change detection with a fixed threshold, published as code and output but not validated against ground or higher-resolution imagery. Recorded as an existence proof that the source is observable in medium-resolution open data, not as a measurement adopted here.",
+  "_why_it_matters": "The limitation recorded here concerned the very-high-resolution releases, which carry no pre-event scene over the source. Sentinel does: this analysis differences a 24 August scene against 27 August at the source. It yields planform area, not thickness, so the detached volume is still unconstrained, but the wording of the limitation needed narrowing.",
+  "sentinel2_ice_loss": {
+   "area_ha": 102.84,
+   "pixels": 2571,
+   "window": "2026-08-24 to 2026-08-27",
+   "largest_patch_ha": 20.2,
+   "largest_patch_km_from_hypocentre": 1.58,
+   "_check": "Implied pixel area 400 m2, exactly the Sentinel-2 20 m bands. Patch distances recomputed here by haversine and reproduce their stated values."
+  },
+  "sentinel1_backscatter_change": {
+   "patches": 45,
+   "area_ha": 67.16,
+   "threshold_db": 3.5,
+   "nearest_patch_ha": 3.8,
+   "nearest_patch_km_from_hypocentre": 1.27,
+   "nearest_patch_mean_db": -6.01,
+   "largest_patch_ha": 8.68,
+   "largest_patch_km_from_hypocentre": 6.06,
+   "_territory": "The largest S1 patch sits at 28.323 N, inside Nepal against the 28.330 N boundary used here."
+  },
+  "volume_still_unconstrained": true,
+  "_volume_note": "Neither Sentinel mission carries the elevation information a volume requires. Area without thickness does not give volume, so known gap 4 stands.",
+  "_source_ref": [
+   "asoto"
+  ]
+ },
+ "recurrence_reimplementation_check": {
+  "_source": "Li et al., recovery and redamage tables from the GLOF hazard-map stress test, data/recovery_redamage_metrics.csv in their release archive",
+  "_source_ref": [
+   "li2026_glof_stresstest"
+  ],
+  "_grade": "B1",
+  "_what_they_did": "Built damage-recovery-redamage chains for eight assets across the 8 July 2025 Purepu outburst and the 26 August 2026 cascade, grading each stage and requiring institutional remote-sensing support for the 2026 damage.",
+  "agreements": {
+   "customs_yard_chain": {
+    "theirs_damage_to_recovery_days": 177,
+    "ours": 177,
+    "theirs_recovery_to_redamage_days": 237,
+    "ours_operational_days": 237,
+    "note": "Exact agreement on both intervals, derived independently from different sources. This is the recurrence interval the manuscript reports and Fig. 4b displays."
+   },
+   "interval_between_events_days": {
+    "theirs": 414,
+    "ours": 414
+   }
+  },
+  "_asset_definition_matters": "Their Miteri bridge chain gives 173 and 241 days against the customs yard's 177 and 237, because they date the bridge's functional recovery to 28 December 2025 and the customs point's to 1 January 2026. The crossing is one thing colloquially and several assets operationally, and the interval depends on which is chosen. This package reports the customs and crossing reopening, which is the pair their customs chain reproduces.",
+  "_sources_they_have_that_this_package_reached_only_through_press": [
+   "UNOSAT damage vectors, https://doi.org/10.63253/1y26ihdq",
+   "NDRRMA Rasuwagadhi situation report of 8 July 2025, archived as a PDF",
+   "Nepal Electricity Authority annual report 2081-82, the primary for hydropower damage",
+   "Chilime Hydropower operator notice, and a Nepal Red Cross situation update of 26 August 2026"
+  ],
+  "_not_adopted": "None of their figures replaces one here. The agreement is recorded as corroboration, and the primary sources they cite are registered so they can be used directly.",
+  "_primary_sources_located_not_yet_ingested": {
+   "_note": "Found through the Li et al. release. Each was requested and responds. They are recorded here as leads rather than in the source registry, which holds only sources a value is actually taken from.",
+   "unosat_damage_vectors": "https://doi.org/10.63253/1y26ihdq — UNOSAT damage assessment vectors for the 26 August event. Institutional remote sensing, independent of Copernicus EMS.",
+   "ndrrma_sitrep_2025": "https://ndrrma.gov.np/mediafiles/publications/Rasuwagadhi_Flood_Sitrep1_08072025_.pdf — the authority's own situation report for the 2025 event, archived at a stable URL. Its existence shows NDRRMA archives some reports, which bears on the 2026 bulletins this package can only cite through relays.",
+   "nea_annual_report": "https://api.neaec.com.np/uploads/notices/1768814495451-Annual%20Report%202081-82%20for%20Web%20Final.pdf — Nepal Electricity Authority annual report, the primary behind the hydropower damage figure carried here from press reporting. Extracting it would settle the internal inconsistency recorded in recurrence.json.",
+   "nrcs_situation_update": "https://nrcs.org/resources/news-and-events/rasuwa-flood-situation-update-26-august-2026/ — Nepal Red Cross situation update."
+  }
+ }
+}

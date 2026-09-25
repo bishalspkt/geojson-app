@@ -1,0 +1,258 @@
+{
+ "_meta": {
+  "description": "Official chronology of the 26 August 2026 Bhote Koshi-Trishuli-Narayani flood, transcribed from the DHM Flood Forecasting Division technical situation report (2083 Bhadra 10). Seismic origin times replaced with the USGS reviewed catalogue values where they supersede the operational log.",
+  "timezone": "NPT (UTC+05:45)",
+  "t0_npt": "2026-08-26T08:37:10+05:45",
+  "t0_source": "USGS us7000tbwb origin time",
+  "_last_verified": "2026-09-01",
+  "_verification_note": "Re-verified 30 Aug, unchanged.",
+  "_source": "DHM Flood Forecasting Division, technical situation report, section 2",
+  "_grade": "A2",
+  "_source_ref": [
+   "dhm_sitrep"
+  ],
+  "_station_attribution_note": "The situation report fuses the two Bhote Koshi stations into one record and attributes Rasuwagadhi's readings to Syabrubesi. The 08:40 and 08:50 entries above are corrected to the instrument archive and each carries a _corrects field saying what the report said. This is the correction Sect. 2 of the manuscript is about, so the timeline must not reproduce the error it documents."
+ },
+ "events": [
+  {
+   "npt": "08:37:10",
+   "dt_min": 0.0,
+   "kind": "trigger",
+   "text": "Ice-rock detachment, north face Langtang Lirung. USGS us7000tbwb, M5.2 ms_vx, event type landslide.",
+   "source": "USGS FDSN",
+   "grade": "A1",
+   "source_ref": [
+    "usgs_fdsn"
+   ]
+  },
+  {
+   "npt": "08:37",
+   "dt_min": 0.0,
+   "kind": "operational",
+   "text": "M4.4 earthquake logged by Nepal's operational chronology (source: Department of Mines and Geology). Later superseded by the USGS landslide classification.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "08:40",
+   "dt_min": 2.8,
+   "kind": "gauge",
+   "text": "Rasuwagadhi last transmission: 1.62 m (warning 6.0 m, danger 7.0 m). The situation report attributes this reading to Syabrubesi.",
+   "source": "DHM river-watch instrument archive, station 4913",
+   "grade": "A1",
+   "source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_corrects": "The report gives this reading as Syabrubesi's. The instrument archive shows 1.62 m is the last value from Bhotekoshi at Rasuwagadhi, station 4913, whose warning stage is 6.0 m. Syabrubesi is station 191 and last read 3.80 m against a 5.50 m warning stage. See event.json, _ndrrma_sitrep_01_crosscheck._contradicts.station_attribution."
+  },
+  {
+   "npt": "08:50",
+   "dt_min": 12.8,
+   "kind": "gauge_lost",
+   "text": "Rasuwagadhi station stops transmitting, below its warning threshold. Syabrubesi follows at 09:00, also below its own.",
+   "source": "DHM river-watch instrument archive, stations 4913 and 191",
+   "grade": "A1",
+   "anchor": true,
+   "source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_corrects": "The report names Syabrubesi here. The two Bhote Koshi stations fell silent ten minutes apart, Rasuwagadhi at 08:50 and Syabrubesi at 09:00, which is what makes a two-station corroboration rule available at 09:00."
+  },
+  {
+   "npt": "09:00",
+   "dt_min": 22.8,
+   "kind": "notification",
+   "text": "Division informed of a large flood entering the Bhote Koshi from Tibet, by the District Administration Office Rasuwa and by Betrawati station staff.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "09:15",
+   "dt_min": 37.8,
+   "kind": "alert",
+   "text": "Confirmation received. High-alert request issued for Trishuli riverine areas as far as Mugling. Initial early warning to Rasuwa, Nuwakot, Dhading, Chitwan.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "09:16",
+   "dt_min": 38.8,
+   "kind": "alert",
+   "text": "Mass SMS dispatch via Nepal Telecom and Ncell: 679,295 messages (NTC 435,635; Ncell 243,660).",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "anchor": true,
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "09:20",
+   "dt_min": 42.8,
+   "kind": "gauge_lost",
+   "text": "Betrawati station stops transmitting. Last reading 3.55 m (warning 4.1 m, danger 5 m). Destroyed below its warning threshold.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "anchor": true,
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "10:28",
+   "dt_min": 110.8,
+   "kind": "arrival_est",
+   "text": "Flood reaches the Dhading-Galchhi area; estimated to pass Mugling within hours. SMS re-issued for the Prithvi Highway and Mugling-Narayanghat road section.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "observed": false,
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "11:26",
+   "dt_min": 168.8,
+   "kind": "gauge",
+   "text": "Phurke (Malekhu) crosses its warning level, rising.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "11:40",
+   "dt_min": 182.8,
+   "kind": "gauge",
+   "text": "Phurke (Malekhu) last recorded level 10.48 m.",
+   "source": "DHM live station 5611",
+   "grade": "B1",
+   "source_ref": [
+    "dhm_riverwatch"
+   ]
+  },
+  {
+   "npt": "11:43",
+   "dt_min": 185.8,
+   "kind": "gauge_lost",
+   "text": "Phurke (Malekhu) crosses its danger level. Station and adjacent bridge swept away immediately after.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "11:45:35",
+   "dt_min": 188.4,
+   "kind": "trigger",
+   "text": "Second detachment at the same source. USGS us7000tc90, M4.2 ms_vx, event type landslide.",
+   "source": "USGS FDSN",
+   "grade": "A1",
+   "source_ref": [
+    "usgs_fdsn"
+   ]
+  },
+  {
+   "npt": "11:50",
+   "dt_min": 192.8,
+   "kind": "arrival",
+   "text": "Flood reaches the Malekhu bazaar area.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "anchor": true,
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "13:00",
+   "dt_min": 262.8,
+   "kind": "arrival",
+   "text": "Flood confirmed past Mugling. Evacuation requested for riverine residents as far as Devghat.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "anchor": true,
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "13:20",
+   "dt_min": 282.8,
+   "kind": "gauge",
+   "text": "Devghat stage 4.76 m. Main flow forecast to reach Devghat about 15:30, with a ~3 m rise to possibly 8 m.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "13:35",
+   "dt_min": 297.8,
+   "kind": "hazard",
+   "text": "Information from the Chinese side: the lake at the blockage site has not fully drained. Risk remains in the Bhote Koshi and Trishuli reaches.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "14:14",
+   "dt_min": 336.8,
+   "kind": "gauge",
+   "text": "Kali Khola crosses its danger level (12.1 m), rising. Maximum recorded 12.3 m.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "15:20",
+   "dt_min": 402.8,
+   "kind": "arrival",
+   "text": "Flood reaches the Narayani-Devghat reach, level rising (automatic station).",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "anchor": true,
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "16:00",
+   "dt_min": 442.8,
+   "kind": "peak",
+   "text": "Devghat peak stage 6.57 m; peak discharge 5,850 m3/s. Below the 7.3 m warning threshold.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "npt": "18:30",
+   "dt_min": 592.8,
+   "kind": "recession",
+   "text": "Devghat receded to about 4 m. Excess flood volume past Devghat estimated at ~2 crore (19.96 million) m3.",
+   "source": "DHM sitrep",
+   "grade": "A2",
+   "source_ref": [
+    "dhm_sitrep"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+as_of_npt,dead_or_remains,missing,rescued_cumulative,source,source_url,note
+2026-08-26T21:00,157,,,"NDRRMA/PMO evening (via ADRC chronology)",https://www.adrc.asia/publications/disaster_report/pdf/2026/ADRC_FL_NPL_Rasuwa_20260826_EN.pdf,"~160 reported; 157 bodies recovered; first tolls 72 (NDRRMA) / 95 (PMO)"
+2026-08-27T08:15,165,826,,"Nepal Police bulletin (via ADRC)",https://www.adrc.asia/publications/disaster_report/pdf/2026/ADRC_FL_NPL_Rasuwa_20260826_EN.pdf,"826 missing = 579 travellers (466 foreign) + 85 security + 161 Rasuwa residents + 1 Nuwakot"
+2026-08-28T15:00,539,977,3742,"NEOC (via ADRC)",https://www.adrc.asia/publications/disaster_report/pdf/2026/ADRC_FL_NPL_Rasuwa_20260826_EN.pdf,
+2026-08-28T20:00,579,1924,,"NDRRMA via AP (A&P casualties.json)",https://doi.org/10.5281/zenodo.22679444,"933 hydropower workers added to missing list"
+2026-08-29T06:00,616,1924,,"NDRRMA via wire (A&P casualties.json)",https://doi.org/10.5281/zenodo.22679444,
+2026-08-29T14:00,626,2426,4451,"Nepal Police/NDRRMA (A&P casualties.json)",https://doi.org/10.5281/zenodo.22679444,
+2026-08-30T09:00,734,2498,,"NDRRMA 09:00 update (A&P casualties.json)",https://doi.org/10.5281/zenodo.22679444,
+2026-08-31T09:00,903,4247,10451,"NDRRMA 09:00 bulletin (A&P; OCHA Flash Update #4)",https://doi.org/10.5281/zenodo.22679444,
+2026-09-01T09:00,987,3916,11814,"NDRRMA SitRep ENG #01",https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf,"missing registered from 62 districts"
+2026-09-01T18:00,1050,3916,11993,"NDRRMA SitRep NEP #11 (via ADRC)",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_11_NEP_01092026.pdf,
+2026-09-02T18:00,1204,4216,11993,"NDRRMA SitRep ENG #02",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_Temp_ENG_02_02092026.pdf,"missing shown as 'approx.'"
+2026-09-03T18:00,1259,5053,12038,"NDRRMA SitRep ENG #03",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_03_03092026.pdf,
+2026-09-04T18:00,1294,5053,13095,"NDRRMA SitRep ENG #04",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_04_04092026_1XV7wFt.pdf,"read from infographic text layer"
+2026-09-05T19:00,1331,4896,13101,"NDRRMA SitRep ENG #05",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_05_05092026.pdf,"read from infographic text layer"
+2026-09-06T19:00,1342,4896,13391,"NDRRMA SitRep ENG #06",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_06_06092026.pdf,"read from infographic text layer"
+2026-09-07T19:00,1356,4894,13396,"NDRRMA SitRep ENG #07",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_07_07092026.pdf,"read from infographic text layer"
+2026-09-08T18:00,1358,5326,13583,"NDRRMA flash update (via ADRC; A&P)",https://ndrrma.gov.np/mediafiles/rasuwa/Situation_update_English_2026.9.08_6_PM.pdf,"first missing-by-district breakdown: Rasuwa 2,860, Nuwakot ~1,981"
+2026-09-09T19:00,1369,5132,13646,"NDRRMA SitRep ENG #09",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_09_09092026.pdf,
+2026-09-10T18:00,1377,5130,13676,"NDRRMA figures quoted in RDNA s3.1",https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf,"104 identified bodies removed from missing list"
+2026-09-12T19:00,1386,5130,13728,"NDRRMA SitRep NEP #22 (via ADRC)",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_22_NEP_12092026.pdf,
+2026-09-13T19:00,1388,5130,13728,"NDRRMA SitRep NEP #23 (via ADRC)",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_23_NEP_13092026.pdf,
+2026-09-14T19:00,1395,5130,13737,"NDRRMA SitRep ENG #13",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_13_14092026.pdf,
+2026-09-15T19:00,1399,5179,13742,"NDRRMA SitRep ENG #14",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_14_15092026.pdf,
+2026-09-16T19:00,1403,6150,13742,"NDRRMA SitRep ENG #15",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_15_16092026.pdf,"missing revised after deducting 105 identified bodies"
+2026-09-17T19:00,1410,6145,13756,"NDRRMA SitRep ENG #16",https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_Situation_Report_ENG_16_17092026_AsGEcO1.pdf,
+2026-09-18T19:00,1410,6055,13756,"NDRRMA SitRep ENG #17",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_17_18092026.pdf,
+2026-09-19T19:00,1411,5875,13784,"NDRRMA SitRep ENG #18",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_18_19092026.pdf,
+2026-09-21T19:00,1451,5745,13784,"NDRRMA SitRep ENG #20 (latest NDRRMA report as of 25 Sep)",https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf,"1,451 = 585 male + 336 female + 530 partial remains; missing incl. 636 foreigners; 112 handed-over bodies deducted"
+2026-09-22T19:00,1451,5705,13795,"NDRRMA update to Tue 22 Sep 19:00 (via Pardafas, 23 Sep)",https://www.pardafas.com/2026/09/23/189125/,"585 male (Pardafas prints 545) + 336 female + 530 partial remains; no NDRRMA PDF for this cut found in the API list"
+2026-09-23T05:00,1452,4718,,"Nepal Police (via Nepalnews 23 Sep)",https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1452-over-4700-still-missing/,"1,450 bodies + 2 died in treatment; police missing list (4,718) is a separate register from NDRRMA's"

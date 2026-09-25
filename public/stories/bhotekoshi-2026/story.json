@@ -1,0 +1,5636 @@
+{
+ "version": 1,
+ "title": "The Bhote Koshi–Trishuli disaster, 26 August 2026",
+ "subtitle": "An ice–rock avalanche on Langtang Lirung became a 200 km debris flow. Minute by minute and town by town, from open data.",
+ "byline": "geojson.app",
+ "layers": [
+  {
+   "id": "rivers",
+   "type": "geojson",
+   "name": "Major rivers",
+   "url": "data/rivers-major.geojson",
+   "temporal": false,
+   "display": {
+    "labelField": "name",
+    "labelMinZoom": 8
+   },
+   "attribution": "© OpenStreetMap contributors"
+  },
+  {
+   "id": "population",
+   "type": "geojson",
+   "name": "People within 2 km of the path (209,751, Kontur H3 cells)",
+   "url": "data/population-2km.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "population"
+    ]
+   },
+   "attribution": "Kontur Population (2023), CC BY 4.0",
+   "legend": {
+    "kind": "swatches",
+    "title": "People per ~0.7 km² cell",
+    "items": [
+     {
+      "label": "5–50",
+      "color": "#fee8c8",
+      "shape": "fill"
+     },
+     {
+      "label": "50–200",
+      "color": "#fdbb84",
+      "shape": "fill"
+     },
+     {
+      "label": "200–500",
+      "color": "#fc8d59",
+      "shape": "fill"
+     },
+     {
+      "label": "500–1,500",
+      "color": "#e34a33",
+      "shape": "fill"
+     },
+     {
+      "label": "1,500+",
+      "color": "#b30000",
+      "shape": "fill"
+     }
+    ]
+   }
+  },
+  {
+   "id": "change",
+   "type": "geojson",
+   "name": "Ground stripped or buried (Sentinel-2 change)",
+   "url": "data/rasuwa-2026-change.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "area_m2"
+    ]
+   },
+   "attribution": "Derived from Copernicus Sentinel-2",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Vegetation or channel lost to debris (NDVI/NDWI change)",
+      "color": "#f97316",
+      "shape": "fill"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hot-extent",
+   "type": "geojson",
+   "name": "Flood extent mapped 27 Aug (HOT)",
+   "url": "data/rasuwa-2026-hot-extent.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "area_km2"
+    ]
+   },
+   "attribution": "Humanitarian OpenStreetMap Team (HDX)",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Flood extent observed 27 Aug",
+      "color": "#92400e",
+      "shape": "fill"
+     }
+    ]
+   }
+  },
+  {
+   "id": "ems-extent",
+   "type": "geojson",
+   "name": "Observed flood/debris extent (Copernicus EMS)",
+   "url": "data/rasuwa-2026-ems-extent.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "type",
+     "area_ha"
+    ]
+   },
+   "attribution": "© European Union, Copernicus EMS (EMSR927)",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Observed debris-flow / flood extent",
+      "color": "#78350f",
+      "shape": "fill"
+     }
+    ]
+   }
+  },
+  {
+   "id": "buildings",
+   "type": "geojson",
+   "name": "Buildings within 200 m of the channel (OSM, 25 Aug)",
+   "url": "data/rasuwa-2026-buildings.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "status",
+     "dist_m",
+     "arrival"
+    ]
+   },
+   "attribution": "© OpenStreetMap contributors (as of the day before the event)",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "In the flow’s footprint or gone from the map",
+      "color": "#b91c1c",
+      "shape": "fill"
+     },
+     {
+      "label": "Within 200 m of the channel",
+      "color": "#f59e0b",
+      "shape": "fill"
+     }
+    ]
+   }
+  },
+  {
+   "id": "ems-buildings",
+   "type": "geojson",
+   "name": "Building damage grading (Copernicus EMS)",
+   "url": "data/rasuwa-2026-ems-buildings.geojson",
+   "temporal": false,
+   "display": {
+    "heatmap": {
+     "radius": 10,
+     "weightField": "damage_weight",
+     "maxWeight": 1,
+     "handoverZoom": 14.6,
+     "intensity": 0.5
+    },
+    "tooltipFields": [
+     "damage",
+     "area"
+    ]
+   },
+   "attribution": "© European Union, Copernicus EMS (EMSR927)",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Destroyed",
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Damaged",
+      "color": "#dc2626"
+     },
+     {
+      "label": "Possibly damaged",
+      "color": "#f59e0b"
+     }
+    ]
+   }
+  },
+  {
+   "id": "ems-transport",
+   "type": "geojson",
+   "name": "Destroyed roads and bridges (Copernicus EMS)",
+   "url": "data/rasuwa-2026-ems-transport.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "type",
+     "damage"
+    ]
+   },
+   "attribution": "© European Union, Copernicus EMS (EMSR927)"
+  },
+  {
+   "id": "bridges",
+   "type": "geojson",
+   "name": "Bridge survey: 39 of 58 washed out (HOT)",
+   "url": "data/bridges-hot.geojson",
+   "temporal": false,
+   "display": {
+    "labelField": "name",
+    "labelMinZoom": 12.5,
+    "tooltipFields": [
+     "status",
+     "location",
+     "district"
+    ]
+   },
+   "attribution": "Humanitarian OpenStreetMap Team (HDX, ODbL)",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Washed out",
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Damaged",
+      "color": "#f59e0b"
+     },
+     {
+      "label": "Intact",
+      "color": "#15803d"
+     }
+    ]
+   }
+  },
+  {
+   "id": "infra",
+   "type": "geojson",
+   "name": "Schools, health posts and bridges near the channel (OSM)",
+   "url": "data/rasuwa-2026-infra.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "kind",
+     "km_downstream",
+     "dist_m"
+    ]
+   },
+   "attribution": "© OpenStreetMap contributors"
+  },
+  {
+   "id": "hydropower",
+   "type": "geojson",
+   "name": "Hydropower: 804 workers missing (23 Sep)",
+   "url": "data/hydropower.geojson",
+   "temporal": false,
+   "display": {
+    "labelField": "label",
+    "labelMinZoom": 10,
+    "tooltipFields": [
+     "part",
+     "capacity_mw",
+     "status",
+     "damage",
+     "missing_workers",
+     "bodies_recovered",
+     "note",
+     "distance_to_flow_m"
+    ]
+   },
+   "attribution": "NEA, NDRRMA and press reports; locations © OpenStreetMap contributors and HOT (ODbL)",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Damaged hydropower (label: workers missing)",
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Damaged NEA solar plant",
+      "color": "#b45309"
+     },
+     {
+      "label": "No damage report found",
+      "color": "#64748b"
+     }
+    ]
+   }
+  },
+  {
+   "id": "gauges",
+   "type": "geojson",
+   "name": "DHM river gauges on the corridor",
+   "url": "data/rasuwa-2026-gauges.geojson",
+   "temporal": false,
+   "display": {
+    "labelField": "name",
+    "labelMinZoom": 9,
+    "tooltipFields": [
+     "last_reading",
+     "telemetry_ceased",
+     "arrival_window",
+     "peak",
+     "fate",
+     "warning_m"
+    ]
+   },
+   "attribution": "DHM via Acharya & Paudel (2026), CC BY 4.0",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Gauge survived",
+      "color": "#0369a1"
+     },
+     {
+      "label": "Gauge went silent / destroyed",
+      "color": "#7f1d1d"
+     }
+    ]
+   }
+  },
+  {
+   "id": "report-places",
+   "type": "geojson",
+   "name": "Source estimates, barrier lakes and reported places",
+   "url": "data/report-places.geojson",
+   "temporal": false,
+   "display": {
+    "labelField": "name",
+    "labelMinZoom": 10.5,
+    "tooltipFields": [
+     "note"
+    ]
+   }
+  },
+  {
+   "id": "flow",
+   "type": "geojson",
+   "name": "Debris-flow front, 26 Aug 2026 (times from DHM gauges)",
+   "url": "data/rasuwa-2026-flow.geojson",
+   "temporal": {
+    "coordTimesField": "coordTimes",
+    "trackColor": "#c2410c"
+   },
+   "display": {
+    "tooltipFields": [
+     "length_km",
+     "start",
+     "end"
+    ]
+   },
+   "legend": {
+    "kind": "gradient",
+    "title": "Flow front",
+    "stops": [
+     {
+      "color": "#fed7aa",
+      "label": "earlier"
+     },
+     {
+      "color": "#c2410c"
+     },
+     {
+      "color": "#fff7ed",
+      "label": "front"
+     }
+    ]
+   }
+  },
+  {
+   "id": "places",
+   "type": "geojson",
+   "name": "Settlements along the path (flash when the front arrives)",
+   "url": "data/rasuwa-2026-places.geojson",
+   "temporal": {
+    "startField": "arrival"
+   },
+   "display": {
+    "labelField": "name",
+    "labelMinZoom": 10.5,
+    "tooltipFields": [
+     "arrival",
+     "km_downstream",
+     "dist_m",
+     "place"
+    ]
+   },
+   "attribution": "© OpenStreetMap contributors"
+  },
+  {
+   "id": "keypoints",
+   "type": "geojson",
+   "name": "Key places and gauges (research dossier)",
+   "url": "data/rasuwa-2026-keypoints.geojson",
+   "temporal": false,
+   "display": {
+    "labelField": "name",
+    "labelMinZoom": 7.5,
+    "tooltipFields": [
+     "reported",
+     "arrival",
+     "km",
+     "note"
+    ]
+   }
+  },
+  {
+   "id": "unosat-detachment",
+   "type": "geojson",
+   "name": "Detachment zone, 1.96 km² (UNOSAT, Landsat 9, 26 Aug)",
+   "url": "data/unosat-detachment.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "area_km2"
+    ]
+   },
+   "attribution": "UNOSAT, CC BY-SA 4.0",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Detachment zone",
+      "color": "#7c2d12",
+      "shape": "fill"
+     }
+    ]
+   }
+  },
+  {
+   "id": "unosat-lakes",
+   "type": "geojson",
+   "name": "Barrier lakes, 28 Aug (UNOSAT, Cartosat-3)",
+   "url": "data/unosat-lakes.geojson",
+   "temporal": false,
+   "display": {
+    "labelField": "name",
+    "labelMinZoom": 12,
+    "tooltipFields": [
+     "area_ha",
+     "observed",
+     "note"
+    ]
+   },
+   "attribution": "UNOSAT, CC BY-SA 4.0",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Barrier lake, 28 Aug",
+      "color": "#0369a1",
+      "shape": "fill"
+     }
+    ]
+   }
+  },
+  {
+   "id": "unosat-extent",
+   "type": "geojson",
+   "name": "Mudflow / rockflow extent, 65 km² (UNOSAT, 26–27 Aug)",
+   "url": "data/unosat-extent.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "area_km2"
+    ]
+   },
+   "attribution": "UNOSAT, CC BY-SA 4.0",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Mudflow / rockflow extent (UNOSAT)",
+      "color": "#9a3412",
+      "shape": "fill"
+     }
+    ]
+   }
+  },
+  {
+   "id": "heritage",
+   "type": "geojson",
+   "name": "Cultural heritage damaged or destroyed (UNOSAT)",
+   "url": "data/heritage.geojson",
+   "temporal": false,
+   "display": {
+    "labelField": "name",
+    "labelMinZoom": 13,
+    "tooltipFields": [
+     "damage",
+     "confidence",
+     "observed",
+     "note"
+    ]
+   },
+   "attribution": "UNOSAT, CC BY-SA 4.0",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Heritage site destroyed",
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Heritage site damaged",
+      "color": "#d97706"
+     }
+    ]
+   }
+  },
+  {
+   "id": "media",
+   "type": "geojson",
+   "name": "Photos and videos from the ground (485, open licences)",
+   "url": "data/media.geojson",
+   "temporal": false,
+   "display": {
+    "tooltipFields": [
+     "kind",
+     "period",
+     "captured",
+     "source",
+     "credit",
+     "license"
+    ]
+   },
+   "attribution": "Wikimedia Commons, KartaView, Flickr contributors (licence per item); YouTube links",
+   "legend": {
+    "kind": "swatches",
+    "items": [
+     {
+      "label": "Photo before the flood",
+      "color": "#0f766e"
+     },
+     {
+      "label": "Street-level frame (KartaView)",
+      "color": "#475569"
+     },
+     {
+      "label": "On the day",
+      "color": "#b91c1c"
+     },
+     {
+      "label": "After (radar, photos, video links)",
+      "color": "#c2410c"
+     }
+    ]
+   }
+  },
+  {
+   "id": "s2-source-before",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2025-11-10 (Langtang Lirung north face – Lende Khola)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-source-before.webp",
+    "coordinates": [
+     [
+      85.43,
+      28.36
+     ],
+     [
+      85.55996883377217,
+      28.36
+     ],
+     [
+      85.55996883377217,
+      28.22004256166826
+     ],
+     [
+      85.43,
+      28.22004256166826
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2025",
+   "description": "Before: sentinel-2b 2025-11-10, 0% cloud over the area"
+  },
+  {
+   "id": "s2-source-after",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2026-09-16 (Langtang Lirung north face – Lende Khola)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-source-after.webp",
+    "coordinates": [
+     [
+      85.43,
+      28.36
+     ],
+     [
+      85.55996883377217,
+      28.36
+     ],
+     [
+      85.55996883377217,
+      28.22004256166826
+     ],
+     [
+      85.43,
+      28.22004256166826
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2026",
+   "description": "After: sentinel-2b 2026-09-16, 50.5% cloud over the area"
+  },
+  {
+   "id": "s2-upper-before",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2025-11-10 (Rasuwagadhi–Timure–Syabrubesi)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-upper-before.webp",
+    "coordinates": [
+     [
+      85.315,
+      28.29
+     ],
+     [
+      85.40501709734674,
+      28.29
+     ],
+     [
+      85.40501709734674,
+      28.13998140201329
+     ],
+     [
+      85.315,
+      28.13998140201329
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2025",
+   "description": "Before: sentinel-2b 2025-11-10, 0% cloud over the area"
+  },
+  {
+   "id": "s2-upper-after",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2026-09-21 (Rasuwagadhi–Timure–Syabrubesi)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-upper-after.webp",
+    "coordinates": [
+     [
+      85.315,
+      28.29
+     ],
+     [
+      85.40501709734674,
+      28.29
+     ],
+     [
+      85.40501709734674,
+      28.13998140201329
+     ],
+     [
+      85.315,
+      28.13998140201329
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2026",
+   "description": "After: sentinel-2c 2026-09-21, 32.3% cloud over the area"
+  },
+  {
+   "id": "s2-middle-before",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2025-10-16 (Syabrubesi–Betrawati)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-middle-before.webp",
+    "coordinates": [
+     [
+      85.17,
+      28.16
+     ],
+     [
+      85.34997332688941,
+      28.16
+     ],
+     [
+      85.34997332688941,
+      27.95500462803964
+     ],
+     [
+      85.17,
+      27.95500462803964
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2025",
+   "description": "Before: sentinel-2c 2025-10-16, 0% cloud over the area"
+  },
+  {
+   "id": "s2-middle-after",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2026-09-21 (Syabrubesi–Betrawati)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-middle-after.webp",
+    "coordinates": [
+     [
+      85.17,
+      28.16
+     ],
+     [
+      85.34997332688941,
+      28.16
+     ],
+     [
+      85.34997332688941,
+      27.95500462803964
+     ],
+     [
+      85.17,
+      27.95500462803964
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2026",
+   "description": "After: sentinel-2c 2026-09-21, 30.6% cloud over the area"
+  },
+  {
+   "id": "s2-bidur-before",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2025-10-21 (Betrawati–Trishuli–Bidur)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-bidur-before.webp",
+    "coordinates": [
+     [
+      85.12,
+      27.99
+     ],
+     [
+      85.20998195572334,
+      27.99
+     ],
+     [
+      85.20998195572334,
+      27.86998510404443
+     ],
+     [
+      85.12,
+      27.86998510404443
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2025",
+   "description": "Before: sentinel-2b 2025-10-21, 0% cloud over the area"
+  },
+  {
+   "id": "s2-bidur-after",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2026-09-21 (Betrawati–Trishuli–Bidur)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-bidur-after.webp",
+    "coordinates": [
+     [
+      85.12,
+      27.99
+     ],
+     [
+      85.20998195572334,
+      27.99
+     ],
+     [
+      85.20998195572334,
+      27.86998510404443
+     ],
+     [
+      85.12,
+      27.86998510404443
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2026",
+   "description": "After: sentinel-2c 2026-09-21, 0.1% cloud over the area"
+  },
+  {
+   "id": "s2-galchhi-before",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2025-10-26 (Galchhi–Phosretar)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-galchhi-before.webp",
+    "coordinates": [
+     [
+      84.95,
+      27.87
+     ],
+     [
+      85.0699557454265,
+      27.87
+     ],
+     [
+      85.0699557454265,
+      27.77001753670208
+     ],
+     [
+      84.95,
+      27.77001753670208
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2025",
+   "description": "Before: sentinel-2c 2025-10-26, 0% cloud over the area"
+  },
+  {
+   "id": "s2-galchhi-after",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2026-09-21 (Galchhi–Phosretar)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-galchhi-after.webp",
+    "coordinates": [
+     [
+      84.95,
+      27.87
+     ],
+     [
+      85.0699557454265,
+      27.87
+     ],
+     [
+      85.0699557454265,
+      27.77001753670208
+     ],
+     [
+      84.95,
+      27.77001753670208
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2026",
+   "description": "After: sentinel-2c 2026-09-21, 2.2% cloud over the area"
+  },
+  {
+   "id": "s2-benighat-before",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2025-10-26 (Benighat–Malekhu)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-benighat-before.webp",
+    "coordinates": [
+     [
+      84.73,
+      27.845
+     ],
+     [
+      84.86995563212584,
+      27.845
+     ],
+     [
+      84.86995563212584,
+      27.77996196747789
+     ],
+     [
+      84.73,
+      27.77996196747789
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2025",
+   "description": "Before: sentinel-2c 2025-10-26, 0% cloud over the area"
+  },
+  {
+   "id": "s2-benighat-after",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2026-09-21 (Benighat–Malekhu)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-benighat-after.webp",
+    "coordinates": [
+     [
+      84.73,
+      27.845
+     ],
+     [
+      84.86995563212584,
+      27.845
+     ],
+     [
+      84.86995563212584,
+      27.77996196747789
+     ],
+     [
+      84.73,
+      27.77996196747789
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2026",
+   "description": "After: sentinel-2c 2026-09-21, 9.4% cloud over the area"
+  },
+  {
+   "id": "s2-mugling-before",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2025-10-26 (Kurintar–Mugling)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-mugling-before.webp",
+    "coordinates": [
+     [
+      84.53,
+      27.895
+     ],
+     [
+      84.65996064100071,
+      27.895
+     ],
+     [
+      84.65996064100071,
+      27.829961967462037
+     ],
+     [
+      84.53,
+      27.829961967462037
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2025",
+   "description": "Before: sentinel-2c 2025-10-26, 0% cloud over the area"
+  },
+  {
+   "id": "s2-mugling-after",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2026-09-21 (Kurintar–Mugling)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-mugling-after.webp",
+    "coordinates": [
+     [
+      84.53,
+      27.895
+     ],
+     [
+      84.65996064100071,
+      27.895
+     ],
+     [
+      84.65996064100071,
+      27.829961967462037
+     ],
+     [
+      84.53,
+      27.829961967462037
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2026",
+   "description": "After: sentinel-2c 2026-09-21, 20.5% cloud over the area"
+  },
+  {
+   "id": "s2-devghat-before",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2025-11-05 (Devghat)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-devghat-before.webp",
+    "coordinates": [
+     [
+      84.39,
+      27.775
+     ],
+     [
+      84.46997752607314,
+      27.775
+     ],
+     [
+      84.46997752607314,
+      27.69999067888659
+     ],
+     [
+      84.39,
+      27.69999067888659
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2025",
+   "description": "Before: sentinel-2c 2025-11-05, 0% cloud over the area"
+  },
+  {
+   "id": "s2-devghat-after",
+   "type": "imagery",
+   "name": "Sentinel-2 · 2026-09-21 (Devghat)",
+   "source": {
+    "type": "image",
+    "url": "img/rasuwa-2026-devghat-after.webp",
+    "coordinates": [
+     [
+      84.39,
+      27.775
+     ],
+     [
+      84.46997752607314,
+      27.775
+     ],
+     [
+      84.46997752607314,
+      27.69999067888659
+     ],
+     [
+      84.39,
+      27.69999067888659
+     ]
+    ]
+   },
+   "attribution": "Contains modified Copernicus Sentinel data 2026",
+   "description": "After: sentinel-2c 2026-09-21, 6.5% cloud over the area"
+  },
+  {
+   "id": "vhr-source-after-1",
+   "type": "imagery",
+   "name": "GeoEye-1 · 2026-09-06 (Langtang Lirung north face)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B0500011006DC010.tif",
+    "bounds": [
+     85.4793,
+     28.23956,
+     85.5507,
+     28.30244
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (GeoEye-1), CC BY-NC 4.0",
+   "description": "After: GeoEye-1, 2026-09-06 04:50 UTC, 0.69 m pixels, 41° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-source-after-0",
+   "type": "imagery",
+   "name": "Legion-6 · 2026-09-18 (Langtang Lirung north face)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B160001101ECBC10.tif",
+    "bounds": [
+     85.4793,
+     28.23956,
+     85.5507,
+     28.30244
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (Legion-6), CC BY-NC 4.0",
+   "description": "After: Legion-6, 2026-09-18 01:21 UTC, 0.36 m pixels, 15° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-barrier-lake-before-0",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-08-26 (Barrier lake at the Chhochen Khola confluence)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/planetscope-2026-08-26/items/20260826_054456_67_251f/20260826_054456_67_251f_visual.tif",
+    "bounds": [
+     85.46519,
+     28.31413,
+     85.50601,
+     28.35007
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "Before: PlanetScope, 2026-08-26 05:44 UTC, 3.4 m pixels, 4° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-barrier-lake-after-0",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-08-28 (Barrier lake at the Chhochen Khola confluence)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/planetscope-2026-08-28/items/20260828_045742_14_2544/20260828_045742_14_2544_visual.tif",
+    "bounds": [
+     85.46519,
+     28.31413,
+     85.50601,
+     28.35007
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "After: PlanetScope, 2026-08-28 04:57 UTC, 3.9 m pixels, 4° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-rasuwagadhi-before-2",
+   "type": "imagery",
+   "name": "WorldView-2 · 2021-10-16 (Rasuwagadhi border crossing)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/10300100C86CED00.tif",
+    "bounds": [
+     85.3625,
+     28.26433,
+     85.3931,
+     28.29127
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "Before: WorldView-2, 2021-10-16 05:22 UTC, 0.57 m pixels, 27° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-rasuwagadhi-before-1",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-05-27 (Rasuwagadhi border crossing)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/pre-event/planetscope-2026-05-27/items/20260527_053219_95_254a/20260527_053219_95_254a_visual.tif",
+    "bounds": [
+     85.3625,
+     28.26433,
+     85.3931,
+     28.29127
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "Before: PlanetScope, 2026-05-27 05:32 UTC, 3.7 m pixels, 5° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-rasuwagadhi-before-0",
+   "type": "imagery",
+   "name": "NEA drone orthophoto · 2025-09-01 (Rasuwagadhi border crossing)",
+   "source": {
+    "type": "cog",
+    "url": "https://oin-hotosm-temp.s3.us-east-1.amazonaws.com/6a8fa5c28f75f1daf8b40eb9/0/6a8fa5c28f75f1daf8b40eba.tif",
+    "bounds": [
+     85.3625,
+     28.26433,
+     85.3931,
+     28.29127
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© NEA Engineering Company (OpenAerialMap), CC BY 4.0",
+   "description": "Before: NEA drone orthophoto, 2025-09-01 12:00 UTC, 0.035 m pixels. CC BY 4.0."
+  },
+  {
+   "id": "vhr-rasuwagadhi-after-3",
+   "type": "imagery",
+   "name": "Vantor mosaic (HOT) · 27 Aug–8 Sep (Rasuwagadhi border crossing)",
+   "source": {
+    "type": "cog",
+    "url": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL/buildings/hot_flood_npl_buildings_damage_post.tif",
+    "bounds": [
+     85.3625,
+     28.26433,
+     85.3931,
+     28.29127
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data, mosaic by Humanitarian OpenStreetMap Team, CC BY-NC 4.0",
+   "description": "After: Vantor mosaic (HOT), 2026-09-08 00:00 UTC, 0.4 m pixels. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-rasuwagadhi-after-2",
+   "type": "imagery",
+   "name": "Pelican · 2026-09-01 (Rasuwagadhi border crossing)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/pelican-2026-09-01/items/20260901_050632_98_300b/20260901_050632_98_300b_visual.tif",
+    "bounds": [
+     85.3625,
+     28.26433,
+     85.3931,
+     28.29127
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (Pelican), Crisis Response release, CC BY-NC 4.0",
+   "description": "After: Pelican, 2026-09-01 05:06 UTC, 0.57 m pixels, 10° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-rasuwagadhi-after-1",
+   "type": "imagery",
+   "name": "Legion-4 · 2026-09-01 (Rasuwagadhi border crossing)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B1400011010A2910.tif",
+    "bounds": [
+     85.3625,
+     28.26433,
+     85.3931,
+     28.29127
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (Legion-4), CC BY-NC 4.0",
+   "description": "After: Legion-4, 2026-09-01 02:58 UTC, 0.4 m pixels, 27° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-rasuwagadhi-after-0",
+   "type": "imagery",
+   "name": "WorldView-3 · 2026-08-27 (Rasuwagadhi border crossing)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B040001100881610.tif",
+    "bounds": [
+     85.3625,
+     28.26433,
+     85.3931,
+     28.29127
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-3), CC BY-NC 4.0",
+   "description": "After: WorldView-3, 2026-08-27 05:05 UTC, 0.31 m pixels, 9° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-timure-before-1",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-05-27 (Timure dry port)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/pre-event/planetscope-2026-05-27/items/20260527_053219_95_254a/20260527_053219_95_254a_visual.tif",
+    "bounds": [
+     85.3517,
+     28.24103,
+     85.3823,
+     28.26797
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "Before: PlanetScope, 2026-05-27 05:32 UTC, 3.7 m pixels, 5° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-timure-before-0",
+   "type": "imagery",
+   "name": "WorldView-2 · 2021-10-16 (Timure dry port)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/10300100C86CED00.tif",
+    "bounds": [
+     85.3517,
+     28.24103,
+     85.3823,
+     28.26797
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "Before: WorldView-2, 2021-10-16 05:22 UTC, 0.57 m pixels, 27° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-timure-after-2",
+   "type": "imagery",
+   "name": "Legion-1 · 2026-08-28 (Timure dry port)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B110001101165110.tif",
+    "bounds": [
+     85.3517,
+     28.24103,
+     85.3823,
+     28.26797
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (Legion-1), CC BY-NC 4.0",
+   "description": "After: Legion-1, 2026-08-28 05:22 UTC, 0.36 m pixels, 19° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-timure-after-1",
+   "type": "imagery",
+   "name": "WorldView-3 · 2026-08-27 (Timure dry port)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B040001100881610.tif",
+    "bounds": [
+     85.3517,
+     28.24103,
+     85.3823,
+     28.26797
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-3), CC BY-NC 4.0",
+   "description": "After: WorldView-3, 2026-08-27 05:05 UTC, 0.31 m pixels, 9° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-timure-after-0",
+   "type": "imagery",
+   "name": "Legion-4 · 2026-09-08 (Timure dry port)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B14000110116A310.tif",
+    "bounds": [
+     85.3517,
+     28.24103,
+     85.3823,
+     28.26797
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (Legion-4), CC BY-NC 4.0",
+   "description": "After: Legion-4, 2026-09-08 07:47 UTC, 0.56 m pixels, 41° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-syabrubesi-before-2",
+   "type": "imagery",
+   "name": "WorldView-2 · 2021-10-16 (Syabrubesi)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/10300100C86CED00.tif",
+    "bounds": [
+     85.32272,
+     28.14933,
+     85.35328,
+     28.17627
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "Before: WorldView-2, 2021-10-16 05:22 UTC, 0.57 m pixels, 27° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-syabrubesi-before-1",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-05-27 (Syabrubesi)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/pre-event/planetscope-2026-05-27/items/20260527_053221_96_254a/20260527_053221_96_254a_visual.tif",
+    "bounds": [
+     85.32272,
+     28.14933,
+     85.35328,
+     28.17627
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "Before: PlanetScope, 2026-05-27 05:32 UTC, 3.7 m pixels, 5° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-syabrubesi-before-0",
+   "type": "imagery",
+   "name": "GeoEye-1 · 2023-09-17 (Syabrubesi)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/10500100364E8400.tif",
+    "bounds": [
+     85.32272,
+     28.14933,
+     85.35328,
+     28.17627
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (GeoEye-1), CC BY-NC 4.0",
+   "description": "Before: GeoEye-1, 2023-09-17 05:09 UTC, 0.43 m pixels, 12° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-syabrubesi-after-4",
+   "type": "imagery",
+   "name": "Vantor mosaic (HOT) · 27 Aug–8 Sep (Syabrubesi)",
+   "source": {
+    "type": "cog",
+    "url": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL/buildings/hot_flood_npl_buildings_damage_post.tif",
+    "bounds": [
+     85.32272,
+     28.14933,
+     85.35328,
+     28.17627
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data, mosaic by Humanitarian OpenStreetMap Team, CC BY-NC 4.0",
+   "description": "After: Vantor mosaic (HOT), 2026-09-08 00:00 UTC, 0.4 m pixels. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-syabrubesi-after-3",
+   "type": "imagery",
+   "name": "Pelican · 2026-09-01 (Syabrubesi)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/pelican-2026-09-01/items/20260901_050635_67_300b/20260901_050635_67_300b_visual.tif",
+    "bounds": [
+     85.32272,
+     28.14933,
+     85.35328,
+     28.17627
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (Pelican), Crisis Response release, CC BY-NC 4.0",
+   "description": "After: Pelican, 2026-09-01 05:06 UTC, 0.57 m pixels, 10° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-syabrubesi-after-2",
+   "type": "imagery",
+   "name": "Legion-2 · 2026-09-12 (Syabrubesi)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B1200011012B2A10.tif",
+    "bounds": [
+     85.32272,
+     28.14933,
+     85.35328,
+     28.17627
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (Legion-2), CC BY-NC 4.0",
+   "description": "After: Legion-2, 2026-09-12 05:26 UTC, 0.38 m pixels, 20° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-syabrubesi-after-1",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-08-26 (Syabrubesi)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/planetscope-2026-08-26/items/20260826_054500_80_251f/20260826_054500_80_251f_visual.tif",
+    "bounds": [
+     85.32272,
+     28.14933,
+     85.35328,
+     28.17627
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "After: PlanetScope, 2026-08-26 05:45 UTC, 3.4 m pixels, 4° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-syabrubesi-after-0",
+   "type": "imagery",
+   "name": "WorldView-3 · 2026-08-27 (Syabrubesi)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B040001100882F10.tif",
+    "bounds": [
+     85.32272,
+     28.14933,
+     85.35328,
+     28.17627
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-3), CC BY-NC 4.0",
+   "description": "After: WorldView-3, 2026-08-27 05:05 UTC, 0.32 m pixels, 12° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-simle-before-2",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-05-27 (Simle and Upper Trishuli-3B)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/pre-event/planetscope-2026-05-27/items/20260527_053224_18_254a/20260527_053224_18_254a_visual.tif",
+    "bounds": [
+     85.16542,
+     27.99513,
+     85.19798,
+     28.02387
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "Before: PlanetScope, 2026-05-27 05:32 UTC, 3.7 m pixels, 5° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-simle-before-1",
+   "type": "imagery",
+   "name": "WorldView-2 · 2024-05-29 (Simle and Upper Trishuli-3B)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/10300100FCB83600.tif",
+    "bounds": [
+     85.16542,
+     27.99513,
+     85.19798,
+     28.02387
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "Before: WorldView-2, 2024-05-29 05:10 UTC, 0.58 m pixels, 28° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-simle-before-0",
+   "type": "imagery",
+   "name": "NEA drone orthophoto · 2025-09-03 (Simle and Upper Trishuli-3B)",
+   "source": {
+    "type": "cog",
+    "url": "https://oin-hotosm-temp.s3.us-east-1.amazonaws.com/6a8f9da28f75f1daf8b405b5/0/6a8f9da28f75f1daf8b405b6.tif",
+    "bounds": [
+     85.16542,
+     27.99513,
+     85.19798,
+     28.02387
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© NEA Engineering Company (OpenAerialMap), CC BY 4.0",
+   "description": "Before: NEA drone orthophoto, 2025-09-03 12:00 UTC, 0.06 m pixels. CC BY 4.0."
+  },
+  {
+   "id": "vhr-simle-after-1",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-08-26 (Simle and Upper Trishuli-3B)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/planetscope-2026-08-26/items/20260826_050133_00_255f/20260826_050133_00_255f_visual.tif",
+    "bounds": [
+     85.16542,
+     27.99513,
+     85.19798,
+     28.02387
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "After: PlanetScope, 2026-08-26 05:01 UTC, 3.8 m pixels, 3° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-simle-after-0",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-08-26 (Simle and Upper Trishuli-3B)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/planetscope-2026-08-26/items/20260826_050135_34_255f/20260826_050135_34_255f_visual.tif",
+    "bounds": [
+     85.16542,
+     27.99513,
+     85.19798,
+     28.02387
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "After: PlanetScope, 2026-08-26 05:01 UTC, 3.8 m pixels, 3° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-betrawati-before-1",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-05-27 (Betrawati)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/pre-event/planetscope-2026-05-27/items/20260527_053226_41_254a/20260527_053226_41_254a_visual.tif",
+    "bounds": [
+     85.17074,
+     27.95963,
+     85.20126,
+     27.98657
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "Before: PlanetScope, 2026-05-27 05:32 UTC, 3.7 m pixels, 5° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-betrawati-before-0",
+   "type": "imagery",
+   "name": "WorldView-2 · 2024-05-29 (Betrawati)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/10300100FCB83600.tif",
+    "bounds": [
+     85.17074,
+     27.95963,
+     85.20126,
+     27.98657
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "Before: WorldView-2, 2024-05-29 05:10 UTC, 0.58 m pixels, 28° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-betrawati-after-1",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-08-28 (Betrawati)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/planetscope-2026-08-28/items/20260828_045749_15_2544/20260828_045749_15_2544_visual.tif",
+    "bounds": [
+     85.17074,
+     27.95963,
+     85.20126,
+     27.98657
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "After: PlanetScope, 2026-08-28 04:57 UTC, 3.9 m pixels, 4° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-betrawati-after-0",
+   "type": "imagery",
+   "name": "Legion-6 · 2026-09-07 (Betrawati)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B160001101DA4B10.tif",
+    "bounds": [
+     85.17074,
+     27.95963,
+     85.20126,
+     27.98657
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (Legion-6), CC BY-NC 4.0",
+   "description": "After: Legion-6, 2026-09-07 05:59 UTC, 0.39 m pixels, 23° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-trishuli-before-2",
+   "type": "imagery",
+   "name": "WorldView-2 · 2024-05-29 (Trishuli Bazar and Bidur)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/10300100FCB83600.tif",
+    "bounds": [
+     85.12965,
+     27.90114,
+     85.17235,
+     27.93886
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "Before: WorldView-2, 2024-05-29 05:10 UTC, 0.58 m pixels, 28° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-trishuli-before-1",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-05-27 (Trishuli Bazar and Bidur)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/pre-event/planetscope-2026-05-27/items/20260527_053226_41_254a/20260527_053226_41_254a_visual.tif",
+    "bounds": [
+     85.12965,
+     27.90114,
+     85.17235,
+     27.93886
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "Before: PlanetScope, 2026-05-27 05:32 UTC, 3.7 m pixels, 5° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-trishuli-before-0",
+   "type": "imagery",
+   "name": "Legion-6 · 2026-02-05 (Trishuli Bazar and Bidur)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B160001100CDB210.tif",
+    "bounds": [
+     85.12965,
+     27.90114,
+     85.17235,
+     27.93886
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (Legion-6), CC BY-NC 4.0",
+   "description": "Before: Legion-6, 2026-02-05 08:17 UTC, 0.35 m pixels, 16° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-trishuli-after-2",
+   "type": "imagery",
+   "name": "Vantor mosaic (HOT) · 27 Aug–8 Sep (Trishuli Bazar and Bidur)",
+   "source": {
+    "type": "cog",
+    "url": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL/buildings/hot_flood_npl_buildings_damage_post.tif",
+    "bounds": [
+     85.12965,
+     27.90114,
+     85.17235,
+     27.93886
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data, mosaic by Humanitarian OpenStreetMap Team, CC BY-NC 4.0",
+   "description": "After: Vantor mosaic (HOT), 2026-09-08 00:00 UTC, 0.4 m pixels. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-trishuli-after-1",
+   "type": "imagery",
+   "name": "WorldView-2 · 2026-09-08 (Trishuli Bazar and Bidur)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B030001100EF5210.tif",
+    "bounds": [
+     85.12965,
+     27.90114,
+     85.17235,
+     27.93886
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "After: WorldView-2, 2026-09-08 05:02 UTC, 0.77 m pixels, 40° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-trishuli-after-0",
+   "type": "imagery",
+   "name": "WorldView-2 · 2026-09-08 (Trishuli Bazar and Bidur)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B030001100EF5510.tif",
+    "bounds": [
+     85.12965,
+     27.90114,
+     85.17235,
+     27.93886
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "After: WorldView-2, 2026-09-08 05:00 UTC, 0.48 m pixels, 12° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-phosretar-after-0",
+   "type": "imagery",
+   "name": "WorldView-2 · 2026-09-08 (Phosretar)",
+   "source": {
+    "type": "cog",
+    "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B030001100EF5110.tif",
+    "bounds": [
+     85.01066,
+     27.81783,
+     85.04114,
+     27.84477
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Vantor Open Data (WorldView-2), CC BY-NC 4.0",
+   "description": "After: WorldView-2, 2026-09-08 05:02 UTC, 0.71 m pixels, 37° off-nadir. CC BY-NC 4.0."
+  },
+  {
+   "id": "vhr-galchhi-after-0",
+   "type": "imagery",
+   "name": "PlanetScope · 2026-08-28 (Galchhi)",
+   "source": {
+    "type": "cog",
+    "url": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/post-event/planetscope-2026-08-28/items/20260828_050143_19_2520/20260828_050143_19_2520_visual.tif",
+    "bounds": [
+     84.98527,
+     27.78393,
+     85.01573,
+     27.81087
+    ],
+    "maxzoom": 20
+   },
+   "attribution": "© Planet Labs PBC (PlanetScope), Crisis Response release, CC BY-NC 4.0",
+   "description": "After: PlanetScope, 2026-08-28 05:01 UTC, 3.8 m pixels, 2° off-nadir. CC BY-NC 4.0."
+  }
+ ],
+ "chapters": [
+  {
+   "id": "title",
+   "kicker": "26 August 2026 · Rasuwa → Chitwan",
+   "title": "The Bhote Koshi–Trishuli disaster",
+   "body": "At **08:37:10** a slab of rock and glacier ice broke from the north face of **Langtang Lirung**. In the next six hours the debris flow it became ran **200 km** down the Bhote Koshi, Trishuli and Narayani, past the Nepal–China border, a dry port, a trekking town, a cascade of hydropower plants and a string of river towns.\n\nIt was Nepal's deadliest disaster since the 2015 earthquake. As of 22 September the NDRRMA counts **1,451 bodies or remains recovered and 5,705 people missing**; China reported 43 dead and 519 missing. The government puts damage and losses at **US$2.70 bn**. All figures are still provisional.\n\nThis story follows the front minute by minute, then goes town by town with the sharpest before-and-after imagery that is openly available. Every layer is open data; the sources are listed in each chapter.",
+   "camera": {
+    "center": [
+     85,
+     28
+    ],
+    "zoom": 8.6,
+    "pitch": 50,
+    "bearing": -20,
+    "duration": 3500
+   },
+   "layers": [
+    "rivers",
+    "flow",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "stats": [
+    {
+     "label": "bodies or remains recovered (NDRRMA, 22 Sep)",
+     "value": "1,451"
+    },
+    {
+     "label": "missing (NDRRMA, 22 Sep)",
+     "value": "5,705"
+    },
+    {
+     "label": "from the source to Devghat",
+     "value": "200 km"
+    },
+    {
+     "label": "damage and losses (government RDNA)",
+     "value": "US$2.70 bn"
+    }
+   ],
+   "sources": [
+    {
+     "label": "NDRRMA figures to 22 Sep 19:00 (via Pardafas, 23 Sep)",
+     "url": "https://www.pardafas.com/2026/09/23/189125/"
+    },
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    },
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "corridor",
+   "kicker": "Before the flood",
+   "title": "A corridor of trade, power and towns",
+   "body": "The Bhote Koshi valley carries Nepal's main road to China. The **Rasuwagadhi–Kerung crossing** had only just reopened: the July 2025 glacial-lake flood from Tibet had closed it for **177 days**, and it reopened on 2026-01-01 on a 91 m Bailey bridge. It had been open 237 days when this flood came, 414 days after the last one.\n\nThe river is also one of Nepal's densest hydropower corridors. The government counts **13 projects totalling 759 MW** hit by this flood — 7 operating (250 MW) and 6 under construction (509 MW) — with thousands of workers in tunnels and camps.\n\nAbout **70,030 people** live within 500 m of the path and **209,751** within 2 km (Kontur, ~0.7 km² cells, so an order of magnitude). OpenStreetMap held **6,966 buildings** within 200 m of the channel on 25 August.",
+   "camera": {
+    "center": [
+     85.22,
+     28.02
+    ],
+    "zoom": 9.9,
+    "pitch": 45,
+    "bearing": -25,
+    "duration": 3500
+   },
+   "layers": [
+    "rivers",
+    "flow",
+    "population",
+    "hydropower",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Hydropower on the corridor",
+    "unit": "MW",
+    "data": [
+     {
+      "label": "Upper Trishuli-1",
+      "value": 216,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Rasuwa Bhotekoshi",
+      "value": 120,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Rasuwagadhi",
+      "value": 111,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Trishuli Galchhi",
+      "value": 75,
+      "color": "#64748b"
+     },
+     {
+      "label": "Upper Trishuli-3A",
+      "value": 60,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Upper Trishuli-3B",
+      "value": 37,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Bhotekoshi Khola Hydropower Project",
+      "value": 33.5,
+      "color": "#64748b"
+     },
+     {
+      "label": "NEA solar plant, Nuwakot",
+      "value": 25,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Upper Trishuli-I Cascade HEP",
+      "value": 24.6,
+      "color": "#64748b"
+     }
+    ],
+    "note": "Red: reported damaged (NEA, NDRRMA, press). Grey: no damage report found (not the same as undamaged)."
+   },
+   "sources": [
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    },
+    {
+     "label": "Humanitarian OpenStreetMap Team — flood extent, bridge damage and exposed hydropower (HDX, ODbL)",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl"
+    },
+    {
+     "label": "Kontur Population (2023), CC BY 4.0",
+     "url": "https://data.humdata.org/dataset/kontur-population-nepal"
+    },
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    }
+   ]
+  },
+  {
+   "id": "source",
+   "kicker": "08:37:10 · Langtang Lirung north face",
+   "title": "The mountain fails",
+   "body": "Seismometers caught it. USGS catalogued a **magnitude 5.2 “landslide” signal** (us7000tbwb) at 08:37:10 — a hand-placed origin; EMSC and later phase picks put it at **08:37:44** — and GFZ an Mw 5.7 event with a landslide signature, while Nepal's Department of Mines and Geology first logged an M4.4 earthquake. Chinese seismologists found smaller signals at 06:04, 06:50 and 08:15–08:19: the slope was already moving, and radar had shown up to 30 cm of creep in the weeks before.\n\nUNOSAT mapped the **detachment zone — 1.96 km²** — on Landsat 9 that same day; the scar drops about 1,100–1,200 m. Seismic estimates of the volume range from about 10 million to 500 million m³; no before-and-after elevation model has measured it yet. There was **no significant rain** (8.8 mm in the previous three days), so rainfall-based warnings never triggered. A **second failure** followed at 11:45:35 (M4.2); USGS has since relocated it to beside the lower barrier lake.\n\nThe swipe compares Sentinel-2 in November 2025 with 16 September: the grey scar of the flow runs from the mountain down to the valley floor. Switch the right side to the Legion-6 scene of 2026-09-18 for a sub-metre view; no sub-metre image of the source exists from before the event.",
+   "camera": {
+    "center": [
+     85.49,
+     28.3
+    ],
+    "zoom": 11.6,
+    "pitch": 55,
+    "bearing": 160,
+    "duration": 5000
+   },
+   "layers": [
+    "report-places",
+    "change",
+    "unosat-detachment"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "s2-source-before",
+    "right": "s2-source-after",
+    "leftLabel": "Before · 2025-11-10 · Sentinel-2",
+    "rightLabel": "After · 2026-09-16 · Sentinel-2",
+    "rightOptions": [
+     {
+      "layers": "s2-source-after",
+      "label": "After · 2026-09-16 · Sentinel-2 10 m"
+     },
+     {
+      "layers": "vhr-source-after-0",
+      "label": "After · 2026-09-18 · Legion-6 0.36 m"
+     },
+     {
+      "layers": "vhr-source-after-1",
+      "label": "After · 2026-09-06 · GeoEye-1 0.69 m"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "seismic magnitude (USGS, landslide signal)",
+     "value": "Ms 5.2"
+    },
+    {
+     "label": "detachment zone (UNOSAT)",
+     "value": "1.96 km²"
+    },
+    {
+     "label": "rain in the previous three days",
+     "value": "8.8 mm"
+    },
+    {
+     "label": "second failure",
+     "value": "11:45:35"
+    }
+   ],
+   "sources": [
+    {
+     "label": "USGS event us7000tbwb (Ms 5.2 landslide signal)",
+     "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tbwb"
+    },
+    {
+     "label": "Huang, Wang & Chen (2026), seismic analysis of the Langtang Lirung avalanche (Zenodo 22884627)",
+     "url": "https://zenodo.org/records/22884627"
+    },
+    {
+     "label": "UNOSAT rapid mapping FL20260826NPL — detachment zone, barrier lakes, flow extent, heritage damage (CC BY-SA 4.0)",
+     "url": "https://data.humdata.org/dataset/mudflow-rockflow-impact-assessment-in-rasuwa-nuwakot-districts-bagmati-province-nepal-as-o"
+    },
+    {
+     "label": "USGS event us7000tc90 (second failure, relocated 21 Sep)",
+     "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tc90"
+    },
+    {
+     "label": "Kathmandu Post, 28 Aug 2026 — what triggered the Rasuwa flood",
+     "url": "https://kathmandupost.com/national/2026/08/28/what-triggered-the-rasuwa-flood-scientists-piece-together-a-complex-chain-of-events"
+    },
+    {
+     "label": "ICIMOD — Kyirong–Rasuwa flood 2026",
+     "url": "https://www.icimod.org/kyirong-rasuwa-flood-2026-nepal-china-border/"
+    },
+    {
+     "label": "Copernicus Sentinel-2 L2A via Element 84 Earth Search — contains modified Copernicus Sentinel data",
+     "url": "https://earth-search.aws.element84.com/v1"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "first-minutes",
+   "kicker": "08:37 → 09:05 · riding the front",
+   "title": "Twenty kilometres in seven minutes",
+   "body": "In the upper gorge the front moved at **25–49 m/s (90–180 km/h)**. It crossed into Tibet and back and reached **Rasuwagadhi about seven minutes** after the detachment; CCTV at Gyirong Port caught it at 08:44. The Rasuwagadhi gauge sent its last reading, 1.62 m, at 08:40 — far below its 6 m warning level — and then fell silent. **Timure** was hit about a minute later, **Syabrubesi** at 08:50–09:00.\n\nThe camera follows the modelled front (arrival times from the gauges, eased between reports) and the timeline slows down while the front is fastest. Settlements flash as it reaches them.",
+   "camera": {
+    "center": [
+     85.5135,
+     28.2774
+    ],
+    "zoom": 13.1,
+    "pitch": 52,
+    "bearing": -21,
+    "duration": 4500
+   },
+   "layers": [
+    "flow",
+    "places",
+    "gauges",
+    "report-places"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "time": {
+    "start": "2026-08-26T08:36:00+05:45",
+    "end": "2026-08-26T09:06:00+05:45",
+    "duration": 40,
+    "autoplay": true,
+    "timeZone": "Asia/Kathmandu",
+    "follow": {
+     "layer": "flow",
+     "zoom": 13.1,
+     "pitch": 52,
+     "bearing": "track",
+     "maxViewSpeed": 0.14
+    },
+    "captions": [
+     {
+      "time": "2026-08-26T08:37:10+05:45",
+      "text": "Rock and ice fall from Langtang Lirung (seismic signal: USGS 08:37:10, EMSC 08:37:44)"
+     },
+     {
+      "time": "2026-08-26T08:40:00+05:45",
+      "text": "Rasuwagadhi gauge: last transmission, 1.62 m (warning level 6 m)"
+     },
+     {
+      "time": "2026-08-26T08:44:00+05:45",
+      "text": "CCTV at Gyirong Port shows the flood"
+     },
+     {
+      "time": "2026-08-26T08:45:00+05:45",
+      "text": "Timure dry port hit"
+     },
+     {
+      "time": "2026-08-26T08:50:00+05:45",
+      "text": "Rasuwagadhi gauge silent; Syabrubesi gauge sends its last reading"
+     },
+     {
+      "time": "2026-08-26T08:55:00+05:45",
+      "text": "The front reaches Syabrubesi"
+     },
+     {
+      "time": "2026-08-26T09:00:00+05:45",
+      "text": "DHM is told of a large flood entering the Bhote Koshi from Tibet"
+     }
+    ]
+   },
+   "sources": [
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "barrier-lake",
+   "kicker": "26–30 Aug · Tibet",
+   "title": "A lake behind the debris",
+   "body": "Where the Chhochen Khola meets the Purepu–Chusumdo valley, just inside Tibet, the debris dammed the river. UNOSAT mapped the lake from Cartosat-3 on 28 August at **11.9 ha**; China's Ministry of Water Resources put it at about **2–2.5 million m³**. It **overflowed on 28 August at about 15:35**, pausing rescue work downstream for three hours and raising the river about 0.6 m, and drained on 29–30 August. A second lake of 19.5 ha formed just below the source; it was assessed as low risk.\n\nSwipe between two PlanetScope frames: hours after the flow on 2026-08-26 and two days later on 2026-08-28, with the lake ponded behind the fan.",
+   "camera": {
+    "center": [
+     85.482,
+     28.3327
+    ],
+    "zoom": 13.6,
+    "pitch": 30,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places",
+    "unosat-lakes"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "vhr-barrier-lake-before-0",
+    "right": "vhr-barrier-lake-after-0",
+    "leftLabel": "2026-08-26 · hours after · PlanetScope",
+    "rightLabel": "2026-08-28 · lake ponded · PlanetScope"
+   },
+   "stats": [
+    {
+     "label": "lake volume",
+     "value": "≈2–2.5 Mm³"
+    },
+    {
+     "label": "lake area, 28 Aug (UNOSAT)",
+     "value": "11.9 ha"
+    },
+    {
+     "label": "overflowed",
+     "value": "28 Aug 15:35"
+    }
+   ],
+   "sources": [
+    {
+     "label": "UNOSAT rapid mapping FL20260826NPL — detachment zone, barrier lakes, flow extent, heritage damage (CC BY-SA 4.0)",
+     "url": "https://data.humdata.org/dataset/mudflow-rockflow-impact-assessment-in-rasuwa-nuwakot-districts-bagmati-province-nepal-as-o"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "rasuwagadhi",
+   "kicker": "km 22 · 08:44 · the border",
+   "title": "Rasuwagadhi, destroyed twice",
+   "body": "The border crossing had been rebuilt after the 2025 glacial-lake flood. The left side is NEA Engineering's **3.5 cm drone survey** of 2025-09-01 — the road, the river and the Miteri Bridge at the crossing (left) down to Timure (right) — laid over PlanetScope from May 2026. The right side is WorldView-3 on 2026-08-27, the day after: the road, the bridges and the valley floor are scoured to bare gravel.\n\nUse the labels to switch scenes: WorldView-2 in 2021, before either flood; Legion-4, Pelican and HOT's mosaic after. The front reached the crossing about seven minutes after the detachment, **31 minutes before** the SMS alert went out.",
+   "camera": {
+    "center": [
+     85.3772,
+     28.2738
+    ],
+    "zoom": 15.9,
+    "pitch": 0,
+    "bearing": 90,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places",
+    "ems-transport",
+    "bridges",
+    "heritage"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": [
+     "vhr-rasuwagadhi-before-0",
+     "vhr-rasuwagadhi-before-1"
+    ],
+    "right": "vhr-rasuwagadhi-after-0",
+    "leftLabel": "Before · 2025-09-01 · NEA drone orthophoto 3.5 cm on PlanetScope 2026-05-27",
+    "rightLabel": "After · 2026-08-27 · WorldView-3 0.31 m",
+    "leftOptions": [
+     {
+      "layers": [
+       "vhr-rasuwagadhi-before-0",
+       "vhr-rasuwagadhi-before-1"
+      ],
+      "label": "Before · 2025-09-01 · NEA drone orthophoto 3.5 cm on PlanetScope 2026-05-27"
+     },
+     {
+      "layers": "vhr-rasuwagadhi-before-1",
+      "label": "Before · 2026-05-27 · PlanetScope 3.7 m"
+     },
+     {
+      "layers": "vhr-rasuwagadhi-before-2",
+      "label": "Before · 2021-10-16 · WorldView-2 0.57 m"
+     },
+     {
+      "layers": "s2-upper-before",
+      "label": "Before · 2025-11-10 · Sentinel-2 10 m"
+     }
+    ],
+    "rightOptions": [
+     {
+      "layers": "vhr-rasuwagadhi-after-0",
+      "label": "After · 2026-08-27 · WorldView-3 0.31 m"
+     },
+     {
+      "layers": "vhr-rasuwagadhi-after-1",
+      "label": "After · 2026-09-01 · Legion-4 0.4 m"
+     },
+     {
+      "layers": "vhr-rasuwagadhi-after-2",
+      "label": "After · 2026-09-01 · Pelican 0.57 m"
+     },
+     {
+      "layers": "vhr-rasuwagadhi-after-3",
+      "label": "After · 27 Aug–8 Sep · Vantor mosaic (HOT) 0.4 m"
+     },
+     {
+      "layers": "s2-upper-after",
+      "label": "After · 2026-09-21 · Sentinel-2 10 m"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "drone pixel size",
+     "value": "3.5 cm"
+    },
+    {
+     "label": "warning before the flood",
+     "value": "-31 min"
+    }
+   ],
+   "sources": [
+    {
+     "label": "NEA Engineering Company drone orthophotos on OpenAerialMap, CC BY 4.0",
+     "url": "https://map.openaerialmap.org/"
+    },
+    {
+     "label": "HOT post-event mosaic of Vantor scenes, 27 Aug–8 Sep (HDX), CC BY-NC 4.0",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl_buildings_damage"
+    },
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    }
+   ]
+  },
+  {
+   "id": "timure",
+   "kicker": "km 26 · ~08:45 · the dry port",
+   "title": "Timure dry port",
+   "body": "Timure's customs yard handled the trade that crossed at Rasuwagadhi. It had the least warning of any town. Fifteen customs staff lost contact; **more than 300 queued vehicles, around 1,000 electric vehicles and over 400 containers** were swept away. Copernicus EMS graded **372 buildings destroyed** here.\n\nThe default swipe is WorldView-2 in 2021 against Legion-4 on 2026-09-08. Switch the left side to PlanetScope in May 2026 to see the port as it was, already rebuilt after the 2025 flood.",
+   "camera": {
+    "center": [
+     85.367,
+     28.2545
+    ],
+    "zoom": 15,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places",
+    "ems-buildings"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "vhr-timure-before-0",
+    "right": "vhr-timure-after-0",
+    "leftLabel": "Before · 2021-10-16 · WorldView-2 0.57 m",
+    "rightLabel": "After · 2026-09-08 · Legion-4 0.56 m",
+    "leftOptions": [
+     {
+      "layers": "vhr-timure-before-0",
+      "label": "Before · 2021-10-16 · WorldView-2 0.57 m"
+     },
+     {
+      "layers": "vhr-timure-before-1",
+      "label": "Before · 2026-05-27 · PlanetScope 3.7 m"
+     },
+     {
+      "layers": "s2-upper-before",
+      "label": "Before · 2025-11-10 · Sentinel-2 10 m"
+     }
+    ],
+    "rightOptions": [
+     {
+      "layers": "vhr-timure-after-0",
+      "label": "After · 2026-09-08 · Legion-4 0.56 m"
+     },
+     {
+      "layers": "vhr-timure-after-1",
+      "label": "After · 2026-08-27 · WorldView-3 0.31 m"
+     },
+     {
+      "layers": "vhr-timure-after-2",
+      "label": "After · 2026-08-28 · Legion-1 0.36 m"
+     },
+     {
+      "layers": "s2-upper-after",
+      "label": "After · 2026-09-21 · Sentinel-2 10 m"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "destroyed (EMS)",
+     "value": "372"
+    },
+    {
+     "label": "warning before the flood",
+     "value": "-30 min"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Copernicus Emergency Management Service, EMSR927 damage grading — © European Union",
+     "url": "https://mapping.emergency.copernicus.eu/activations/EMSR927/"
+    },
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    }
+   ]
+  },
+  {
+   "id": "syabrubesi",
+   "kicker": "km 37 · 08:50–09:00",
+   "title": "Syabrubesi",
+   "body": "Syabrubesi sits where the Bhote Koshi meets the Langtang Khola, at the start of the Langtang trail. GeoEye-1 in 2023 shows the town climbing terraced slopes above a narrow river; WorldView-3 on 2026-08-27 shows the confluence and the riverside town under a single sheet of grey sediment. EMS graded **323 buildings destroyed**.\n\nChilime's powerhouse at Syabrubesi was buried; rescuers reached it through 250 m of tunnel and found five NEA staff dead. Among the alternates is a PlanetScope frame taken at **11:29 that same morning**, about two and a half hours after the front passed, and HOT's mosaic of the Vantor scenes from 27 August to 8 September.",
+   "camera": {
+    "center": [
+     85.338,
+     28.1628
+    ],
+    "zoom": 15,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places",
+    "ems-buildings",
+    "hydropower",
+    "heritage"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "vhr-syabrubesi-before-0",
+    "right": "vhr-syabrubesi-after-0",
+    "leftLabel": "Before · 2023-09-17 · GeoEye-1 0.43 m",
+    "rightLabel": "After · 2026-08-27 · WorldView-3 0.32 m",
+    "leftOptions": [
+     {
+      "layers": "vhr-syabrubesi-before-0",
+      "label": "Before · 2023-09-17 · GeoEye-1 0.43 m"
+     },
+     {
+      "layers": "vhr-syabrubesi-before-1",
+      "label": "Before · 2026-05-27 · PlanetScope 3.7 m"
+     },
+     {
+      "layers": "vhr-syabrubesi-before-2",
+      "label": "Before · 2021-10-16 · WorldView-2 0.57 m"
+     },
+     {
+      "layers": "s2-upper-before",
+      "label": "Before · 2025-11-10 · Sentinel-2 10 m"
+     }
+    ],
+    "rightOptions": [
+     {
+      "layers": "vhr-syabrubesi-after-0",
+      "label": "After · 2026-08-27 · WorldView-3 0.32 m"
+     },
+     {
+      "layers": "vhr-syabrubesi-after-1",
+      "label": "After · 2026-08-26 · PlanetScope 3.4 m"
+     },
+     {
+      "layers": "vhr-syabrubesi-after-2",
+      "label": "After · 2026-09-12 · Legion-2 0.38 m"
+     },
+     {
+      "layers": "vhr-syabrubesi-after-3",
+      "label": "After · 2026-09-01 · Pelican 0.57 m"
+     },
+     {
+      "layers": "vhr-syabrubesi-after-4",
+      "label": "After · 27 Aug–8 Sep · Vantor mosaic (HOT) 0.4 m"
+     },
+     {
+      "layers": "s2-upper-after",
+      "label": "After · 2026-09-21 · Sentinel-2 10 m"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "destroyed (EMS)",
+     "value": "323"
+    },
+    {
+     "label": "warning before the flood",
+     "value": "-20 min"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Copernicus Emergency Management Service, EMSR927 damage grading — © European Union",
+     "url": "https://mapping.emergency.copernicus.eu/activations/EMSR927/"
+    },
+    {
+     "label": "HOT post-event mosaic of Vantor scenes, 27 Aug–8 Sep (HDX), CC BY-NC 4.0",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl_buildings_damage"
+    },
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    }
+   ]
+  },
+  {
+   "id": "gauges",
+   "kicker": "06:00 → 18:00 · the instrument record",
+   "title": "The gauges went silent",
+   "body": "DHM's river gauges report every ten minutes. The three upstream stations — Rasuwagadhi, Syabrubesi and Betrawati — **stopped transmitting while still below their warning levels**: they were destroyed before they could register the flood. A gauge-based alarm could not have fired for the upper valley.\n\nDownstream the record survives. Galchhi rose **about 8.8 m in half an hour**; Devghat peaked at **6.57 m and 5,850 m³/s at 16:00**, below its warning level — a 2–3-year flood by the time it reached the plains.",
+   "camera": {
+    "center": [
+     85.05,
+     27.95
+    ],
+    "zoom": 9.2,
+    "pitch": 35,
+    "bearing": -10,
+    "duration": 3500
+   },
+   "layers": [
+    "rivers",
+    "flow",
+    "gauges"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "line",
+    "title": "River stage above the morning level, 26 Aug (m)",
+    "xLabel": "NPT",
+    "series": [
+     {
+      "label": "Rasuwagadhi",
+      "color": "#7f1d1d",
+      "points": [
+       [
+        6,
+        0.03
+       ],
+       [
+        6.17,
+        0.04
+       ],
+       [
+        6.33,
+        0.06
+       ],
+       [
+        6.5,
+        0.03
+       ],
+       [
+        6.67,
+        0.02
+       ],
+       [
+        6.83,
+        0.03
+       ],
+       [
+        7,
+        0
+       ],
+       [
+        7.17,
+        0.02
+       ],
+       [
+        7.33,
+        -0.03
+       ],
+       [
+        7.5,
+        -0.03
+       ],
+       [
+        7.67,
+        -0.04
+       ],
+       [
+        7.83,
+        -0.06
+       ],
+       [
+        8,
+        -0.07
+       ],
+       [
+        8.17,
+        -0.07
+       ],
+       [
+        8.33,
+        -0.07
+       ],
+       [
+        8.5,
+        -0.08
+       ],
+       [
+        8.67,
+        -0.09
+       ]
+      ]
+     },
+     {
+      "label": "Syabrubesi",
+      "color": "#b91c1c",
+      "points": [
+       [
+        6,
+        -0.06
+       ],
+       [
+        6.17,
+        0.06
+       ],
+       [
+        6.33,
+        0.01
+       ],
+       [
+        6.5,
+        0.04
+       ],
+       [
+        6.67,
+        -0.07
+       ],
+       [
+        6.83,
+        -0.07
+       ],
+       [
+        7,
+        0
+       ],
+       [
+        7.17,
+        0.07
+       ],
+       [
+        7.33,
+        0.03
+       ],
+       [
+        7.5,
+        0.01
+       ],
+       [
+        7.67,
+        0.01
+       ],
+       [
+        7.83,
+        0.07
+       ],
+       [
+        8,
+        -0.14
+       ],
+       [
+        8.17,
+        0.07
+       ],
+       [
+        8.33,
+        -0.02
+       ],
+       [
+        8.5,
+        -0.12
+       ],
+       [
+        8.67,
+        0
+       ],
+       [
+        8.83,
+        -0.1
+       ]
+      ]
+     },
+     {
+      "label": "Betrawati",
+      "color": "#ea580c",
+      "points": [
+       [
+        6,
+        0
+       ],
+       [
+        6.17,
+        0.02
+       ],
+       [
+        6.33,
+        0
+       ],
+       [
+        6.5,
+        -0.02
+       ],
+       [
+        6.67,
+        0.02
+       ],
+       [
+        6.83,
+        0
+       ],
+       [
+        7,
+        0.01
+       ],
+       [
+        7.17,
+        0
+       ],
+       [
+        7.33,
+        0.03
+       ],
+       [
+        7.5,
+        -0.02
+       ],
+       [
+        7.67,
+        0
+       ],
+       [
+        7.83,
+        -0.04
+       ],
+       [
+        8,
+        -0.06
+       ],
+       [
+        8.17,
+        -0.05
+       ],
+       [
+        8.33,
+        -0.04
+       ],
+       [
+        8.5,
+        -0.02
+       ],
+       [
+        8.67,
+        -0.06
+       ],
+       [
+        8.83,
+        -0.03
+       ],
+       [
+        9,
+        -0.06
+       ],
+       [
+        9.17,
+        -0.04
+       ],
+       [
+        9.33,
+        -0.03
+       ]
+      ]
+     },
+     {
+      "label": "Galchhi",
+      "color": "#0369a1",
+      "points": [
+       [
+        6,
+        0.42
+       ],
+       [
+        6.17,
+        0.38
+       ],
+       [
+        6.33,
+        0.3
+       ],
+       [
+        6.5,
+        0.24
+       ],
+       [
+        6.67,
+        0.12
+       ],
+       [
+        6.83,
+        0.04
+       ],
+       [
+        7,
+        -0.02
+       ],
+       [
+        7.17,
+        -0.1
+       ],
+       [
+        7.33,
+        -0.14
+       ],
+       [
+        7.5,
+        -0.23
+       ],
+       [
+        7.67,
+        -0.28
+       ],
+       [
+        7.83,
+        -0.31
+       ],
+       [
+        8,
+        -0.38
+       ],
+       [
+        8.17,
+        -0.46
+       ],
+       [
+        8.33,
+        -0.5
+       ],
+       [
+        8.5,
+        -0.51
+       ],
+       [
+        8.67,
+        -0.54
+       ],
+       [
+        8.83,
+        -0.61
+       ],
+       [
+        9,
+        -0.62
+       ],
+       [
+        9.17,
+        -0.68
+       ],
+       [
+        9.33,
+        -0.72
+       ],
+       [
+        9.5,
+        -0.69
+       ],
+       [
+        9.67,
+        -0.77
+       ],
+       [
+        9.83,
+        -0.83
+       ],
+       [
+        10,
+        -0.82
+       ],
+       [
+        10.17,
+        -0.83
+       ],
+       [
+        10.33,
+        -0.84
+       ],
+       [
+        10.5,
+        2.12
+       ],
+       [
+        10.67,
+        6.71
+       ],
+       [
+        10.83,
+        7.99
+       ],
+       [
+        11,
+        7.92
+       ],
+       [
+        11.17,
+        7.44
+       ],
+       [
+        11.33,
+        7.07
+       ],
+       [
+        11.5,
+        6.38
+       ],
+       [
+        11.67,
+        5.63
+       ],
+       [
+        11.83,
+        4.76
+       ],
+       [
+        12,
+        4.01
+       ],
+       [
+        12.17,
+        3.28
+       ],
+       [
+        12.33,
+        2.86
+       ],
+       [
+        12.5,
+        2.3
+       ],
+       [
+        12.67,
+        2.04
+       ],
+       [
+        12.83,
+        1.54
+       ],
+       [
+        13,
+        1.13
+       ],
+       [
+        13.17,
+        0.72
+       ],
+       [
+        13.33,
+        0.53
+       ],
+       [
+        13.5,
+        0.32
+       ],
+       [
+        13.67,
+        0.04
+       ],
+       [
+        13.83,
+        -0.02
+       ],
+       [
+        14,
+        -0.24
+       ],
+       [
+        14.17,
+        -0.32
+       ],
+       [
+        14.33,
+        -0.51
+       ],
+       [
+        14.5,
+        -0.53
+       ],
+       [
+        14.67,
+        -0.79
+       ],
+       [
+        14.83,
+        -0.96
+       ],
+       [
+        15,
+        -0.93
+       ],
+       [
+        15.17,
+        -1.06
+       ],
+       [
+        15.33,
+        -1.07
+       ],
+       [
+        15.5,
+        -1.12
+       ],
+       [
+        15.67,
+        -1.25
+       ],
+       [
+        15.83,
+        -1.33
+       ],
+       [
+        16,
+        -1.31
+       ],
+       [
+        16.17,
+        -1.35
+       ],
+       [
+        16.33,
+        -1.47
+       ],
+       [
+        16.5,
+        -1.51
+       ],
+       [
+        16.67,
+        -1.43
+       ],
+       [
+        16.83,
+        -1.42
+       ],
+       [
+        17,
+        -1.33
+       ],
+       [
+        17.17,
+        -1.24
+       ],
+       [
+        17.33,
+        -1.08
+       ],
+       [
+        17.5,
+        -1.2
+       ],
+       [
+        17.67,
+        -1.28
+       ],
+       [
+        17.83,
+        -1.13
+       ],
+       [
+        18,
+        -1.17
+       ]
+      ]
+     },
+     {
+      "label": "Kali Khola",
+      "color": "#0f766e",
+      "points": [
+       [
+        6,
+        -0.28
+       ],
+       [
+        6.17,
+        -0.27
+       ],
+       [
+        6.33,
+        -0.22
+       ],
+       [
+        6.5,
+        -0.16
+       ],
+       [
+        6.67,
+        -0.15
+       ],
+       [
+        6.83,
+        -0.06
+       ],
+       [
+        7,
+        0.01
+       ],
+       [
+        7.17,
+        0.07
+       ],
+       [
+        7.33,
+        0.14
+       ],
+       [
+        7.5,
+        0.18
+       ],
+       [
+        7.67,
+        0.17
+       ],
+       [
+        7.83,
+        0.27
+       ],
+       [
+        8,
+        0.28
+       ],
+       [
+        8.17,
+        0.35
+       ],
+       [
+        8.33,
+        0.41
+       ],
+       [
+        8.5,
+        0.45
+       ],
+       [
+        8.67,
+        0.48
+       ],
+       [
+        8.83,
+        0.53
+       ],
+       [
+        9,
+        0.52
+       ],
+       [
+        9.17,
+        0.53
+       ],
+       [
+        9.33,
+        0.5
+       ],
+       [
+        9.5,
+        0.46
+       ],
+       [
+        9.67,
+        0.39
+       ],
+       [
+        9.83,
+        0.26
+       ],
+       [
+        10,
+        0.24
+       ],
+       [
+        10.17,
+        0.23
+       ],
+       [
+        10.33,
+        0.16
+       ],
+       [
+        10.5,
+        0.17
+       ],
+       [
+        10.67,
+        0.11
+       ],
+       [
+        10.83,
+        0.08
+       ],
+       [
+        11,
+        0.02
+       ],
+       [
+        11.17,
+        0.01
+       ],
+       [
+        11.33,
+        -0.07
+       ],
+       [
+        11.5,
+        -0.09
+       ],
+       [
+        11.67,
+        -0.13
+       ],
+       [
+        11.83,
+        -0.2
+       ],
+       [
+        12,
+        -0.21
+       ],
+       [
+        12.17,
+        -0.29
+       ],
+       [
+        12.33,
+        -0.31
+       ],
+       [
+        12.5,
+        -0.4
+       ],
+       [
+        12.67,
+        -0.47
+       ],
+       [
+        12.83,
+        -0.51
+       ],
+       [
+        13,
+        -0.54
+       ],
+       [
+        13.17,
+        -0.54
+       ],
+       [
+        13.33,
+        -0.11
+       ],
+       [
+        13.5,
+        0.85
+       ],
+       [
+        13.67,
+        2.06
+       ],
+       [
+        13.83,
+        3.04
+       ],
+       [
+        14,
+        3.99
+       ],
+       [
+        14.17,
+        4.8
+       ],
+       [
+        14.33,
+        5.07
+       ],
+       [
+        14.5,
+        4.98
+       ],
+       [
+        14.67,
+        4.52
+       ],
+       [
+        14.83,
+        3.82
+       ],
+       [
+        15,
+        3.35
+       ],
+       [
+        15.17,
+        2.75
+       ],
+       [
+        15.33,
+        2.22
+       ],
+       [
+        15.5,
+        1.83
+       ],
+       [
+        15.67,
+        1.34
+       ],
+       [
+        15.83,
+        0.92
+       ],
+       [
+        16,
+        0.54
+       ],
+       [
+        16.17,
+        0.14
+       ],
+       [
+        16.33,
+        -0.14
+       ],
+       [
+        16.5,
+        -0.27
+       ],
+       [
+        16.67,
+        -0.48
+       ],
+       [
+        16.83,
+        -0.65
+       ],
+       [
+        17,
+        -0.89
+       ],
+       [
+        17.17,
+        -1.02
+       ],
+       [
+        17.33,
+        -1.15
+       ],
+       [
+        17.5,
+        -1.24
+       ],
+       [
+        17.67,
+        -1.26
+       ],
+       [
+        17.83,
+        -1.34
+       ],
+       [
+        18,
+        -1.3
+       ]
+      ]
+     },
+     {
+      "label": "Devghat",
+      "color": "#4338ca",
+      "points": [
+       [
+        6,
+        -0.01
+       ],
+       [
+        6.17,
+        -0.02
+       ],
+       [
+        6.33,
+        -0.01
+       ],
+       [
+        6.5,
+        -0.01
+       ],
+       [
+        6.67,
+        0
+       ],
+       [
+        6.83,
+        -0.01
+       ],
+       [
+        7,
+        -0.01
+       ],
+       [
+        7.17,
+        0.01
+       ],
+       [
+        7.33,
+        0.01
+       ],
+       [
+        7.5,
+        0.02
+       ],
+       [
+        7.67,
+        0.03
+       ],
+       [
+        7.83,
+        0.02
+       ],
+       [
+        8,
+        0.04
+       ],
+       [
+        8.17,
+        0.05
+       ],
+       [
+        8.33,
+        0.1
+       ],
+       [
+        8.5,
+        0.08
+       ],
+       [
+        8.67,
+        0.12
+       ],
+       [
+        8.83,
+        0.12
+       ],
+       [
+        9,
+        0.15
+       ],
+       [
+        9.17,
+        0.15
+       ],
+       [
+        9.33,
+        0.17
+       ],
+       [
+        9.5,
+        0.17
+       ],
+       [
+        9.67,
+        0.2
+       ],
+       [
+        9.83,
+        0.23
+       ],
+       [
+        10,
+        0.2
+       ],
+       [
+        10.17,
+        0.24
+       ],
+       [
+        10.33,
+        0.23
+       ],
+       [
+        10.5,
+        0.22
+       ],
+       [
+        10.67,
+        0.22
+       ],
+       [
+        10.83,
+        0.23
+       ],
+       [
+        11,
+        0.22
+       ],
+       [
+        11.17,
+        0.21
+       ],
+       [
+        11.33,
+        0.2
+       ],
+       [
+        11.5,
+        0.17
+       ],
+       [
+        11.67,
+        0.17
+       ],
+       [
+        11.83,
+        0.16
+       ],
+       [
+        12,
+        0.15
+       ],
+       [
+        12.17,
+        0.13
+       ],
+       [
+        12.33,
+        0.14
+       ],
+       [
+        12.5,
+        0.11
+       ],
+       [
+        12.67,
+        0.09
+       ],
+       [
+        12.83,
+        0.09
+       ],
+       [
+        13,
+        0.07
+       ],
+       [
+        13.17,
+        0.06
+       ],
+       [
+        13.33,
+        0.03
+       ],
+       [
+        13.5,
+        0.02
+       ],
+       [
+        13.67,
+        0.02
+       ],
+       [
+        13.83,
+        0
+       ],
+       [
+        14,
+        -0.04
+       ],
+       [
+        14.17,
+        -0.04
+       ],
+       [
+        14.33,
+        -0.02
+       ],
+       [
+        14.5,
+        0.01
+       ],
+       [
+        14.67,
+        0.12
+       ],
+       [
+        14.83,
+        0.3
+       ],
+       [
+        15,
+        0.57
+       ],
+       [
+        15.17,
+        0.82
+       ],
+       [
+        15.33,
+        1.02
+       ],
+       [
+        15.5,
+        1.24
+       ],
+       [
+        15.67,
+        1.47
+       ],
+       [
+        15.83,
+        1.61
+       ],
+       [
+        16,
+        1.89
+       ],
+       [
+        16.17,
+        1.89
+       ],
+       [
+        16.33,
+        1.51
+       ],
+       [
+        16.5,
+        1.08
+       ],
+       [
+        16.67,
+        0.97
+       ],
+       [
+        16.83,
+        0.56
+       ],
+       [
+        17,
+        0.26
+       ],
+       [
+        17.17,
+        0.23
+       ],
+       [
+        17.33,
+        0.01
+       ],
+       [
+        17.5,
+        -0.15
+       ],
+       [
+        17.67,
+        -0.24
+       ],
+       [
+        17.83,
+        -0.44
+       ],
+       [
+        18,
+        -0.52
+       ]
+      ]
+     }
+    ],
+    "xTicks": [
+     {
+      "x": 6,
+      "label": "06:00"
+     },
+     {
+      "x": 8,
+      "label": "08:00"
+     },
+     {
+      "x": 10,
+      "label": "10:00"
+     },
+     {
+      "x": 12,
+      "label": "12:00"
+     },
+     {
+      "x": 14,
+      "label": "14:00"
+     },
+     {
+      "x": 16,
+      "label": "16:00"
+     },
+     {
+      "x": 18,
+      "label": "18:00"
+     }
+    ],
+    "markers": [
+     {
+      "x": 8.616666666666667,
+      "label": "detachment"
+     },
+     {
+      "x": 9.266666666666667,
+      "label": "SMS"
+     }
+    ],
+    "note": "DHM river-watch 10-minute series (Acharya & Paudel 2026). Lines that stop are gauges that went silent."
+   },
+   "sources": [
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    }
+   ]
+  },
+  {
+   "id": "warning",
+   "kicker": "09:15 · the warning",
+   "title": "Faster than the warning",
+   "body": "DHM's forecasters learned of the wave around 09:00. At **09:15 the alert was confirmed and at 09:16 a mass SMS** went out: 679,295 messages to phones in Rasuwa, Nuwakot, Dhading, Chitwan — **38.8 minutes** after the detachment.\n\nBy then the front had passed Rasuwagadhi, Timure and Syabrubesi. Betrawati got about ten minutes. At Tribhuvan Trishuli school about 900 pupils were evacuated roughly ten minutes before the water arrived. Downstream the lead time grew: about an hour at Galchhi, more than three hours at Mugling.\n\nNegative bars mean the flood arrived before the SMS. The warning latency was longer than the flood's travel time to the first three towns — the central finding of Acharya & Paudel's analysis.",
+   "camera": {
+    "center": [
+     85.1,
+     27.98
+    ],
+    "zoom": 9,
+    "pitch": 40,
+    "bearing": -15,
+    "duration": 3500
+   },
+   "layers": [
+    "rivers",
+    "flow",
+    "gauges",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Warning lead time (minutes after the 09:15 SMS)",
+    "unit": "negative = flood arrived first",
+    "data": [
+     {
+      "label": "Rasuwagadhi",
+      "value": -31,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Timure",
+      "value": -30,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Syabrubesi",
+      "value": -20,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Betrawati",
+      "value": 10,
+      "color": "#f59e0b"
+     },
+     {
+      "label": "Trishuli / Bidur",
+      "value": 22,
+      "color": "#f59e0b"
+     },
+     {
+      "label": "Galchhi",
+      "value": 70,
+      "color": "#15803d"
+     },
+     {
+      "label": "Malekhu",
+      "value": 151,
+      "color": "#15803d"
+     },
+     {
+      "label": "Mugling",
+      "value": 220,
+      "color": "#15803d"
+     },
+     {
+      "label": "Devghat",
+      "value": 320,
+      "color": "#15803d"
+     }
+    ]
+   },
+   "sources": [
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "NDRRMA Situation Report #01 (1 Sep 2026)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf"
+    }
+   ]
+  },
+  {
+   "id": "middle",
+   "kicker": "09:00 → 10:45 · down the Trishuli",
+   "title": "Down the Trishuli",
+   "body": "Below Syabrubesi the valley narrows past **Tiru** (where more than 500 people were still unaccounted for weeks later) and the Upper Trishuli hydropower sites, then opens at **Betrawati** and **Trishuli Bazar**. The front slowed to a few metres per second but carried the valley floor with it.",
+   "camera": {
+    "center": [
+     85.33195,
+     28.15705
+    ],
+    "zoom": 12.6,
+    "pitch": 52,
+    "bearing": -142,
+    "duration": 4500
+   },
+   "layers": [
+    "flow",
+    "places",
+    "gauges",
+    "hydropower",
+    "report-places"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "time": {
+    "start": "2026-08-26T08:55:00+05:45",
+    "end": "2026-08-26T10:45:00+05:45",
+    "duration": 45,
+    "autoplay": true,
+    "timeZone": "Asia/Kathmandu",
+    "follow": {
+     "layer": "flow",
+     "zoom": 12.6,
+     "pitch": 52,
+     "bearing": "track",
+     "maxViewSpeed": 0.15
+    },
+    "captions": [
+     {
+      "time": "2026-08-26T09:00:00+05:45",
+      "text": "DHM Flood Forecasting Division informed"
+     },
+     {
+      "time": "2026-08-26T09:15:00+05:45",
+      "text": "Alert confirmed; high alert for the Trishuli as far as Mugling"
+     },
+     {
+      "time": "2026-08-26T09:16:00+05:45",
+      "text": "Mass SMS: 679,295 messages"
+     },
+     {
+      "time": "2026-08-26T09:20:00+05:45",
+      "text": "Betrawati gauge silent at 3.55 m (warning 4.1 m)"
+     },
+     {
+      "time": "2026-08-26T09:25:00+05:45",
+      "text": "The front reaches Betrawati"
+     },
+     {
+      "time": "2026-08-26T09:37:00+05:45",
+      "text": "Trishuli Bazar and Bidur; the Trishuli bridge is swept away"
+     },
+     {
+      "time": "2026-08-26T10:25:00+05:45",
+      "text": "Galchhi gauge begins to rise"
+     },
+     {
+      "time": "2026-08-26T10:28:00+05:45",
+      "text": "SMS re-issued for the Prithvi Highway and Mugling–Narayangadh"
+     }
+    ]
+   },
+   "sources": [
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "hydropower",
+   "kicker": "Energy",
+   "title": "804 workers still missing",
+   "body": "The government counts **13 hydropower projects (759 MW)** and 5 solar plants hit. On 23 September the Energy Minister told Parliament that 11 plants were shut, **410 MW was off the grid** — more than a tenth of Nepal's capacity — and **804 workers were still missing**.\n\nThe toll concentrated at the construction sites. At **Upper Trishuli-1** (216 MW, 84% built, US$647 M) 1,433 people were on site; 439 are missing and more than 90% of the upper dam is gone. Thirty-one bodies were recovered from the rebar mesh of its Audit-3 tunnel at Hakubesi. At **Upper Trishuli-3B** the workers' quarters were buried: 178 missing. At Upper Trishuli-3A two workers were rescued alive from a tunnel on day ten.",
+   "camera": {
+    "center": [
+     85.25,
+     28.06
+    ],
+    "zoom": 11,
+    "pitch": 50,
+    "bearing": -30,
+    "duration": 4000
+   },
+   "layers": [
+    "flow",
+    "hydropower",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Workers missing, by project (23 Sep)",
+    "data": [
+     {
+      "label": "Upper Trishuli-1",
+      "value": 439,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Upper Trishuli-3B",
+      "value": 178,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Rasuwagadhi",
+      "value": 93,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Langtang Khola",
+      "value": 39,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Upper Trishuli-3A",
+      "value": 39,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Mailung Khola",
+      "value": 7,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Rasuwa Bhotekoshi",
+      "value": 3,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Trishuli",
+      "value": 3,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Middle Trishuli Ganga",
+      "value": 2,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Chilime",
+      "value": 1,
+      "color": "#7f1d1d"
+     }
+    ],
+    "note": "Energy Minister to Parliament, via the Kathmandu Post. Counts include contractors and NEA staff."
+   },
+   "stats": [
+    {
+     "label": "workers missing (23 Sep)",
+     "value": "804"
+    },
+    {
+     "label": "hydropower hit (RDNA)",
+     "value": "759 MW"
+    },
+    {
+     "label": "off the grid (23 Sep)",
+     "value": "410 MW"
+    },
+    {
+     "label": "energy damage and losses (RDNA)",
+     "value": "US$997 M"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Kathmandu Post, 23 Sep 2026 — over 800 missing from hydropower projects (Energy Minister)",
+     "url": "https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha"
+    },
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    },
+    {
+     "label": "NDRRMA Situation Report #20 (21 Sep 2026)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf"
+    },
+    {
+     "label": "Humanitarian OpenStreetMap Team — flood extent, bridge damage and exposed hydropower (HDX, ODbL)",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "simle",
+   "kicker": "km 62 · ~09:20 · Upper Trishuli-3B",
+   "title": "Simle and the Upper Trishuli-3B camp",
+   "body": "Just above Betrawati, the Upper Trishuli-3B project had its powerhouse and workers' camp on the valley floor at Simle. The quarters were buried; an excavation 2 m below the new riverbed found only an office foundation. **178 workers** are missing here.\n\nThe left side is NEA Engineering's **6 cm drone survey** of September 2025, a year before the flood, laid over WorldView-2 from May 2024; upstream is on the left. No clear sub-metre image exists after the flood: cloud or haze covers every scene of this reach. The right side is Sentinel-2 (10 m) on 2026-09-21; switch it to PlanetScope taken at **10:46 on 26 August**, about an hour and a half after the front passed — hazy, but the new riverbed is plain.",
+   "camera": {
+    "center": [
+     85.1815,
+     28.0095
+    ],
+    "zoom": 15.1,
+    "pitch": 0,
+    "bearing": 90,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places",
+    "hydropower"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": [
+     "vhr-simle-before-0",
+     "vhr-simle-before-1"
+    ],
+    "right": "s2-middle-after",
+    "leftLabel": "Before · 2025-09-03 · NEA drone orthophoto 6 cm on WorldView-2 2024-05-29",
+    "rightLabel": "After · 2026-09-21 · Sentinel-2 10 m",
+    "leftOptions": [
+     {
+      "layers": [
+       "vhr-simle-before-0",
+       "vhr-simle-before-1"
+      ],
+      "label": "Before · 2025-09-03 · NEA drone orthophoto 6 cm on WorldView-2 2024-05-29"
+     },
+     {
+      "layers": "vhr-simle-before-1",
+      "label": "Before · 2024-05-29 · WorldView-2 0.58 m"
+     },
+     {
+      "layers": "vhr-simle-before-2",
+      "label": "Before · 2026-05-27 · PlanetScope 3.7 m"
+     },
+     {
+      "layers": "s2-middle-before",
+      "label": "Before · 2025-10-16 · Sentinel-2 10 m"
+     }
+    ],
+    "rightOptions": [
+     {
+      "layers": "s2-middle-after",
+      "label": "After · 2026-09-21 · Sentinel-2 10 m"
+     },
+     {
+      "layers": "vhr-simle-after-0",
+      "label": "After · 2026-08-26 · PlanetScope 3.8 m"
+     },
+     {
+      "layers": "vhr-simle-after-1",
+      "label": "After · 2026-08-26 · PlanetScope 3.8 m"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "workers missing (UT-3B)",
+     "value": "178"
+    },
+    {
+     "label": "drone pixel size",
+     "value": "6 cm"
+    }
+   ],
+   "sources": [
+    {
+     "label": "NEA Engineering Company drone orthophotos on OpenAerialMap, CC BY 4.0",
+     "url": "https://map.openaerialmap.org/"
+    },
+    {
+     "label": "NDRRMA Situation Report #20 (21 Sep 2026)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf"
+    },
+    {
+     "label": "Kathmandu Post, 23 Sep 2026 — over 800 missing from hydropower projects (Energy Minister)",
+     "url": "https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha"
+    },
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    }
+   ]
+  },
+  {
+   "id": "betrawati",
+   "kicker": "km 66 · 09:20–09:30",
+   "title": "Betrawati",
+   "body": "At Betrawati the Phalakhu Khola joins the Trishuli, and both gauges here went silent at 09:20. WorldView-2 in May 2024 shows the town and bridges; Legion-6 on 2026-09-07 (partly cloudy) and PlanetScope on 28 August show the debris fan that filled the valley. Betrawati had about **ten minutes** of warning.\n\nUNOSAT saw the Uttargaya Dham temples and Shree Ram Mandir destroyed; the government's assessment adds Betrawati's historic treaty stone (Sandhishila) to 47 damaged heritage assets.",
+   "camera": {
+    "center": [
+     85.186,
+     27.9731
+    ],
+    "zoom": 15,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places",
+    "bridges",
+    "heritage"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "vhr-betrawati-before-0",
+    "right": "vhr-betrawati-after-0",
+    "leftLabel": "Before · 2024-05-29 · WorldView-2 0.58 m",
+    "rightLabel": "After · 2026-09-07 · Legion-6 0.39 m",
+    "leftOptions": [
+     {
+      "layers": "vhr-betrawati-before-0",
+      "label": "Before · 2024-05-29 · WorldView-2 0.58 m"
+     },
+     {
+      "layers": "vhr-betrawati-before-1",
+      "label": "Before · 2026-05-27 · PlanetScope 3.7 m"
+     },
+     {
+      "layers": "s2-middle-before",
+      "label": "Before · 2025-10-16 · Sentinel-2 10 m"
+     }
+    ],
+    "rightOptions": [
+     {
+      "layers": "vhr-betrawati-after-0",
+      "label": "After · 2026-09-07 · Legion-6 0.39 m"
+     },
+     {
+      "layers": "vhr-betrawati-after-1",
+      "label": "After · 2026-08-28 · PlanetScope 3.9 m"
+     },
+     {
+      "layers": "s2-middle-after",
+      "label": "After · 2026-09-21 · Sentinel-2 10 m"
+     }
+    ]
+   },
+   "sources": [
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    }
+   ]
+  },
+  {
+   "id": "trishuli",
+   "kicker": "km 75–78 · 09:30–09:45",
+   "title": "Trishuli Bazar and Bidur",
+   "body": "In February 2026 (Legion-6, 0.35 m) the Trishuli ran between Trishuli Bazar and Bidur about as wide as a road. On 2026-09-08 (WorldView-2) it is a braided gravel bed several hundred metres wide, the **Trishuli bridge is gone**, and riverside streets are erased. Tribhuvan Trishuli school evacuated about 900 pupils roughly ten minutes before the water arrived.\n\nCopernicus EMS graded **2,479 buildings destroyed** in the Bidur area — the largest count of any mapped town; the government counts 3,026 buildings affected in Bidur municipality. Sugatpur Buddhist Vihara was destroyed.",
+   "camera": {
+    "center": [
+     85.151,
+     27.92
+    ],
+    "zoom": 14.6,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places",
+    "ems-buildings",
+    "bridges",
+    "heritage"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "vhr-trishuli-before-0",
+    "right": "vhr-trishuli-after-0",
+    "leftLabel": "Before · 2026-02-05 · Legion-6 0.35 m",
+    "rightLabel": "After · 2026-09-08 · WorldView-2 0.48 m",
+    "leftOptions": [
+     {
+      "layers": "vhr-trishuli-before-0",
+      "label": "Before · 2026-02-05 · Legion-6 0.35 m"
+     },
+     {
+      "layers": "vhr-trishuli-before-1",
+      "label": "Before · 2026-05-27 · PlanetScope 3.7 m"
+     },
+     {
+      "layers": "vhr-trishuli-before-2",
+      "label": "Before · 2024-05-29 · WorldView-2 0.58 m"
+     },
+     {
+      "layers": "s2-bidur-before",
+      "label": "Before · 2025-10-21 · Sentinel-2 10 m"
+     }
+    ],
+    "rightOptions": [
+     {
+      "layers": "vhr-trishuli-after-0",
+      "label": "After · 2026-09-08 · WorldView-2 0.48 m"
+     },
+     {
+      "layers": "vhr-trishuli-after-1",
+      "label": "After · 2026-09-08 · WorldView-2 0.77 m"
+     },
+     {
+      "layers": "vhr-trishuli-after-2",
+      "label": "After · 27 Aug–8 Sep · Vantor mosaic (HOT) 0.4 m"
+     },
+     {
+      "layers": "s2-bidur-after",
+      "label": "After · 2026-09-21 · Sentinel-2 10 m"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "destroyed (EMS, Bidur area)",
+     "value": "2,479"
+    },
+    {
+     "label": "warning before the flood",
+     "value": "22 min"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Copernicus Emergency Management Service, EMSR927 damage grading — © European Union",
+     "url": "https://mapping.emergency.copernicus.eu/activations/EMSR927/"
+    },
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    },
+    {
+     "label": "UNOSAT rapid mapping FL20260826NPL — detachment zone, barrier lakes, flow extent, heritage damage (CC BY-SA 4.0)",
+     "url": "https://data.humdata.org/dataset/mudflow-rockflow-impact-assessment-in-rasuwa-nuwakot-districts-bagmati-province-nepal-as-o"
+    },
+    {
+     "label": "HOT post-event mosaic of Vantor scenes, 27 Aug–8 Sep (HDX), CC BY-NC 4.0",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl_buildings_damage"
+    },
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    }
+   ]
+  },
+  {
+   "id": "phosretar",
+   "kicker": "km 96 · Dhading",
+   "title": "Phosretar",
+   "body": "No sub-metre image of Phosretar exists from before the flood, so the left side is Sentinel-2 (10 m). The right side is WorldView-2 on 2026-09-08 at 0.71 m. EMS graded **397 buildings destroyed** here.",
+   "camera": {
+    "center": [
+     85.0259,
+     27.8313
+    ],
+    "zoom": 15,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places",
+    "ems-buildings"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "s2-galchhi-before",
+    "right": "vhr-phosretar-after-0",
+    "leftLabel": "Before · 2025-10-26 · Sentinel-2 10 m",
+    "rightLabel": "After · 2026-09-08 · WorldView-2 0.71 m",
+    "leftOptions": [
+     {
+      "layers": "s2-galchhi-before",
+      "label": "Before · 2025-10-26 · Sentinel-2 10 m"
+     }
+    ],
+    "rightOptions": [
+     {
+      "layers": "vhr-phosretar-after-0",
+      "label": "After · 2026-09-08 · WorldView-2 0.71 m"
+     },
+     {
+      "layers": "s2-galchhi-after",
+      "label": "After · 2026-09-21 · Sentinel-2 10 m"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "destroyed (EMS)",
+     "value": "397"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Copernicus Emergency Management Service, EMSR927 damage grading — © European Union",
+     "url": "https://mapping.emergency.copernicus.eu/activations/EMSR927/"
+    },
+    {
+     "label": "Copernicus Sentinel-2 L2A via Element 84 Earth Search — contains modified Copernicus Sentinel data",
+     "url": "https://earth-search.aws.element84.com/v1"
+    },
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    }
+   ]
+  },
+  {
+   "id": "galchhi",
+   "kicker": "km 100 · 10:20–10:30",
+   "title": "Galchhi",
+   "body": "The Galchhi gauge rose about **8.8 m in half an hour** after 10:20 and peaked at 10:50. The only clear post-event frame here is PlanetScope (3.8 m) on 2026-08-28; the left side is Sentinel-2. Galchhi had about an hour of warning.",
+   "camera": {
+    "center": [
+     85.0005,
+     27.7974
+    ],
+    "zoom": 15,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "report-places"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "s2-galchhi-before",
+    "right": "vhr-galchhi-after-0",
+    "leftLabel": "Before · 2025-10-26 · Sentinel-2 10 m",
+    "rightLabel": "After · 2026-08-28 · PlanetScope 3.8 m",
+    "leftOptions": [
+     {
+      "layers": "s2-galchhi-before",
+      "label": "Before · 2025-10-26 · Sentinel-2 10 m"
+     }
+    ],
+    "rightOptions": [
+     {
+      "layers": "vhr-galchhi-after-0",
+      "label": "After · 2026-08-28 · PlanetScope 3.8 m"
+     },
+     {
+      "layers": "s2-galchhi-after",
+      "label": "After · 2026-09-21 · Sentinel-2 10 m"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "gauge rise in 30 minutes",
+     "value": "≈8.8 m"
+    },
+    {
+     "label": "warning before the flood",
+     "value": "70 min"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "Copernicus Sentinel-2 L2A via Element 84 Earth Search — contains modified Copernicus Sentinel data",
+     "url": "https://earth-search.aws.element84.com/v1"
+    },
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    }
+   ]
+  },
+  {
+   "id": "lower",
+   "kicker": "10:40 → 16:00 · six hours to the plains",
+   "title": "Six hours to the plains",
+   "body": "Below Galchhi the Trishuli runs beside the Prithvi Highway, Nepal's busiest road. The Phurke gauge at Malekhu crossed its danger level at 11:43 and was swept away with the bridge beside it. The flood passed Mugling by 13:00 and reached the Narayani at Devghat in mid-afternoon, peaking there at 16:00. The camera pulls back as the valley widens.",
+   "camera": {
+    "center": [
+     85.00911,
+     27.80587
+    ],
+    "zoom": 11.8,
+    "pitch": 50,
+    "bearing": -118,
+    "duration": 4500
+   },
+   "layers": [
+    "flow",
+    "places",
+    "gauges",
+    "report-places"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "time": {
+    "start": "2026-08-26T10:20:00+05:45",
+    "end": "2026-08-26T16:10:00+05:45",
+    "duration": 45,
+    "autoplay": true,
+    "timeZone": "Asia/Kathmandu",
+    "follow": {
+     "layer": "flow",
+     "zoom": 11.8,
+     "pitch": 50,
+     "bearing": "track",
+     "maxViewSpeed": 0.15
+    },
+    "captions": [
+     {
+      "time": "2026-08-26T10:50:00+05:45",
+      "text": "Galchhi peaks, about 8.8 m above the morning level"
+     },
+     {
+      "time": "2026-08-26T11:26:00+05:45",
+      "text": "Phurke (Malekhu) gauge crosses its warning level"
+     },
+     {
+      "time": "2026-08-26T11:43:00+05:45",
+      "text": "Phurke crosses danger; the gauge and bridge are swept away"
+     },
+     {
+      "time": "2026-08-26T11:45:35+05:45",
+      "text": "A second failure at the source (USGS M4.2)"
+     },
+     {
+      "time": "2026-08-26T11:50:00+05:45",
+      "text": "The flood reaches Malekhu bazaar"
+     },
+     {
+      "time": "2026-08-26T13:00:00+05:45",
+      "text": "Confirmed past Mugling; evacuation requested as far as Devghat"
+     },
+     {
+      "time": "2026-08-26T13:35:00+05:45",
+      "text": "China reports the barrier lake has not fully drained"
+     },
+     {
+      "time": "2026-08-26T14:14:00+05:45",
+      "text": "Kali Khola gauge crosses its danger level (12.1 m)"
+     },
+     {
+      "time": "2026-08-26T14:35:00+05:45",
+      "text": "The front reaches Devghat (gauge record)"
+     },
+     {
+      "time": "2026-08-26T16:00:00+05:45",
+      "text": "Devghat peak: 6.57 m, 5,850 m³/s"
+     }
+    ]
+   },
+   "sources": [
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    }
+   ]
+  },
+  {
+   "id": "benighat",
+   "kicker": "Sentinel-2 · Benighat–Malekhu",
+   "title": "Malekhu, Benighat and Krishnabhir",
+   "body": "No sub-metre scene covers the lower Trishuli, so this swipe is Sentinel-2 (10 m): 2025-10-26 against 2026-09-21. Downstream at **Krishnabhir** the river ate **70 m of the Prithvi Highway**, closing it from 30 August to 17 September.",
+   "camera": {
+    "center": [
+     84.8,
+     27.81
+    ],
+    "zoom": 12.6,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "change",
+    "report-places",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "s2-benighat-before",
+    "right": "s2-benighat-after",
+    "leftLabel": "Before · 2025-10-26",
+    "rightLabel": "After · 2026-09-21"
+   },
+   "sources": [
+    {
+     "label": "Copernicus Sentinel-2 L2A via Element 84 Earth Search — contains modified Copernicus Sentinel data",
+     "url": "https://earth-search.aws.element84.com/v1"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "mugling",
+   "kicker": "Sentinel-2 · Kurintar–Mugling",
+   "title": "Mugling",
+   "body": "Mugling, where the Trishuli meets the Marsyangdi and two highways meet, was passed by 13:00. Sentinel-2: 2025-10-26 against 2026-09-21.",
+   "camera": {
+    "center": [
+     84.59,
+     27.86
+    ],
+    "zoom": 12.8,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "change",
+    "report-places",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "s2-mugling-before",
+    "right": "s2-mugling-after",
+    "leftLabel": "Before · 2025-10-26",
+    "rightLabel": "After · 2026-09-21"
+   },
+   "sources": [
+    {
+     "label": "Copernicus Sentinel-2 L2A via Element 84 Earth Search — contains modified Copernicus Sentinel data",
+     "url": "https://earth-search.aws.element84.com/v1"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "devghat",
+   "kicker": "Sentinel-2 · Devghat",
+   "title": "Devghat and the Narayani",
+   "body": "At Devghat the flood entered the Narayani. The peak — 6.57 m, 5,850 m³/s — stayed below the warning level: a 2–3-year flood here. Bodies were carried far further: most were recovered in Chitwan and Nawalparasi, and some reached Uttar Pradesh in India. Sentinel-2: 2025-11-05 against 2026-09-21.",
+   "camera": {
+    "center": [
+     84.43,
+     27.735
+    ],
+    "zoom": 13,
+    "pitch": 0,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "change",
+    "report-places",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "compare": {
+    "left": "s2-devghat-before",
+    "right": "s2-devghat-after",
+    "leftLabel": "Before · 2025-11-05",
+    "rightLabel": "After · 2026-09-21"
+   },
+   "sources": [
+    {
+     "label": "Copernicus Sentinel-2 L2A via Element 84 Earth Search — contains modified Copernicus Sentinel data",
+     "url": "https://earth-search.aws.element84.com/v1"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "ground",
+   "kicker": "Crowdsourced media",
+   "title": "Seen from the ground",
+   "body": "Open, geotagged photos and video of this disaster are scarce. Everything found under an open licence is on the map — click a point to open it:\n\n- **205 photos from before** (Wikimedia Commons and Flickr), including a series taken along the Trishuli on 24 August, two days before the flood\n- **246 street-level frames** from KartaView on the Galchhi–Devghat highway\n- **CCTV clips from Gyirong Port**, released into the public domain, showing the flood arriving at 08:44\n- **Umbra radar images** of the source and the barrier lake (CC BY 4.0), which see through monsoon cloud\n- a few **news videos** on YouTube (links only, placed approximately at the towns they show)\n\nNo openly licensed, geotagged ground video from after the flood could be found; Mapillary's archive needs a sign-in to search.",
+   "camera": {
+    "center": [
+     85,
+     28.03
+    ],
+    "zoom": 9,
+    "pitch": 35,
+    "bearing": -15,
+    "duration": 4000
+   },
+   "layers": [
+    "flow",
+    "media"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "stats": [
+    {
+     "label": "open photos and videos mapped",
+     "value": "485"
+    },
+    {
+     "label": "on the day",
+     "value": "3"
+    },
+    {
+     "label": "latest photo before the flood",
+     "value": "2026-08-24"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Wikimedia Commons contributors (CC BY / CC BY-SA / public domain, per item)",
+     "url": "https://commons.wikimedia.org/wiki/Category:2026_Nepal_floods"
+    },
+    {
+     "label": "KartaView street-level imagery, CC BY-SA 4.0",
+     "url": "https://kartaview.org/"
+    },
+    {
+     "label": "Umbra Open Data radar images via Wikimedia Commons, CC BY 4.0",
+     "url": "https://umbra.space/open-data/"
+    }
+   ]
+  },
+  {
+   "id": "damage",
+   "kicker": "Damage",
+   "title": "Counting the buildings",
+   "body": "The government's Rapid Damage and Needs Assessment counts **7,570 buildings affected** in 15 municipalities — 3,026 in Bidur alone — home to about 8,317 households and 32,963 people.\n\nSatellite mapping agrees on the pattern. Copernicus EMS graded four towns within days: **3,571 buildings destroyed**, 427 damaged and 687 possibly damaged. UNOSAT flagged 5,048 potentially affected buildings along the whole corridor and 10 heritage sites damaged or destroyed, among them Rasuwa Fort at the border; the government lists 47 heritage assets and 18 schools damaged and 4 health posts destroyed.\n\nOf 6,966 buildings mapped in OpenStreetMap within 200 m of the channel the day before, **3,056** now lie in stripped or buried ground or have vanished from the map.",
+   "camera": {
+    "center": [
+     85.16,
+     27.93
+    ],
+    "zoom": 12.2,
+    "pitch": 45,
+    "bearing": -20,
+    "duration": 4000
+   },
+   "layers": [
+    "ems-extent",
+    "ems-buildings",
+    "heritage",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Buildings affected, by municipality (RDNA)",
+    "data": [
+     {
+      "label": "Bidur (Nuwakot)",
+      "value": 3026,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Gosaikunda (Rasuwa)",
+      "value": 1043,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Benighat Rorang (Dhading)",
+      "value": 1037,
+      "color": "#ea580c"
+     },
+     {
+      "label": "Kispang (Nuwakot)",
+      "value": 696,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Uttargaya (Rasuwa)",
+      "value": 567,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Gandaki (Gorkha)",
+      "value": 248,
+      "color": "#f59e0b"
+     },
+     {
+      "label": "Siddhalek (Dhading)",
+      "value": 228,
+      "color": "#ea580c"
+     },
+     {
+      "label": "Belkotgadhi (Nuwakot)",
+      "value": 212,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Kalika (Rasuwa)",
+      "value": 112,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Gajuri (Dhading)",
+      "value": 107,
+      "color": "#ea580c"
+     }
+    ],
+    "note": "Data cut-off 3 Sep. Colours by district: Rasuwa, Nuwakot, Dhading, Gorkha/Chitwan."
+   },
+   "stats": [
+    {
+     "label": "buildings affected (RDNA)",
+     "value": "7,570"
+    },
+    {
+     "label": "destroyed (EMS, 4 areas)",
+     "value": "3,571"
+    },
+    {
+     "label": "people in affected households (RDNA)",
+     "value": "32,963"
+    },
+    {
+     "label": "heritage assets damaged (RDNA)",
+     "value": "47"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    },
+    {
+     "label": "Copernicus Emergency Management Service, EMSR927 damage grading — © European Union",
+     "url": "https://mapping.emergency.copernicus.eu/activations/EMSR927/"
+    },
+    {
+     "label": "UNOSAT rapid mapping FL20260826NPL — detachment zone, barrier lakes, flow extent, heritage damage (CC BY-SA 4.0)",
+     "url": "https://data.humdata.org/dataset/mudflow-rockflow-impact-assessment-in-rasuwa-nuwakot-districts-bagmati-province-nepal-as-o"
+    }
+   ]
+  },
+  {
+   "id": "bridges-roads",
+   "kicker": "Bridges and roads",
+   "title": "39 of 58 bridges gone",
+   "body": "Bridges tell the story best, because a bridge cannot drift downstream the way bodies do. HOT's survey of 58 named bridges found **39 washed out** — 23 of 27 in Rasuwa, 11 of 20 in Nuwakot, 5 of 8 in Dhading and none in Gorkha. The government counts **33 road bridges washed out** and 4 damaged — 3 km of bridge — plus 68 trail-bridge spans and **69 km of road**, including the whole 55 km from Betrawati to Rasuwagadhi.\n\nArmy Bailey bridges went in at Phalakhu (70 m), Betrawati (72 m) and Syabrubesi (76 m). Downstream the river cut 70 m of the Prithvi Highway at **Krishnabhir**, closing Nepal's busiest road — about 14,000 vehicles a day — from 30 August to 17 September.",
+   "camera": {
+    "center": [
+     85.24,
+     28.08
+    ],
+    "zoom": 10.4,
+    "pitch": 50,
+    "bearing": -25,
+    "duration": 4000
+   },
+   "layers": [
+    "flow",
+    "bridges",
+    "ems-transport",
+    "report-places"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Bridges washed out, by district (HOT survey)",
+    "data": [
+     {
+      "label": "Rasuwa (23/27)",
+      "value": 23,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Nuwakot (11/20)",
+      "value": 11,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Dhading (5/8)",
+      "value": 5,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Gorkha (0/3)",
+      "value": 0,
+      "color": "#7f1d1d"
+     }
+    ],
+    "note": "The share washed out falls downstream."
+   },
+   "stats": [
+    {
+     "label": "bridges washed out (HOT survey)",
+     "value": "39 / 58"
+    },
+    {
+     "label": "road bridges lost or damaged (RDNA)",
+     "value": "33 + 4"
+    },
+    {
+     "label": "road damaged (RDNA)",
+     "value": "69 km"
+    },
+    {
+     "label": "Prithvi Highway closed",
+     "value": "18 days"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Humanitarian OpenStreetMap Team — flood extent, bridge damage and exposed hydropower (HDX, ODbL)",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl"
+    },
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    },
+    {
+     "label": "Copernicus Emergency Management Service, EMSR927 damage grading — © European Union",
+     "url": "https://mapping.emergency.copernicus.eu/activations/EMSR927/"
+    },
+    {
+     "label": "NDRRMA Situation Report #01 (1 Sep 2026)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf"
+    }
+   ]
+  },
+  {
+   "id": "change",
+   "kicker": "Sentinel-2 · the whole corridor",
+   "title": "What the satellites saw",
+   "body": "Comparing Sentinel-2 before (October–November 2025) and after (September 2026) along all 200 km, change detection finds **15.95 km²** of vegetation or river channel replaced by bare debris within 500 m of the path — **83%** of it above Bidur, where the flow was fastest. HOT mapped 31.7 km² of flood extent from imagery on 27 August.\n\nMonsoon cloud hid parts of every scene; masked areas are not counted, so these are lower bounds.",
+   "camera": {
+    "center": [
+     85.15,
+     28.02
+    ],
+    "zoom": 9.8,
+    "pitch": 40,
+    "bearing": -20,
+    "duration": 4000
+   },
+   "layers": [
+    "change",
+    "hot-extent",
+    "flow"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Stripped or buried ground by stretch",
+    "unit": "km²",
+    "data": [
+     {
+      "label": "Langtang Lirung north face – Lende Khola",
+      "value": 3.78,
+      "color": "#f97316"
+     },
+     {
+      "label": "Rasuwagadhi–Timure–Syabrubesi",
+      "value": 2.46,
+      "color": "#f97316"
+     },
+     {
+      "label": "Syabrubesi–Betrawati",
+      "value": 3.41,
+      "color": "#f97316"
+     },
+     {
+      "label": "Betrawati–Trishuli–Bidur",
+      "value": 3.53,
+      "color": "#f97316"
+     },
+     {
+      "label": "Galchhi–Phosretar",
+      "value": 1.74,
+      "color": "#f97316"
+     },
+     {
+      "label": "Benighat–Malekhu",
+      "value": 0.6,
+      "color": "#f97316"
+     },
+     {
+      "label": "Kurintar–Mugling",
+      "value": 0.4,
+      "color": "#f97316"
+     },
+     {
+      "label": "Devghat",
+      "value": 0.03,
+      "color": "#f97316"
+     }
+    ]
+   },
+   "sources": [
+    {
+     "label": "Copernicus Sentinel-2 L2A via Element 84 Earth Search — contains modified Copernicus Sentinel data",
+     "url": "https://earth-search.aws.element84.com/v1"
+    },
+    {
+     "label": "Humanitarian OpenStreetMap Team — flood extent, bridge damage and exposed hydropower (HDX, ODbL)",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl"
+    }
+   ]
+  },
+  {
+   "id": "debris",
+   "kicker": "Where the debris went",
+   "title": "30.5 million cubic metres",
+   "body": "A government model puts **30.5 million m³** of debris on the valley floor over the 94 km from Timure to Malekhu — 53% of it on the long reach from Haku to Devighat. Clearing only the settlements would mean moving about 1.8 million m³.\n\nUNOSAT mapped **65 km² of mudflow and rockflow** from the source to below Devghat on images from 26–27 August. How much rock and ice fell in the first place is still open: seismic estimates range from about 10 to 500 million m³.",
+   "camera": {
+    "center": [
+     85.19,
+     28
+    ],
+    "zoom": 11.6,
+    "pitch": 55,
+    "bearing": -30,
+    "duration": 4000
+   },
+   "layers": [
+    "unosat-extent",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Modelled deposition by reach (million m³)",
+    "unit": "Mm³",
+    "data": [
+     {
+      "label": "Timure–Syafrubesi (5.6 km)",
+      "value": 3.5,
+      "color": "#9a3412"
+     },
+     {
+      "label": "Syafrubesi–Site 3 (4.7 km)",
+      "value": 2.6,
+      "color": "#9a3412"
+     },
+     {
+      "label": "Site 3–near Dhunche (4.1 km)",
+      "value": 1.5,
+      "color": "#9a3412"
+     },
+     {
+      "label": "Near Dhunche–Haku (4.2 km)",
+      "value": 1.3,
+      "color": "#9a3412"
+     },
+     {
+      "label": "Haku–Devighat (39.3 km)",
+      "value": 16.1,
+      "color": "#9a3412"
+     },
+     {
+      "label": "Devighat–Galchhi (15.9 km)",
+      "value": 2.7,
+      "color": "#9a3412"
+     },
+     {
+      "label": "Galchhi–Malekhu (20.2 km)",
+      "value": 2.8,
+      "color": "#9a3412"
+     }
+    ],
+    "note": "RDNA debris model (NDRRMA/NPC), upstream to downstream."
+   },
+   "stats": [
+    {
+     "label": "modelled deposition (RDNA)",
+     "value": "30.5 Mm³"
+    },
+    {
+     "label": "flow extent (UNOSAT)",
+     "value": "65 km²"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    },
+    {
+     "label": "UNOSAT rapid mapping FL20260826NPL — detachment zone, barrier lakes, flow extent, heritage damage (CC BY-SA 4.0)",
+     "url": "https://data.humdata.org/dataset/mudflow-rockflow-impact-assessment-in-rasuwa-nuwakot-districts-bagmati-province-nepal-as-o"
+    },
+    {
+     "label": "Huang, Wang & Chen (2026), seismic analysis of the Langtang Lirung avalanche (Zenodo 22884627)",
+     "url": "https://zenodo.org/records/22884627"
+    }
+   ]
+  },
+  {
+   "id": "people",
+   "kicker": "26 Aug → 23 Sep · the toll",
+   "title": "1,451 dead, 5,705 missing",
+   "body": "The count grew for weeks as recovery reached the upper valley. By 22 September the NDRRMA counted **1,451 dead — 585 men, 336 women and 530 partial remains — and 5,705 missing**; 13,795 people had been rescued. The police keep a separate register: 1,452 dead and 4,718 missing on 23 September. Duplicate reports have been removed from the missing lists since 21 September, so the two will converge.\n\nThe missing include hydropower workers, drivers queued at the border, trekkers and residents, and **more than 600 foreigners from 35 countries**. DNA samples had been taken from 1,286 bodies and 1,997 relatives by 21 September. China reported 43 dead and 519 missing.",
+   "camera": {
+    "center": [
+     84.75,
+     27.8
+    ],
+    "zoom": 8.6,
+    "pitch": 30,
+    "bearing": 0,
+    "duration": 4000
+   },
+   "layers": [
+    "rivers",
+    "flow",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "line",
+    "title": "Reported toll in Nepal, by days after the event",
+    "xLabel": "days after 26 Aug 08:37",
+    "series": [
+     {
+      "label": "Dead (bodies or remains)",
+      "color": "#7f1d1d",
+      "points": [
+       [
+        0.52,
+        157
+       ],
+       [
+        2.27,
+        539
+       ],
+       [
+        2.47,
+        579
+       ],
+       [
+        2.89,
+        616
+       ],
+       [
+        4.02,
+        734
+       ],
+       [
+        5.02,
+        903
+       ],
+       [
+        6.02,
+        987
+       ],
+       [
+        6.39,
+        1050
+       ],
+       [
+        7.39,
+        1204
+       ],
+       [
+        8.39,
+        1259
+       ],
+       [
+        9.39,
+        1294
+       ],
+       [
+        10.43,
+        1331
+       ],
+       [
+        11.43,
+        1342
+       ],
+       [
+        12.43,
+        1356
+       ],
+       [
+        13.39,
+        1358
+       ],
+       [
+        14.43,
+        1369
+       ],
+       [
+        15.39,
+        1377
+       ],
+       [
+        17.43,
+        1386
+       ],
+       [
+        18.43,
+        1388
+       ],
+       [
+        19.43,
+        1395
+       ],
+       [
+        20.43,
+        1399
+       ],
+       [
+        21.43,
+        1403
+       ],
+       [
+        22.43,
+        1410
+       ],
+       [
+        23.43,
+        1410
+       ],
+       [
+        24.43,
+        1411
+       ],
+       [
+        26.43,
+        1451
+       ],
+       [
+        27.43,
+        1451
+       ]
+      ]
+     },
+     {
+      "label": "Missing",
+      "color": "#64748b",
+      "dashed": true,
+      "points": [
+       [
+        2.27,
+        977
+       ],
+       [
+        2.47,
+        1924
+       ],
+       [
+        2.89,
+        1924
+       ],
+       [
+        4.02,
+        2498
+       ],
+       [
+        5.02,
+        4247
+       ],
+       [
+        6.02,
+        3916
+       ],
+       [
+        6.39,
+        3916
+       ],
+       [
+        7.39,
+        4216
+       ],
+       [
+        8.39,
+        5053
+       ],
+       [
+        9.39,
+        5053
+       ],
+       [
+        10.43,
+        4896
+       ],
+       [
+        11.43,
+        4896
+       ],
+       [
+        12.43,
+        4894
+       ],
+       [
+        13.39,
+        5326
+       ],
+       [
+        14.43,
+        5132
+       ],
+       [
+        15.39,
+        5130
+       ],
+       [
+        17.43,
+        5130
+       ],
+       [
+        18.43,
+        5130
+       ],
+       [
+        19.43,
+        5130
+       ],
+       [
+        20.43,
+        5179
+       ],
+       [
+        21.43,
+        6150
+       ],
+       [
+        22.43,
+        6145
+       ],
+       [
+        23.43,
+        6055
+       ],
+       [
+        24.43,
+        5875
+       ],
+       [
+        26.43,
+        5745
+       ],
+       [
+        27.43,
+        5705
+       ]
+      ]
+     }
+    ],
+    "xTicks": [
+     {
+      "x": 0,
+      "label": "0 d"
+     },
+     {
+      "x": 7,
+      "label": "7 d"
+     },
+     {
+      "x": 14,
+      "label": "14 d"
+     },
+     {
+      "x": 21,
+      "label": "21 d"
+     },
+     {
+      "x": 28,
+      "label": "28 d"
+     }
+    ],
+    "note": "NDRRMA bulletins and situation reports to 22 Sep (inputs/official-2026). The jump in missing on 16 Sep is a re-registration, not new losses."
+   },
+   "sources": [
+    {
+     "label": "NDRRMA figures to 22 Sep 19:00 (via Pardafas, 23 Sep)",
+     "url": "https://www.pardafas.com/2026/09/23/189125/"
+    },
+    {
+     "label": "NDRRMA Situation Report #20 (21 Sep 2026)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf"
+    },
+    {
+     "label": "Nepal Police register, 23 Sep 05:00 (via Nepalnews)",
+     "url": "https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1452-over-4700-still-missing/"
+    },
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "recovered",
+   "kicker": "Where they were found",
+   "title": "Carried 250 km",
+   "body": "Where bodies were recovered is not where people died. By 21 September **821 of 1,451** had been found in Chitwan and the two Nawalparasi districts, on the Narayani plains 150–250 km from the source — 57% of the total. Some reached Uttar Pradesh in India.\n\nRasuwa's count rose last, from 13 on 30 August to 236, as searchers dug into the upper valley; 31 of those bodies came out of the Upper Trishuli-1 tunnel at Hakubesi on 20–21 September. (One chart in SitRep #20 swaps Rasuwa and Nuwakot; the figures here follow its district table and the police count.)",
+   "camera": {
+    "center": [
+     84.55,
+     27.72
+    ],
+    "zoom": 8.7,
+    "pitch": 35,
+    "bearing": 10,
+    "duration": 4500
+   },
+   "layers": [
+    "rivers",
+    "flow",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Bodies recovered by district, 21 Sep (upstream → downstream)",
+    "data": [
+     {
+      "label": "Rasuwa",
+      "value": 236,
+      "color": "#7f1d1d"
+     },
+     {
+      "label": "Nuwakot",
+      "value": 203,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Dhading",
+      "value": 72,
+      "color": "#ea580c"
+     },
+     {
+      "label": "Gorkha",
+      "value": 79,
+      "color": "#f59e0b"
+     },
+     {
+      "label": "Tanahun",
+      "value": 38,
+      "color": "#0f766e"
+     },
+     {
+      "label": "Chitwan",
+      "value": 367,
+      "color": "#0369a1"
+     },
+     {
+      "label": "Nawalparasi East",
+      "value": 232,
+      "color": "#4338ca"
+     },
+     {
+      "label": "Nawalparasi West",
+      "value": 222,
+      "color": "#6d28d9"
+     }
+    ],
+    "note": "NDRRMA Situation Report #20. Two people who died in treatment in Kathmandu are not shown."
+   },
+   "stats": [
+    {
+     "label": "found on the Narayani plains",
+     "value": "57%"
+    },
+    {
+     "label": "Chitwan",
+     "value": "367"
+    },
+    {
+     "label": "Rasuwa",
+     "value": "236"
+    }
+   ],
+   "sources": [
+    {
+     "label": "NDRRMA Situation Report #20 (21 Sep 2026)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf"
+    },
+    {
+     "label": "Nepal Police register, 23 Sep 05:00 (via Nepalnews)",
+     "url": "https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1452-over-4700-still-missing/"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "cost",
+   "kicker": "The bill",
+   "title": "US$2.70 bn of damage and losses",
+   "body": "The government's assessment puts damage and losses at **NPR 408 billion (US$2.70 bn)** and the cost of recovery at **US$4.77 bn**, most of it long-term. Energy is the largest item — US$997 M of damage and losses and US$2.58 bn to rebuild — ahead of lost livelihoods and trade (US$965 M) and homes (US$422 M).\n\nThe figures were cut off on 3 September, before most of the upper valley had been reached. On 24 September Nepal's foreign minister told the UN General Assembly that losses exceed US$5 billion.",
+   "camera": {
+    "center": [
+     85.05,
+     27.98
+    ],
+    "zoom": 9.2,
+    "pitch": 40,
+    "bearing": -15,
+    "duration": 4000
+   },
+   "layers": [
+    "flow",
+    "hydropower",
+    "bridges",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "chart": {
+    "kind": "bars",
+    "title": "Damage and losses by sector (US$ million, RDNA)",
+    "data": [
+     {
+      "label": "Energy",
+      "value": 997,
+      "color": "#b91c1c"
+     },
+     {
+      "label": "Economic activities / livelihoods",
+      "value": 965,
+      "color": "#64748b"
+     },
+     {
+      "label": "Private buildings",
+      "value": 422,
+      "color": "#64748b"
+     },
+     {
+      "label": "Roads",
+      "value": 155,
+      "color": "#64748b"
+     },
+     {
+      "label": "Bridges",
+      "value": 75,
+      "color": "#64748b"
+     },
+     {
+      "label": "Public buildings and facilities",
+      "value": 17,
+      "color": "#64748b"
+     },
+     {
+      "label": "Irrigation and river training",
+      "value": 11,
+      "color": "#64748b"
+     },
+     {
+      "label": "Livestock",
+      "value": 10,
+      "color": "#64748b"
+     }
+    ]
+   },
+   "stats": [
+    {
+     "label": "damage and losses",
+     "value": "US$2.70 bn"
+    },
+    {
+     "label": "recovery needs",
+     "value": "US$4.77 bn"
+    },
+    {
+     "label": "energy share of the bill",
+     "value": "37%"
+    }
+   ],
+   "sources": [
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    }
+   ]
+  },
+  {
+   "id": "lessons",
+   "kicker": "What the data says",
+   "title": "Faster than any warning built on rain or rivers",
+   "body": "**The trigger was dry.** No rain fell at the source, so rainfall thresholds never fired.\n\n**The river gauges died first.** The three upstream stations went silent below their warning levels; the instrument that could have raised the alarm was destroyed by the thing it measured.\n\n**Seismometers saw it at once.** The 08:37 signal was recorded worldwide within minutes but logged in Nepal as an earthquake. A seismic trigger for mass-flow alerts on this corridor could have bought the first towns minutes they did not have.\n\n**It happened twice in 14 months.** The 2025 flood came from Tibet, this one from Nepal's own side; both hit the same crossing, dry port and hydropower cascade. Recovery built back in the same place.",
+   "camera": {
+    "center": [
+     85.3,
+     28.15
+    ],
+    "zoom": 10.4,
+    "pitch": 55,
+    "bearing": 200,
+    "duration": 4500
+   },
+   "layers": [
+    "flow",
+    "gauges",
+    "hydropower",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "sources": [
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "ICIMOD — Kyirong–Rasuwa flood 2026",
+     "url": "https://www.icimod.org/kyirong-rasuwa-flood-2026-nepal-china-border/"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  },
+  {
+   "id": "methods",
+   "kicker": "How this map was made",
+   "title": "Methods, data and caveats",
+   "body": "**Flow front.** Acharya & Paudel's centreline from the scar to Devghat, timed by DHM gauge arrivals and reports. The front moves at constant speed between reports and eases between speeds around each one; it shows when the front passed, not a hydraulic simulation.\n\n**Imagery.** Town close-ups stream full-resolution scenes straight from the Vantor Open Data Program and Planet's Crisis Response release (both CC BY-NC 4.0), NEA Engineering's drone orthophotos on OpenAerialMap (CC BY 4.0) and HOT's post-event mosaic, chosen per town for the least cloud after checking every available scene. Nothing is re-hosted. Sentinel-2 fills in where no sub-metre scene exists.\n\n**Official figures.** Tolls follow NDRRMA's situation reports (the police register is noted where it differs); damage, costs and the debris model come from the government's Rapid Damage and Needs Assessment (cut-off 3 Sep); missing hydropower workers from the Energy Minister's statement to Parliament. Satellite damage maps are Copernicus EMS's and UNOSAT's.\n\n**Change detection.** Sentinel-2 pixels where NDVI fell at least 0.2 to below 0.25 while the surface brightened, or water became bright bare ground, within 500 m of the path; cloud, shadow and snow masked in both scenes. A screening map.\n\n**Buildings** are OpenStreetMap footprints as of 25 August; \"hit\" means inside a change area, or deleted after the event with nothing redrawn there. **Damage grades** are Copernicus EMS's; **bridges** are HOT's field survey. **Media** are only items with an open licence and a location; YouTube videos are links. **All figures are provisional.**",
+   "camera": {
+    "center": [
+     85,
+     28
+    ],
+    "zoom": 8.8,
+    "pitch": 20,
+    "bearing": 0,
+    "duration": 3500
+   },
+   "layers": [
+    "rivers",
+    "flow",
+    "keypoints"
+   ],
+   "terrain": true,
+   "exaggeration": 1.5,
+   "sources": [
+    {
+     "label": "Acharya & Paudel (2026), Bhote Koshi–Trishuli flash flood data package (DHM gauges, timeline, casualties), CC BY 4.0",
+     "url": "https://doi.org/10.31223/X5HN5H"
+    },
+    {
+     "label": "USGS event us7000tbwb (Ms 5.2 landslide signal)",
+     "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tbwb"
+    },
+    {
+     "label": "Copernicus Emergency Management Service, EMSR927 damage grading — © European Union",
+     "url": "https://mapping.emergency.copernicus.eu/activations/EMSR927/"
+    },
+    {
+     "label": "Humanitarian OpenStreetMap Team — flood extent, bridge damage and exposed hydropower (HDX, ODbL)",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl"
+    },
+    {
+     "label": "Vantor (formerly Maxar) Open Data Program — Nepal-Flooding-Aug-2026, CC BY-NC 4.0",
+     "url": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json"
+    },
+    {
+     "label": "Planet Crisis Response — Bhote Koshi–Trishuli Outburst Flood (Source Cooperative), CC BY-NC 4.0",
+     "url": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26"
+    },
+    {
+     "label": "Copernicus Sentinel-2 L2A via Element 84 Earth Search — contains modified Copernicus Sentinel data",
+     "url": "https://earth-search.aws.element84.com/v1"
+    },
+    {
+     "label": "OpenStreetMap contributors (ODbL) — settlements, buildings, bridges as of 25 Aug 2026",
+     "url": "https://www.openstreetmap.org/copyright"
+    },
+    {
+     "label": "Kontur Population (2023), CC BY 4.0",
+     "url": "https://data.humdata.org/dataset/kontur-population-nepal"
+    },
+    {
+     "label": "NDRRMA Situation Report #01 (1 Sep 2026)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf"
+    },
+    {
+     "label": "ICIMOD — Kyirong–Rasuwa flood 2026",
+     "url": "https://www.icimod.org/kyirong-rasuwa-flood-2026-nepal-china-border/"
+    },
+    {
+     "label": "Kathmandu Post, 28 Aug 2026 — what triggered the Rasuwa flood",
+     "url": "https://kathmandupost.com/national/2026/08/28/what-triggered-the-rasuwa-flood-scientists-piece-together-a-complex-chain-of-events"
+    },
+    {
+     "label": "Nepalnews, 23 Sep 2026 — buried under debris, erased from the record",
+     "url": "https://english.nepalnews.com/s/feature/buried-under-debris-erased-from-the-record/"
+    },
+    {
+     "label": "NDRRMA figures to 22 Sep 19:00 (via Pardafas, 23 Sep)",
+     "url": "https://www.pardafas.com/2026/09/23/189125/"
+    },
+    {
+     "label": "NDRRMA Situation Report #20 (21 Sep 2026)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf"
+    },
+    {
+     "label": "Nepal Police register, 23 Sep 05:00 (via Nepalnews)",
+     "url": "https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1452-over-4700-still-missing/"
+    },
+    {
+     "label": "Government of Nepal (NDRRMA, NPC) — Rapid Damage and Needs Assessment, Rasuwa–Bhotekoshi Flood 2026 (published 17 Sep)",
+     "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf"
+    },
+    {
+     "label": "Kathmandu Post, 23 Sep 2026 — over 800 missing from hydropower projects (Energy Minister)",
+     "url": "https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha"
+    },
+    {
+     "label": "UNOSAT rapid mapping FL20260826NPL — detachment zone, barrier lakes, flow extent, heritage damage (CC BY-SA 4.0)",
+     "url": "https://data.humdata.org/dataset/mudflow-rockflow-impact-assessment-in-rasuwa-nuwakot-districts-bagmati-province-nepal-as-o"
+    },
+    {
+     "label": "Huang, Wang & Chen (2026), seismic analysis of the Langtang Lirung avalanche (Zenodo 22884627)",
+     "url": "https://zenodo.org/records/22884627"
+    },
+    {
+     "label": "USGS event us7000tc90 (second failure, relocated 21 Sep)",
+     "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tc90"
+    },
+    {
+     "label": "NEA Engineering Company drone orthophotos on OpenAerialMap, CC BY 4.0",
+     "url": "https://map.openaerialmap.org/"
+    },
+    {
+     "label": "HOT post-event mosaic of Vantor scenes, 27 Aug–8 Sep (HDX), CC BY-NC 4.0",
+     "url": "https://data.humdata.org/dataset/hot_flood_npl_buildings_damage"
+    },
+    {
+     "label": "Wikimedia Commons contributors (CC BY / CC BY-SA / public domain, per item)",
+     "url": "https://commons.wikimedia.org/wiki/Category:2026_Nepal_floods"
+    },
+    {
+     "label": "KartaView street-level imagery, CC BY-SA 4.0",
+     "url": "https://kartaview.org/"
+    },
+    {
+     "label": "Umbra Open Data radar images via Wikimedia Commons, CC BY 4.0",
+     "url": "https://umbra.space/open-data/"
+    },
+    {
+     "label": "Research dossier (all sources, conflicting figures side by side)",
+     "url": "https://github.com/bishalspkt/geojson-app/tree/main/stories/bhotekoshi-2026/research"
+    }
+   ]
+  }
+ ]
+}

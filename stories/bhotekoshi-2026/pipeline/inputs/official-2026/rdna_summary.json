@@ -1,0 +1,16 @@
+{
+ "source": "Government of Nepal, NDRRMA with NPC: Rapid Damage and Needs Assessment (RDNA), Rasuwa-Bhotekoshi Flood 2026. Data cut-off 3 Sep 2026, finalised 10 Sep 2026, published on NDRRMA portal 17 Sep 2026.",
+ "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026.pdf",
+ "total_effects": {"npr_crore": 40828.91, "usd_m": 2695.33, "damage_npr_crore": 27448.32, "losses_npr_crore": 13380.58},
+ "recovery_needs": {"npr_crore": 72331.52, "usd_m": 4774.99, "early_0_6m_usd_m": 57.66, "longer_term_usd_m": 4717.32},
+ "affected_buildings_by_district": {"Rasuwa": 1779, "Nuwakot": 3977, "Dhading": 1451, "Gorkha": 263, "Chitwan": 100, "total": 7570, "est_households": 8317, "est_population": 32963, "wards": 52, "local_levels": 15, "top_wards": {"Kispang-5": 696, "Gosaikunda-2": 571, "Benighat Rorang-3": 553}},
+ "holding_centres_10sep": {"Rasuwa": [9, 775], "Nuwakot": [25, 2615], "Dhading": [3, 295], "total": [37, 3685]},
+ "energy": {"hydro_projects": 13, "hydro_capacity_mw": 759.025, "operating": [7, 250.4], "under_construction": [6, 508.625], "solar_plants": [5, 24.36], "hydro_damage_npr_crore": 11995.56, "annual_generation_loss_gwh": {"hydro": 2520.0, "solar": 210.48}},
+ "education": {"schools": 18, "buildings": 56, "rooms_partial": 152, "rooms_complete": 156},
+ "health_facilities": {"public_hospital_partial": 1, "health_posts_complete": 4, "phcc_partial": 2},
+ "cultural_heritage": {"assets": 47, "complete": 43, "partial": 4, "note": "includes Betrawati treaty stone (Sandhishila)"},
+ "banking": {"branches": 17, "damage_npr_crore": 72.4, "cash_npr_crore": 19.59},
+ "renewables_household": {"solar_home_systems": 2450, "biogas": 2740, "micro_hydro_kw": 92, "water_mills": 185},
+ "debris_model": {"corridor_km": 94.075, "modelled_deposition_m3": 30523530.8, "settlement_debris_m3": 7294874.5, "clearance_m3": 1845748.97, "building_debris_m3": 1320000},
+ "road_project_context": "DoR Galchhi–Trishuli–Mailung–Syafrubesi–Rasuwagadhi road: 82 km (46 + 19 + 17 km)"
+}

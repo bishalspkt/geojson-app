@@ -1,6 +1,6 @@
 # Stories: guided map narratives
 
-A **story** is a JSON document that bundles data layers and imagery with an ordered list of **chapters**. Each chapter moves the camera (optionally in 3D over terrain), decides which layers are visible, and can play the timeline, animate tracks, and open a before/after swipe comparison. Stories are how geojson.app presents analysis.
+A **story** is a JSON document that bundles data layers and imagery with an ordered list of **chapters**. Each chapter moves the camera (optionally in 3D over terrain), decides which layers are visible, and can play the timeline, animate tracks, and open a before/after swipe comparison. Stories are how geojson.app presents analysis: the [Bhote Koshi–Trishuli 2026 story](../public/stories/bhotekoshi-2026/story.json) is the reference example, and its build pipeline lives in [`stories/bhotekoshi-2026/`](../stories/bhotekoshi-2026/).
 
 Everything stays static and cheap: a story is a JSON file plus GeoJSON and images served from any static host (Cloudflare Pages for the built-in ones). Satellite imagery can stream directly from keyless public services (NASA GIBS) or, at full resolution, from cloud-optimised GeoTIFFs in open buckets (Vantor/Maxar Open Data, Planet on Source Cooperative, OpenAerialMap) — nothing is re-hosted.
 
@@ -130,4 +130,4 @@ Timeline modes: **cumulative** (everything up to now) or **recent** (a sliding w
 
 ## Building a story from data
 
-Keep raw downloads and processing out of `public/`: put a pipeline next to the story (`stories/<name>/pipeline/`) that fetches open data with caching, processes it, and writes `public/stories/<name>/`. Budget sizes — the whole story should load in a few seconds on a phone: simplify geometry, round coordinates to ~1 m (5 decimals), and prefer WebP for imagery chips.
+Keep raw downloads and processing out of `public/`: put a pipeline next to the story (see `stories/bhotekoshi-2026/pipeline/`) that fetches open data with caching, processes it, and writes `public/stories/<name>/`. Budget sizes — the whole story should load in a few seconds on a phone: simplify geometry, round coordinates to ~1 m (5 decimals), and prefer WebP for imagery chips.

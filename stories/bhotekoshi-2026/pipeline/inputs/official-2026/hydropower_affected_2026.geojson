@@ -1,0 +1,583 @@
+{
+ "type": "FeatureCollection",
+ "name": "Hydropower and energy assets affected by the 26 Aug 2026 Bhote Koshi-Trishuli flood (compiled 2026-09-25)",
+ "note": "Compiled from OSM (ODbL), HOT/HDX exposed-hydropower layer (ODbL), Kathmandu Post 30 Aug & 23 Sep 2026, Radio Nepal 5 Sep 2026, NDRRMA SitRep #20, JoongAng Daily 27 Aug 2026, RGHPCL. Licence points are approximate DoED licence coordinates, not structures. Items marked [not verified] were not confirmed from a primary source in this session.",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Rasuwagadhi HEP",
+    "capacity_mw": 111,
+    "status_pre_event": "operating (COD 31 Dec 2024)",
+    "owner": "Rasuwagadhi Hydropower Company Ltd (Chilime-led)",
+    "owner_src": "https://rghpcl.com.np/about-the-project/",
+    "damage": "NEA spokesperson: 'completely washed away' (KP 30 Aug); dam site, quarters and station severely damaged",
+    "missing_workers_23sep": 93,
+    "bodies_recovered": ">=1 (body found inside tunnel, NDRRMA SitRep #22, 12 Sep, via ADRC)",
+    "notes": "Headworks ~400 m below Kerung-Lende confluence; 4,185 m headrace; underground powerhouse; 613.9 GWh/yr; 80 m3/s design discharge (company site). HOT/DoED layer still lists it 'Under Construction' (outdated).",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "headworks/dam",
+    "coord_source": "OSM way 1552793903 'Rasuwagadhi Hydropower Dam'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.37712,
+     28.27364
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Rasuwagadhi HEP",
+    "capacity_mw": 111,
+    "status_pre_event": "operating (COD 31 Dec 2024)",
+    "owner": "Rasuwagadhi Hydropower Company Ltd (Chilime-led)",
+    "owner_src": "https://rghpcl.com.np/about-the-project/",
+    "damage": "NEA spokesperson: 'completely washed away' (KP 30 Aug); dam site, quarters and station severely damaged",
+    "missing_workers_23sep": 93,
+    "bodies_recovered": ">=1 (body found inside tunnel, NDRRMA SitRep #22, 12 Sep, via ADRC)",
+    "notes": "Headworks ~400 m below Kerung-Lende confluence; 4,185 m headrace; underground powerhouse; 613.9 GWh/yr; 80 m3/s design discharge (company site). HOT/DoED layer still lists it 'Under Construction' (outdated).",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "licence point (approx.)",
+    "coord_source": "HOT exposed-hydropower layer (DoED licence point)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.370139,
+     28.251111
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Chilime HEP",
+    "capacity_mw": 22.1,
+    "status_pre_event": "operating",
+    "owner": "Chilime Hydropower Company Ltd (NEA group) [not re-verified this session]",
+    "owner_src": "",
+    "damage": "'buried' (NEA spokesperson, KP 30 Aug); 5 NEA staff found dead at powerhouse after 250 m tunnel breakthrough",
+    "missing_workers_23sep": 1,
+    "bodies_recovered": "5 (KP 23 Sep; NDRRMA SitRep #16/#20)",
+    "notes": "HOT destroyed-features layer tags the powerhouse node 'Destroyed'.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "headworks",
+    "coord_source": "OSM node 4352711189 'Chilime Hydropower Plant headworks'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.30757,
+     28.18062
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Chilime HEP",
+    "capacity_mw": 22.1,
+    "status_pre_event": "operating",
+    "owner": "Chilime Hydropower Company Ltd (NEA group) [not re-verified this session]",
+    "owner_src": "",
+    "damage": "'buried' (NEA spokesperson, KP 30 Aug); 5 NEA staff found dead at powerhouse after 250 m tunnel breakthrough",
+    "missing_workers_23sep": 1,
+    "bodies_recovered": "5 (KP 23 Sep; NDRRMA SitRep #16/#20)",
+    "notes": "HOT destroyed-features layer tags the powerhouse node 'Destroyed'.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "powerhouse",
+    "coord_source": "OSM node 982602383 'Chilime Hydropower Powerhouse' (22.1 MW)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.33192,
+     28.15735
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Chilime HEP",
+    "capacity_mw": 22.1,
+    "status_pre_event": "operating",
+    "owner": "Chilime Hydropower Company Ltd (NEA group) [not re-verified this session]",
+    "owner_src": "",
+    "damage": "'buried' (NEA spokesperson, KP 30 Aug); 5 NEA staff found dead at powerhouse after 250 m tunnel breakthrough",
+    "missing_workers_23sep": 1,
+    "bodies_recovered": "5 (KP 23 Sep; NDRRMA SitRep #16/#20)",
+    "notes": "HOT destroyed-features layer tags the powerhouse node 'Destroyed'.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "powerhouse adit",
+    "coord_source": "OSM node 14172124335 'Chilime Powerhouse Entrance'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.33188,
+     28.1576
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Langtang Khola HEP",
+    "capacity_mw": 20,
+    "status_pre_event": "testing phase (per KP 30 Aug)",
+    "owner": "private [name not verified]",
+    "owner_src": "",
+    "damage": "listed 'completely damaged' by DAO Rasuwa (Radio Nepal 5 Sep)",
+    "missing_workers_23sep": 39,
+    "bodies_recovered": "2 (19 rescued) (KP 23 Sep)",
+    "notes": "",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "project area",
+    "coord_source": "OSM way 1552890448 'Langtang Khola Hydroelektric Power'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.34035,
+     28.16376
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Rasuwa Bhotekoshi HEP",
+    "capacity_mw": 120,
+    "status_pre_event": "under construction",
+    "owner": "private (KP 30 Aug)",
+    "owner_src": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+    "damage": "listed 'completely damaged' (Radio Nepal 5 Sep)",
+    "missing_workers_23sep": 3,
+    "bodies_recovered": "",
+    "notes": "NDRRMA SitRep #20 table labels 'Rasuwagadhi Hydropower Project (120 MW)' - likely a mix-up with this project.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "licence point (approx.)",
+    "coord_source": "HOT exposed-hydropower layer (DoED licence point)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.354167,
+     28.204722
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Upper Trishuli-1 HEP (UT-1)",
+    "capacity_mw": 216,
+    "status_pre_event": "under construction (~84% complete; COD planned Jul 2027)",
+    "owner": "Korea-led: Korea South-East Power + Doosan Enerbility (USD 647 M)",
+    "owner_src": "https://www.koreajoongangdaily.com/business/deadly-flood-in-nepal-threatens-647-million-korealed-hydropower-project/12847739",
+    "damage": ">90% of upper dam and ~90% of workers' base camp destroyed (JoongAng Daily 27 Aug)",
+    "missing_workers_23sep": 439,
+    "bodies_recovered": "39 from tunnel (KP 23 Sep); 31 recovered from rebar mesh in Audit-3 tunnel at Hakubesi (NDRRMA SitRep #20, 21 Sep)",
+    "notes": "1,433 people on site before flood; 955 rescued/made contact; a Chinese national rescued alive on day 12 (KP 23 Sep). 9 Korean staff missing (6 Doosan, 3 KOSEP).",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "licence point (approx.)",
+    "coord_source": "HOT exposed-hydropower layer (DoED licence point)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.255972,
+     28.10125
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Upper Trishuli-1 HEP (UT-1)",
+    "capacity_mw": 216,
+    "status_pre_event": "under construction (~84% complete; COD planned Jul 2027)",
+    "owner": "Korea-led: Korea South-East Power + Doosan Enerbility (USD 647 M)",
+    "owner_src": "https://www.koreajoongangdaily.com/business/deadly-flood-in-nepal-threatens-647-million-korealed-hydropower-project/12847739",
+    "damage": ">90% of upper dam and ~90% of workers' base camp destroyed (JoongAng Daily 27 Aug)",
+    "missing_workers_23sep": 439,
+    "bodies_recovered": "39 from tunnel (KP 23 Sep); 31 recovered from rebar mesh in Audit-3 tunnel at Hakubesi (NDRRMA SitRep #20, 21 Sep)",
+    "notes": "1,433 people on site before flood; 955 rescued/made contact; a Chinese national rescued alive on day 12 (KP 23 Sep). 9 Korean staff missing (6 Doosan, 3 KOSEP).",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "project area (Mailung)",
+    "coord_source": "OSM way 1552864314 'Upper Trishuli-1 Hydroelectric Project'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.20992,
+     28.07246
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Upper Trishuli-1 HEP (UT-1)",
+    "capacity_mw": 216,
+    "status_pre_event": "under construction (~84% complete; COD planned Jul 2027)",
+    "owner": "Korea-led: Korea South-East Power + Doosan Enerbility (USD 647 M)",
+    "owner_src": "https://www.koreajoongangdaily.com/business/deadly-flood-in-nepal-threatens-647-million-korealed-hydropower-project/12847739",
+    "damage": ">90% of upper dam and ~90% of workers' base camp destroyed (JoongAng Daily 27 Aug)",
+    "missing_workers_23sep": 439,
+    "bodies_recovered": "39 from tunnel (KP 23 Sep); 31 recovered from rebar mesh in Audit-3 tunnel at Hakubesi (NDRRMA SitRep #20, 21 Sep)",
+    "notes": "1,433 people on site before flood; 955 rescued/made contact; a Chinese national rescued alive on day 12 (KP 23 Sep). 9 Korean staff missing (6 Doosan, 3 KOSEP).",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "Audit-1 Bailey bridge (Hakubesi)",
+    "coord_source": "HOT bridge-damage layer 'Trisuli 216 Audit 1 Bailey Bridge' (washed out)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2884222,
+     28.1202833
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Upper Trishuli-3A HEP",
+    "capacity_mw": 60,
+    "status_pre_event": "operating",
+    "owner": "NEA [general knowledge; not re-verified]",
+    "owner_src": "",
+    "damage": "listed damaged (NEA; Radio Nepal 5 Sep); tunnel entrance blocked by ~4 ft of debris (SitRep #20)",
+    "missing_workers_23sep": 39,
+    "bodies_recovered": "1 (2 rescued alive on day 10) (KP 23 Sep)",
+    "notes": "HOT bridge layer: 'Trishuli 3A Dam-2/Dam-3' crossings washed out.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "headworks/dam area",
+    "coord_source": "OSM way 1443565890 'Upper Trishuli 3 Hydropower Station' (tagged destroyed in HOT layer)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.20665,
+     28.06393
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Upper Trishuli-3A HEP",
+    "capacity_mw": 60,
+    "status_pre_event": "operating",
+    "owner": "NEA [general knowledge; not re-verified]",
+    "owner_src": "",
+    "damage": "listed damaged (NEA; Radio Nepal 5 Sep); tunnel entrance blocked by ~4 ft of debris (SitRep #20)",
+    "missing_workers_23sep": 39,
+    "bodies_recovered": "1 (2 rescued alive on day 10) (KP 23 Sep)",
+    "notes": "HOT bridge layer: 'Trishuli 3A Dam-2/Dam-3' crossings washed out.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "powerhouse",
+    "coord_source": "OSM way 1555095822 'Upper Trishuli 3A Powerhouse'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.18477,
+     28.02698
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Upper Trishuli-3B HEP",
+    "capacity_mw": 37,
+    "status_pre_event": "under construction",
+    "owner": "NEA + Nepal Telecom (KP 30 Aug)",
+    "owner_src": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+    "damage": "residential quarters (Buildings A1, A2, B1, B2, D) buried; excavation 2 m below riverbed found only office foundation (SitRep #20)",
+    "missing_workers_23sep": 178,
+    "bodies_recovered": "none reported",
+    "notes": "",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "powerhouse",
+    "coord_source": "OSM way 1553105361 'Upper Trishuli-3B Powerhouse'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.18311,
+     27.9949
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Upper Trishuli-3B HEP",
+    "capacity_mw": 37,
+    "status_pre_event": "under construction",
+    "owner": "NEA + Nepal Telecom (KP 30 Aug)",
+    "owner_src": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+    "damage": "residential quarters (Buildings A1, A2, B1, B2, D) buried; excavation 2 m below riverbed found only office foundation (SitRep #20)",
+    "missing_workers_23sep": 178,
+    "bodies_recovered": "none reported",
+    "notes": "",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "licence point (approx.)",
+    "coord_source": "HOT exposed-hydropower layer (DoED licence point)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.185,
+     28.004583
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Mailung Khola HEP",
+    "capacity_mw": 5,
+    "status_pre_event": "operating",
+    "owner": "Mailung Khola Jal Vidhyut (listed co.) [not re-verified]",
+    "owner_src": "",
+    "damage": "listed 'completely damaged' (Radio Nepal 5 Sep)",
+    "missing_workers_23sep": 7,
+    "bodies_recovered": "",
+    "notes": "",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "project building",
+    "coord_source": "OSM way 338849230 'Mailung Khola Project'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.20729,
+     28.07054
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Trishuli HEP",
+    "capacity_mw": 24,
+    "status_pre_event": "operating",
+    "owner": "NEA",
+    "owner_src": "",
+    "damage": "damaged (NEA list)",
+    "missing_workers_23sep": 3,
+    "bodies_recovered": "",
+    "notes": "",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "powerhouse",
+    "coord_source": "OSM relation 5143911 'Trishuli Hydropower Station' (24 MW)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.14599,
+     27.92148
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Trishuli HEP",
+    "capacity_mw": 24,
+    "status_pre_event": "operating",
+    "owner": "NEA",
+    "owner_src": "",
+    "damage": "damaged (NEA list)",
+    "missing_workers_23sep": 3,
+    "bodies_recovered": "",
+    "notes": "",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "dam",
+    "coord_source": "OSM way 755069236 'Trishuli Hydro Power Dam'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.14687,
+     27.92492
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Trishuli HEP",
+    "capacity_mw": 24,
+    "status_pre_event": "operating",
+    "owner": "NEA",
+    "owner_src": "",
+    "damage": "damaged (NEA list)",
+    "missing_workers_23sep": 3,
+    "bodies_recovered": "",
+    "notes": "",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "intake weir",
+    "coord_source": "OSM node 2532475226 (weir)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.15851,
+     27.94404
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Devighat HEP",
+    "capacity_mw": 14.1,
+    "status_pre_event": "operating",
+    "owner": "NEA",
+    "owner_src": "",
+    "damage": "damaged (NEA list); HOT layer tags 'Devighat' power way destroyed",
+    "missing_workers_23sep": null,
+    "bodies_recovered": "",
+    "notes": "Employees missing, no separate figure (KP 23 Sep).",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "powerhouse/substation",
+    "coord_source": "OSM way 826107756 'Devighat' substation"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.135,
+     27.88901
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "Devighat HEP",
+    "capacity_mw": 14.1,
+    "status_pre_event": "operating",
+    "owner": "NEA",
+    "owner_src": "",
+    "damage": "damaged (NEA list); HOT layer tags 'Devighat' power way destroyed",
+    "missing_workers_23sep": null,
+    "bodies_recovered": "",
+    "notes": "Employees missing, no separate figure (KP 23 Sep).",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "licence point (approx.)",
+    "coord_source": "HOT exposed-hydropower layer (DoED licence point)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.138889,
+     27.902222
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "NEA Nuwakot/Devighat solar (~25 MW)",
+    "capacity_mw": 25,
+    "status_pre_event": "operating",
+    "owner": "NEA and subsidiaries (KP 30 Aug)",
+    "owner_src": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+    "damage": "three generating blocks and main substation swept away (CLaSH StoryMap)",
+    "missing_workers_23sep": null,
+    "bodies_recovered": "",
+    "notes": "RDNA counts 5 operating solar plants, 24.36 MW.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "solar block",
+    "coord_source": "OSM way 1385457298 (plant:source=solar)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.13439,
+     27.89084
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "NEA Nuwakot/Devighat solar (~25 MW)",
+    "capacity_mw": 25,
+    "status_pre_event": "operating",
+    "owner": "NEA and subsidiaries (KP 30 Aug)",
+    "owner_src": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+    "damage": "three generating blocks and main substation swept away (CLaSH StoryMap)",
+    "missing_workers_23sep": null,
+    "bodies_recovered": "",
+    "notes": "RDNA counts 5 operating solar plants, 24.36 MW.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "solar block",
+    "coord_source": "OSM way 1557871915 (solar)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.13186,
+     27.88737
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "NEA Nuwakot/Devighat solar (~25 MW)",
+    "capacity_mw": 25,
+    "status_pre_event": "operating",
+    "owner": "NEA and subsidiaries (KP 30 Aug)",
+    "owner_src": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+    "damage": "three generating blocks and main substation swept away (CLaSH StoryMap)",
+    "missing_workers_23sep": null,
+    "bodies_recovered": "",
+    "notes": "RDNA counts 5 operating solar plants, 24.36 MW.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "solar block",
+    "coord_source": "OSM relation 21305331 (solar)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.12472,
+     27.88198
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "project": "NEA Nuwakot/Devighat solar (~25 MW)",
+    "capacity_mw": 25,
+    "status_pre_event": "operating",
+    "owner": "NEA and subsidiaries (KP 30 Aug)",
+    "owner_src": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+    "damage": "three generating blocks and main substation swept away (CLaSH StoryMap)",
+    "missing_workers_23sep": null,
+    "bodies_recovered": "",
+    "notes": "RDNA counts 5 operating solar plants, 24.36 MW.",
+    "sources": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions; https://kathmandupost.com/national/2026/09/23/over-800-people-remain-missing-from-hydropower-projects-after-bhotekoshi-floods-says-energy-minister-shrestha; https://radionepalonline.com/en/2026/09/05/435476.html; https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_ENG_20_21092026.pdf",
+    "point_role": "solar block",
+    "coord_source": "OSM way 1385457304 (solar)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.12312,
+     27.88008
+    ]
+   }
+  }
+ ]
+}

@@ -5,7 +5,7 @@ description: Create or extend a geojson.app story — a guided map narrative (ch
 
 # Add a story
 
-A story is data: `public/stories/<name>/story.json` plus the GeoJSON/images it references. The format reference is `docs/stories.md`.
+A story is data: `public/stories/<name>/story.json` plus the GeoJSON/images it references. The format reference is `docs/stories.md`; the Bhote Koshi–Trishuli 2026 story (`public/stories/bhotekoshi-2026/`, built by `stories/bhotekoshi-2026/pipeline/`) is the worked example.
 
 ## Steps
 

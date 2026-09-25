@@ -1,0 +1,565 @@
+{
+ "_meta": {
+  "description": "Open very-high-resolution optical imagery available for this event, from two independent releases. Neither carries stereo pairs or elevation products.",
+  "retrieved": "2026-08-29",
+  "_last_verified": "2026-09-01",
+  "_verification_note": "Re-verified 30 Aug: Vantor still 13 scenes, Planet still 24. No change.",
+  "_collections_are_growing": "Both providers are still adding scenes. Counts here are as of 1 September and will drift: Vantor has gone 12, 13, 14 then 16, Planet 24 then 26. What has not changed on any pull is that no scene in either release covers the detachment source."
+ },
+ "vantor_open_data": {
+  "_meta": {
+   "description": "Very-high-resolution optical imagery available for the event, from the Vantor (formerly Maxar) Open Data STAC collection. Enumerated directly from the STAC API on 2026-08-29. Footprint coverage of the detachment source and of Syabrubesi was tested by point-in-polygon against each scene geometry.",
+   "source": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json",
+   "viewer": "https://developmentseed.org/stac-map/?href=https%3A%2F%2Fvantor-opendata.s3.amazonaws.com%2Fevents%2FNepal-Flooding-Aug-2026%2Fcollection.json",
+   "license": "CC-BY-NC-4.0",
+   "license_note": "CC-BY-NC-4.0. NonCommercial. Acceptable for academic publication; check the licence before any commercial reuse.",
+   "grade": "A1 (machine-readable provider metadata)",
+   "collection_description_caveat": "The collection description states the surge entered the Bhote Koshi 'at approximately 9:15 AM local time'. That conflicts with the DHM chronology, in which 09:15 is the ALERT time and the wave had already destroyed the Syabrubesi gauge by 08:50. Treated as a provider paraphrase that conflated alert time with onset time. NOT USED.",
+   "_last_verified": "2026-08-31",
+   "source_ref": [
+    "vantor"
+   ]
+  },
+  "counts": {
+   "total": 16,
+   "pre_event": 4,
+   "post_event": 12
+  },
+  "assets_available": [
+   "visual",
+   "thumbnail"
+  ],
+  "limitations": {
+   "no_multispectral": true,
+   "no_stereo_or_dsm": true,
+   "dem_differencing_possible": false,
+   "why": "Only rendered 'visual' and 'thumbnail' assets are published. No stereo pairs or DSMs, so this collection CANNOT constrain the detachment volume or the scar geometry.",
+   "post_event_cloud_cover_pct": {
+    "min": 71,
+    "max": 94,
+    "mean": 77.3
+   },
+   "cloud_note": "Every post-event scene is 71-81% cloud. Monsoon-season optical change detection over this corridor is severely limited, which is a direct explanation for why the source geometry remained contested days after the event.",
+   "pre_event_gap_months": 35,
+   "scenes_covering_detachment_source": 0,
+   "source_coverage_note": "No scene in the collection, at any date, contains the detachment source at 85.515 E, 28.271 N. The only scene reaching far enough east is the pre-event acquisition of 17 September 2023, whose footprint stops at 28.261 N, about 1 km south of the source. The detachment area is therefore unimaged by this collection in both epochs, which is a stronger constraint than cloud cover alone and is the reason no detachment volume is estimated.",
+   "most_recent_pre_event_covering_syabrubesi": "2023-09-17T05:09:38.085154Z",
+   "pre_event_gap_note": "Measured to the most recent pre-event scene whose footprint actually contains Syabrubesi. Two later pre-event scenes exist, of 29 May 2024 and 5 February 2026, but neither covers Syabrubesi or the source, so neither supports change detection at the impacted sites.",
+   "_cloud_note": "Range widened on 31 August by a tenth scene at 94 per cent cloud, the worst yet. It covers Syabrubesi but not the source."
+  },
+  "items": [
+   {
+    "id": "10300100C86CED00",
+    "datetime_utc": "2021-10-16T05:22:48.18818Z",
+    "cloud_cover_pct": 22,
+    "off_nadir_deg": 27.47,
+    "epoch": "pre",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "10500100364E8400",
+    "datetime_utc": "2023-09-17T05:09:38.085154Z",
+    "cloud_cover_pct": 46,
+    "off_nadir_deg": 11.84,
+    "epoch": "pre",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "10300100FCB83600",
+    "datetime_utc": "2024-05-29T05:10:55.358133Z",
+    "cloud_cover_pct": 15,
+    "off_nadir_deg": 27.5259441,
+    "epoch": "pre",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "B160001100CDB210",
+    "datetime_utc": "2026-02-05T08:17:49.999664Z",
+    "cloud_cover_pct": 0,
+    "off_nadir_deg": 15.61,
+    "epoch": "pre",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "B040001100881410",
+    "datetime_utc": "2026-08-27T05:04:50.163085Z",
+    "cloud_cover_pct": 73,
+    "off_nadir_deg": 21.72,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B040001100881610",
+    "datetime_utc": "2026-08-27T05:05:11.313431Z",
+    "cloud_cover_pct": 71,
+    "off_nadir_deg": 9.13,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B040001100882F10",
+    "datetime_utc": "2026-08-27T05:05:34.062169Z",
+    "cloud_cover_pct": 79,
+    "off_nadir_deg": 12.34,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B040001100881710",
+    "datetime_utc": "2026-08-27T05:06:11.96286Z",
+    "cloud_cover_pct": 72,
+    "off_nadir_deg": 26.56,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B030001100CF1110",
+    "datetime_utc": "2026-08-28T05:07:26.153146Z",
+    "cloud_cover_pct": 81,
+    "off_nadir_deg": 25.06,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B030001100CF1310",
+    "datetime_utc": "2026-08-28T05:07:35.702347Z",
+    "cloud_cover_pct": 78,
+    "off_nadir_deg": 21.53,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B030001100CF1210",
+    "datetime_utc": "2026-08-28T05:07:57.401535Z",
+    "cloud_cover_pct": 74,
+    "off_nadir_deg": 15.42,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "B030001100CF1610",
+    "datetime_utc": "2026-08-28T05:08:06.351933Z",
+    "cloud_cover_pct": 79,
+    "off_nadir_deg": 12.23,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B110001101165110",
+    "datetime_utc": "2026-08-28T05:22:46.124607Z",
+    "cloud_cover_pct": 78,
+    "off_nadir_deg": 19.45,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B130001101153A10",
+    "datetime_utc": "2026-08-31T05:16:50.999692Z",
+    "cloud_cover_pct": 94,
+    "off_nadir_deg": 42.61,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B1400011010A2910",
+    "datetime_utc": "2026-09-01T02:58:09.499751Z",
+    "cloud_cover_pct": 71,
+    "off_nadir_deg": 26.84,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "B1400011010A2E10",
+    "datetime_utc": "2026-09-01T02:58:29.749839Z",
+    "cloud_cover_pct": 78,
+    "off_nadir_deg": 36.61,
+    "epoch": "post",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   }
+  ],
+  "stereo_release": {
+   "_source": "Vantor Open Data bucket, events/Nepal-Flooding-Aug-2026/stereo/, listed directly on 1 September 2026",
+   "_grade": "A1",
+   "_note": "Not indexed in the STAC collection. Every item in collection.json still exposes only thumbnail and visual assets, so an enumeration of the catalogue alone misses this.",
+   "strips": [
+    {
+     "id": "B040001100881410",
+     "datetime_utc": "2026-08-27T05:04:50",
+     "off_nadir_deg": 21.72,
+     "cloud_cover_pct": 73,
+     "rpc_lon_range": [
+      85.216,
+      85.509
+     ],
+     "rpc_lat_range": [
+      28.084,
+      28.398
+     ]
+    },
+    {
+     "id": "B040001100881610",
+     "datetime_utc": "2026-08-27T05:05:11",
+     "off_nadir_deg": 9.13,
+     "cloud_cover_pct": 71,
+     "rpc_lon_range": [
+      85.228,
+      85.496
+     ],
+     "rpc_lat_range": [
+      28.107,
+      28.371
+     ]
+    }
+   ],
+   "sensor": "WorldView-3, RGB, with RPC00B camera models",
+   "licence_note": "The directory README requires derivatives, including DSMs, to be released under the same terms.",
+   "covers_syabrubesi": true,
+   "covers_detachment_source": false,
+   "_shortfall_km": 0.6,
+   "_shortfall_note": "Both the STAC footprint polygons and the RPC normalisation boxes agree. The wider strip reaches longitude 85.509 and the source sits at 85.515, so the pair stops about 0.6 km west of it. This is the closest any stereo coverage has come.",
+   "_consequence": "A stereo pair does exist in the open record, which the earlier statement here denied. It supports a photogrammetric surface model of the corridor, and a third party has built one at 0.5 m. It does not reach the scar, so the detachment volume is still unmeasured.",
+   "_source_ref": [
+    "vantor"
+   ]
+  }
+ },
+ "planet_crisis_response": {
+  "_meta": {
+   "description": "Planet Crisis Response release for this event, from the Source Cooperative STAC catalogue. Enumerated directly from the catalogue on 2026-08-29; footprint coverage of the detachment source and of Syabrubesi tested by point-in-polygon against each scene geometry.",
+   "source": "https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/catalog.json",
+   "landing": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26",
+   "title": "Planet Crisis Response - Bhote Koshi-Trishuli Outburst Flood, Nepal (2026)",
+   "license": "CC-BY-NC-4.0",
+   "license_note": "NonCommercial. Acceptable for academic publication; check before any commercial reuse.",
+   "grade": "A1 (machine-readable provider metadata)",
+   "source_ref": [
+    "planet_sourcecoop"
+   ]
+  },
+  "counts": {
+   "total": 26,
+   "pre_event": 5,
+   "post_event": 21
+  },
+  "platforms": {
+   "PlanetScope": {
+    "gsd_m": [
+     3.4,
+     3.9
+    ],
+    "scenes": 19
+   },
+   "SkySat": {
+    "gsd_m": [
+     0.79,
+     0.81
+    ],
+    "scenes": 2
+   },
+   "Pelican": {
+    "gsd_m": [
+     0.55,
+     0.55
+    ],
+    "scenes": 3
+   }
+  },
+  "assets_available": [
+   "visual",
+   "analytic",
+   "udm2",
+   "thumbnail"
+  ],
+  "limitations": {
+   "no_stereo_or_dsm": true,
+   "dem_differencing_possible": false,
+   "why": "The release carries visual, analytic and usable-data-mask rasters. No stereo pairs and no elevation products, so it cannot constrain the detachment volume or the scar geometry on its own.",
+   "scenes_covering_detachment_source_post_event": 2,
+   "scenes_covering_detachment_source_pre_event": 0,
+   "source_coverage_note": "Two post-event scenes contain the detachment source, on 26 August at 3.4 m and 28 August at 3.8 m ground sample distance, at 88 and 81 per cent cloud. No pre-event scene contains it. The source is therefore imaged after the failure but never before it, so no before-and-after pair exists at the source and change detection there is impossible regardless of cloud.",
+   "pre_event_date": "2026-05-27",
+   "pre_event_gap_months": 3.0,
+   "pre_event_gap_note": "One of the five pre-event scenes contains Syabrubesi, at 52 per cent cloud. This is a far shorter baseline than the 35-month gap in the Vantor collection, and it is the most recent open pre-event imagery of the impacted settlement.",
+   "earliest_post_event_utc": "2026-08-26T05:44:56Z",
+   "earliest_post_event_note": "About three hours after the detachment at 02:52 UTC, and a day earlier than the first Vantor acquisition."
+  },
+  "items": [
+   {
+    "id": "20260527_053217_72_254a",
+    "collection": "pre-event-planetscope-2026-05-27",
+    "datetime_utc": "2026-05-27T05:32:17.727510Z",
+    "gsd_m": 3.7,
+    "cloud_cover_pct": 41,
+    "epoch": "pre-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260527_053219_95_254a",
+    "collection": "pre-event-planetscope-2026-05-27",
+    "datetime_utc": "2026-05-27T05:32:19.952034Z",
+    "gsd_m": 3.7,
+    "cloud_cover_pct": 43,
+    "epoch": "pre-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260527_053221_96_254a",
+    "collection": "pre-event-planetscope-2026-05-27",
+    "datetime_utc": "2026-05-27T05:32:21.964727Z",
+    "gsd_m": 3.7,
+    "cloud_cover_pct": 52,
+    "epoch": "pre-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "20260527_053224_18_254a",
+    "collection": "pre-event-planetscope-2026-05-27",
+    "datetime_utc": "2026-05-27T05:32:24.189295Z",
+    "gsd_m": 3.7,
+    "cloud_cover_pct": 48,
+    "epoch": "pre-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260527_053226_41_254a",
+    "collection": "pre-event-planetscope-2026-05-27",
+    "datetime_utc": "2026-05-27T05:32:26.413863Z",
+    "gsd_m": 3.7,
+    "cloud_cover_pct": 5,
+    "epoch": "pre-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260826_050125_99_255f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:01:25.993228Z",
+    "gsd_m": 3.8,
+    "cloud_cover_pct": 79,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260826_050128_33_255f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:01:28.330973Z",
+    "gsd_m": 3.8,
+    "cloud_cover_pct": 78,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260826_050130_66_255f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:01:30.668664Z",
+    "gsd_m": 3.8,
+    "cloud_cover_pct": 93,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260826_050133_00_255f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:01:33.006355Z",
+    "gsd_m": 3.8,
+    "cloud_cover_pct": 92,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260826_050135_34_255f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:01:35.344100Z",
+    "gsd_m": 3.8,
+    "cloud_cover_pct": 62,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260826_054456_67_251f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:44:56.678410Z",
+    "gsd_m": 3.4,
+    "cloud_cover_pct": 72,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260826_054458_74_251f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:44:58.741089Z",
+    "gsd_m": 3.4,
+    "cloud_cover_pct": 88,
+    "epoch": "post-event",
+    "covers_detachment_source": true,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260826_054500_80_251f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:45:00.803768Z",
+    "gsd_m": 3.4,
+    "cloud_cover_pct": 92,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "20260826_054502_86_251f",
+    "collection": "post-event-planetscope-2026-08-26",
+    "datetime_utc": "2026-08-26T05:45:02.866447Z",
+    "gsd_m": 3.4,
+    "cloud_cover_pct": 78,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260827_020055_ssc1_u0001",
+    "collection": "post-event-skysat-2026-08-27",
+    "datetime_utc": "2026-08-27T02:00:55.499000Z",
+    "gsd_m": 0.81,
+    "cloud_cover_pct": 50,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "20260827_020055_ssc1_u0002",
+    "collection": "post-event-skysat-2026-08-27",
+    "datetime_utc": "2026-08-27T02:00:55.499000Z",
+    "gsd_m": 0.79,
+    "cloud_cover_pct": 50,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260827_060956_98_3009",
+    "collection": "post-event-pelican-2026-08-27",
+    "datetime_utc": "2026-08-27T06:09:56.991050Z",
+    "gsd_m": 0.55,
+    "cloud_cover_pct": 85,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260827_060958_31_3009",
+    "collection": "post-event-pelican-2026-08-27",
+    "datetime_utc": "2026-08-27T06:09:58.325153Z",
+    "gsd_m": 0.55,
+    "cloud_cover_pct": 83,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260827_060959_65_3009",
+    "collection": "post-event-pelican-2026-08-27",
+    "datetime_utc": "2026-08-27T06:09:59.659256Z",
+    "gsd_m": 0.55,
+    "cloud_cover_pct": 85,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "20260828_045742_14_2544",
+    "collection": "post-event-planetscope-2026-08-28",
+    "datetime_utc": "2026-08-28T04:57:42.145508Z",
+    "gsd_m": 3.9,
+    "cloud_cover_pct": 68,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260828_045744_48_2544",
+    "collection": "post-event-planetscope-2026-08-28",
+    "datetime_utc": "2026-08-28T04:57:44.481921Z",
+    "gsd_m": 3.8,
+    "cloud_cover_pct": 81,
+    "epoch": "post-event",
+    "covers_detachment_source": true,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "20260828_045746_81_2544",
+    "collection": "post-event-planetscope-2026-08-28",
+    "datetime_utc": "2026-08-28T04:57:46.818334Z",
+    "gsd_m": 3.9,
+    "cloud_cover_pct": 90,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": true
+   },
+   {
+    "id": "20260828_045749_15_2544",
+    "collection": "post-event-planetscope-2026-08-28",
+    "datetime_utc": "2026-08-28T04:57:49.154803Z",
+    "gsd_m": 3.9,
+    "cloud_cover_pct": 64,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260828_050143_19_2520",
+    "collection": "post-event-planetscope-2026-08-28",
+    "datetime_utc": "2026-08-28T05:01:43.195327Z",
+    "gsd_m": 3.8,
+    "cloud_cover_pct": 80,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260831_092523_ssc9_u0002",
+    "collection": "post-event-skysat-2026-08-31",
+    "datetime_utc": "2026-08-31T09:25:23.130000Z",
+    "gsd_m": 0.64,
+    "cloud_cover_pct": 76,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   },
+   {
+    "id": "20260831_092523_ssc9_u0003",
+    "collection": "post-event-skysat-2026-08-31",
+    "datetime_utc": "2026-08-31T09:25:23.130000Z",
+    "gsd_m": 0.65,
+    "cloud_cover_pct": 76,
+    "epoch": "post-event",
+    "covers_detachment_source": false,
+    "covers_syabrubesi": false
+   }
+  ]
+ }
+}

@@ -1,0 +1,341 @@
+{
+ "_meta": {
+  "description": "Registry of every source the data package draws on, each with a way to retrieve it. Blocks in the other files carry _source_ref keys naming entries here, so a reader can go from any value to something they can open.",
+  "_source": "Compiled from the source fields of the other files in this directory; every link was requested and confirmed to respond on the accessed date, except where an entry says otherwise.",
+  "_grade": "A1 (this is the provenance record itself)",
+  "_last_verified": "2026-09-09",
+  "_retrieve_field": "The actionable pointer: a URL, a DOI, or the exact query and script that obtains the data. Where no permanent link exists the field says so plainly and gives the route that does work.",
+  "_bib_key_field": "Where the manuscript cites the same source, the key in paper/latex/references.bib, so the data and the bibliography line up.",
+  "_links_checked": "2026-09-09",
+  "_links_checked_result": "52 links reachable, 0 refusing automated requests, 0 with an unverifiable certificate, 0 gone, and 3 sources that carry no permanent link by nature and say so in their retrieve field.",
+  "_registry_contract": "This registry holds sources the package actually draws a value from. Primary sources that have been located but not yet extracted are recorded as leads in data/SOURCES.md and in the relevant cross-check block, not here, so that a reference from a data block always means the value came from that source."
+ },
+ "sources": {
+  "_source": "Compiled from the source fields of the other files in this directory. Every link here was requested and confirmed to respond on the accessed date; the two entries with no permanent link say so in their retrieve field.",
+  "_grade": "A1 (the provenance record itself)",
+  "dhm_sitrep": {
+   "title": "Technical situation report on the 2083 Bhote Koshi-Trishuli-Narayani flood, 2083 Bhadra 10",
+   "publisher": "Department of Hydrology and Meteorology, Flood Forecasting Division (बाढी पूर्वानुमान महाशाखा), Babarmahal, Kathmandu",
+   "kind": "agency document",
+   "retrieve": "No permanent public URL. The department did not post the document to a citable location. It is retrievable through contemporaneous reproductions that agree on every figure used here: the Kathmandu Post, Nepalnews and Ratopati reports of 26-27 August 2026, and the bulletin mirror at https://nirajbhusal.github.io/rasuwa-flood-bulletin/ . Obtaining a citable copy from the department is the first item in paper/SUBMISSION-PLAN.md section 4.",
+   "accessed": "2026-08-28",
+   "pages": 9,
+   "_limitation": "This is the backbone of the propagation record and the one primary source without a permanent link. Every quantity taken from it that could be checked against an instrument record has been, and agreed: see dhm_riverwatch."
+  },
+  "dhm_riverwatch": {
+   "title": "River-watch station pages and their stage series",
+   "publisher": "Department of Hydrology and Meteorology, Nepal",
+   "kind": "instrument service",
+   "retrieve": "https://www.dhm.gov.np/hydrology/hms-Single/{station_id} for each station, whose form posts to https://dhm.gov.np/site/getRiverWatchBySeriesId_Single with a date to return the ten-minute series. Station identifiers are listed in data/gauges.json. Retrieved by analysis/fetch_dhm_series.py, which handles the session, the twelve-hour clock labels and the dropped samples, and stores the result in data/gauge_timeseries.json.",
+   "accessed": "2026-09-01",
+   "stations": "4913, 191, 52, 4658, 5705, 4781, 265, 4657"
+  },
+  "usgs_fdsn": {
+   "title": "FDSN event web service, event us7000tbwb",
+   "publisher": "United States Geological Survey",
+   "kind": "instrument service",
+   "retrieve": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000tbwb&format=geojson ; human-readable event page at https://earthquake.usgs.gov/earthquakes/eventpage/us7000tbwb",
+   "accessed": "2026-08-28",
+   "bib_key": "usgs_catalog"
+  },
+  "usgs_landslide_program": {
+   "title": "2026 Nepal debris avalanche and flash flood",
+   "publisher": "USGS Landslide Hazards Program",
+   "kind": "agency web page",
+   "retrieve": "https://www.usgs.gov/programs/landslide-hazards/science/2026-nepal-debris-avalanche-and-flash-flood",
+   "accessed": "2026-08-30",
+   "bib_key": "usgs2026"
+  },
+  "geofon": {
+   "title": "GEOFON event gfz2026qrfy",
+   "publisher": "GFZ Helmholtz Centre for Geosciences",
+   "kind": "instrument service",
+   "retrieve": "https://geofon.gfz.de/eqinfo/event.php?id=gfz2026qrfy",
+   "accessed": "2026-08-31",
+   "bib_key": "gfz2026"
+  },
+  "copernicus_ems": {
+   "title": "Rapid Mapping activation EMSR927, Flood in Nepal",
+   "publisher": "Copernicus Emergency Management Service, European Union",
+   "kind": "open dataset",
+   "retrieve": "Portal https://mapping.emergency.copernicus.eu/activations/EMSR927/ ; machine-readable status at https://rapidmapping.emergency.copernicus.eu/backend/dashboard-api/public-activations/?code=EMSR927 ; vector products at https://rapidmapping.emergency.copernicus.eu/backend/EMSR927/{AOI}/{PRODUCT}/ , with the exact per-product download URLs recorded in data/ems_damage.json",
+   "accessed": "2026-09-01",
+   "licence": "Copernicus data and information policy: free and open with attribution",
+   "bib_key": "ems2026"
+  },
+  "osm_overpass": {
+   "title": "OpenStreetMap river centreline, boundary and settlement data",
+   "publisher": "OpenStreetMap contributors",
+   "kind": "open dataset",
+   "retrieve": "Queried through the Overpass API at https://overpass-api.de/api/interpreter . The exact queries are in analysis/build_channel.py, which writes data/channel.json and data/border.json. Project home https://www.openstreetmap.org",
+   "accessed": "2026-08-29",
+   "licence": "Open Database License (ODbL)",
+   "bib_key": "osm2026"
+  },
+  "osm_nominatim": {
+   "title": "Nominatim geocoding of the corridor settlements",
+   "publisher": "OpenStreetMap contributors",
+   "kind": "open dataset",
+   "retrieve": "https://nominatim.openstreetmap.org/ , queried as https://nominatim.openstreetmap.org/search?q={place}&format=json . Resulting coordinates are recorded in data/event.json under flow_path_nodes, each within 0.6 km of the mapped centreline, which is the check on them.",
+   "accessed": "2026-08-28",
+   "licence": "Open Database License (ODbL)",
+   "bib_key": "osm2026"
+  },
+  "copernicus_dem": {
+   "title": "Copernicus Global Digital Elevation Model GLO-30, tile N28 E085",
+   "publisher": "European Space Agency; produced from Airbus WorldDEM",
+   "kind": "open dataset",
+   "retrieve": "https://doi.org/10.5270/ESA-c5d3d65 . The tile used is https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N28_00_E085_00_DEM/Copernicus_DSM_COG_10_N28_00_E085_00_DEM.tif ; the exact gdal_translate window is in the docstring of analysis/trace_headwater.py",
+   "accessed": "2026-09-01",
+   "licence": "Copernicus data policy: free and open",
+   "bib_key": "copernicusdem2021"
+  },
+  "hot_hdx": {
+   "title": "Nepal Flood 2026 flood-affected area and building damage assessment",
+   "publisher": "Humanitarian OpenStreetMap Team, via the Humanitarian Data Exchange",
+   "kind": "open dataset",
+   "retrieve": "https://data.humdata.org/dataset/hot_flood_npl and https://data.humdata.org/dataset/hot_flood_npl_buildings_damage",
+   "accessed": "2026-08-31",
+   "licence": "Open Database License (ODbL)",
+   "bib_key": "hot2026"
+  },
+  "keystone": {
+   "title": "Bhote Koshi flash flood impact and exposure atlas",
+   "publisher": "Keystone GIS",
+   "kind": "open dataset",
+   "retrieve": "https://doi.org/10.5281/zenodo.22118798 ; project page https://keystonegis.com/disasters/nepal-bhotekoshi-flood-20260826.html",
+   "accessed": "2026-09-01",
+   "bib_key": "keystone2026"
+  },
+  "geopera": {
+   "title": "Bhote Koshi 2026 outburst flood reconstruction",
+   "publisher": "geo-pera",
+   "kind": "code repository",
+   "retrieve": "https://github.com/geo-pera/bhotekoshi-2026-reconstruction ; narrative write-up at https://geopera.com/blog/bhote-koshi-flood-2026-satellite-analysis",
+   "accessed": "2026-09-01",
+   "licence": "MIT",
+   "bib_key": "geopera2026"
+  },
+  "asoto": {
+   "title": "Manning routing and HAND inundation for the Bhote Koshi corridor",
+   "publisher": "asoto59g",
+   "kind": "code repository",
+   "retrieve": "https://github.com/asoto59g/Nepal",
+   "accessed": "2026-08-30",
+   "bib_key": "asoto2026"
+  },
+  "sakil": {
+   "title": "Nepal Flood Intelligence, toll-data.json",
+   "publisher": "Sakil786",
+   "kind": "code repository",
+   "retrieve": "https://github.com/Sakil786/Nepal-Flood-Intelligence",
+   "accessed": "2026-08-28"
+  },
+  "rasuwa_bulletin": {
+   "title": "Rasuwa flood bulletin, a mirror of official daily bulletins",
+   "publisher": "Niraj Bhusal",
+   "kind": "third-party mirror",
+   "retrieve": "https://nirajbhusal.github.io/rasuwa-flood-bulletin/",
+   "accessed": "2026-09-01",
+   "_limitation": "A mirror, not a primary source. Used only to locate the official bulletins it reproduces. Its named rescue and casualty registries were deliberately not ingested."
+  },
+  "planet_sourcecoop": {
+   "title": "Nepal flash flood 2026 imagery release",
+   "publisher": "Planet Labs, via Source Cooperative",
+   "kind": "satellite catalogue",
+   "retrieve": "https://source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26 ; STAC catalogue at https://data.source.coop/planet/disasterdata/nepal-flash-flood-2026-08-26/catalog.json",
+   "accessed": "2026-09-01",
+   "bib_key": "planet2026"
+  },
+  "vantor": {
+   "title": "Nepal flooding August 2026 open imagery",
+   "publisher": "Vantor",
+   "kind": "satellite catalogue",
+   "retrieve": "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json . The stereo pair is in the unindexed prefix events/Nepal-Flooding-Aug-2026/stereo/ of the same bucket, which the STAC collection does not list.",
+   "accessed": "2026-09-01",
+   "bib_key": "vantor2026"
+  },
+  "icimod": {
+   "title": "Major flash flood sweeps through Nepal's Rasuwa district",
+   "publisher": "International Centre for Integrated Mountain Development",
+   "kind": "press release",
+   "retrieve": "https://www.icimod.org/press-release/major-flash-flood-sweeps-through-nepals-rasuwa-district-raising-fears-of-further-downstream-flooding/ (the site returns 403 to automated requests; opens normally in a browser)",
+   "accessed": "2026-08-28",
+   "bib_key": "icimod2026"
+  },
+  "ndrrma": {
+   "title": "Daily situation reports and incident records on the 26 August 2026 flood",
+   "publisher": "National Disaster Risk Reduction and Management Authority, Nepal",
+   "kind": "agency document",
+   "retrieve": "Portal https://bipadportal.gov.np/ ; incident API https://bipadportal.gov.np/api/v1/incident/ . The specific daily bulletins are timestamped in data/casualties.json under reported_totals, each with the outlet that relayed it, because the authority does not archive the bulletins at stable per-day URLs.",
+   "accessed": "2026-09-01",
+   "_limitation": "Totals rose repeatedly during the response. Every revision is kept in reported_totals with its time, and the analysis uses only the spatial distribution, which is stable across revisions."
+  },
+  "landslide_blog": {
+   "title": "26 August 2026 Nepal and Tibet, The Landslide Blog",
+   "publisher": "Dave Petley, via Eos (AGU)",
+   "kind": "expert commentary",
+   "retrieve": "https://eos.org/thelandslideblog/26-august-2026-nepal-and-tibet",
+   "accessed": "2026-08-29",
+   "_limitation": "Expert commentary published within days of the event, not peer reviewed. Used for source-area geometry, which is graded accordingly."
+  },
+  "davies_blog": {
+   "title": "August 2026 Nepal and Tibet floods",
+   "publisher": "Bethan Davies, AntarcticGlaciers.org",
+   "kind": "expert commentary",
+   "retrieve": "https://www.antarcticglaciers.org/2026/08/august-2026-nepal-tibet-floods/",
+   "accessed": "2026-08-29",
+   "_limitation": "Expert glaciological commentary, not peer reviewed. Used for the initiation-point estimate and source-area geometry, which are graded accordingly."
+  },
+  "press_relay": {
+   "title": "Wire and newspaper relays of official figures",
+   "publisher": "Kathmandu Post, Nepalnews, Ratopati, Al Jazeera, CNN, Associated Press, ANI, Xinhua, Global Times, Outlook India",
+   "kind": "press",
+   "retrieve": "No permanent article URLs were captured for these relays. Each value that rests on one names the outlet and the date in its own source field, so it can be located in that outlet's archive. Where an official record exists for the same figure it is cited instead: see dhm_sitrep, ndrrma and copernicus_ems.",
+   "accessed": "2026-09-01",
+   "_limitation": "The weakest link in this package. Used for casualty totals, which are also carried by ndrrma, and for a small number of context figures graded B2 or C. No conclusion in the manuscript rests on a press-only value."
+  },
+  "this_study": {
+   "title": "Values computed by this study from the sources above",
+   "publisher": "Sunim Acharya",
+   "kind": "computed",
+   "retrieve": "Every computed value names the script that produces it. Run python3 analysis/reproduce.py to regenerate them all, and see data/CLAIMS.md for the mapping from each number in the manuscript to the field it comes from. This release is 3.0.0, archived at https://doi.org/10.5281/zenodo.22679444; the concept DOI https://doi.org/10.5281/zenodo.22153581 resolves to the newest.",
+   "accessed": "2026-09-01",
+   "licence": "MIT for the code, CC-BY-4.0 for the data"
+  },
+  "pleiades_pre_event": {
+   "title": "13 October 2019 Pleiades (CNES) pre-event digital elevation models for the rock-ice avalanche source area of the August 2026 Trishuli flood",
+   "publisher": "Etienne Berthier, deposited on Zenodo. Images from the Pleiades World Heritage programme of Dinamis and CNES, processed with the Ames Stereo Pipeline",
+   "kind": "open dataset",
+   "retrieve": "https://doi.org/10.5281/zenodo.22147118 . Five products at 2, 4 and 20 m; the 20 m file used here is https://zenodo.org/api/records/22147118/files/2019-10-13_PHR1A_DEM_SGM_20m.tif/content . Projection WGS 84 / UTM zone 45N, footprint 85.43 to 85.57 E and 28.24 to 28.35 N, which covers all four initiation estimates but stops about 4 km short of Rasuwagadhi.",
+   "accessed": "2026-09-01",
+   "licence": "CC-BY-4.0",
+   "_limitation": "Pre-event only. The matching post-event surface had not been released at the time of writing, and without it this cannot give a detachment volume.",
+   "bib_key": "berthier2026"
+  },
+  "press_crisis_declaration": {
+   "title": "Government declares flood-hit local units disaster crisis zones for three months",
+   "publisher": "Kathmandu Post and Ratopati, reporting the Ministry of Home Affairs notice in the Nepal Gazette",
+   "kind": "press",
+   "retrieve": "https://kathmandupost.com/national/2026/08/26/government-orders-free-treatment-emergency-aid-for-rasuwa-flood-victims and https://english.ratopati.com/story/76504/local-levels-in-disaster-affected-districts-declared-disaster-affected-areas-here-are-the-provisions . The underlying instrument is the Nepal Gazette notice under Section 32(1) of the Disaster Risk Reduction and Management Act 2017; the gazette itself was not retrieved.",
+   "accessed": "2026-09-02"
+  },
+  "press_hydropower_damage": {
+   "title": "Flood damage to Nepal's hydropower sector could run into billions",
+   "publisher": "Kathmandu Post, 30 August 2026, reporting Nepal Electricity Authority figures",
+   "kind": "press",
+   "retrieve": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+   "accessed": "2026-09-02",
+   "_limitation": "The published figures are not internally consistent: the itemised operational and under-construction projects do not sum to the totals the same article gives. Recorded as a cross-check on the capacity figure carried here, not as a replacement for it."
+  },
+  "press_border_reopening": {
+   "title": "Rasuwagadhi border point reopens after six-month closure, and the customs point's future after the 2026 flood",
+   "publisher": "The Himalayan Times and OnlineKhabar",
+   "kind": "press",
+   "retrieve": "https://thehimalayantimes.com/nepal/rasuwagadhi-border-point-reopens-after-six-month-closure and https://english.onlinekhabar.com/rasuwa-customs-points-future.html . The second carries the post-reopening trade values and the revenue shortfall.",
+   "accessed": "2026-09-02"
+  },
+  "press_crossborder_toll": {
+   "title": "Wire reporting of the cross-border toll, including the Tibet-side figures attributed to Xinhua",
+   "publisher": "Al Jazeera and NBC News",
+   "kind": "press",
+   "retrieve": "https://www.aljazeera.com/news/2026/8/26/at-least-eight-killed-in-nepal-flash-floods-that-swept-away-villages-roads and https://www.nbcnews.com/world/asia/flash-flood-nepal-tibet-villages-destroyed-american-tourists-missing-rcna594473",
+   "accessed": "2026-09-02",
+   "_limitation": "Xinhua's own bulletins were not retrieved directly. Later Xinhua figures than the ones recorded here circulated in secondary reporting and were not adopted, because the primary was not obtained."
+  },
+  "care_nepal": {
+   "title": "CARE's emergency response to the 2026 Nepal flash floods, and its Bhote Koshi readiness statement",
+   "publisher": "CARE International",
+   "kind": "agency document",
+   "retrieve": "https://www.care.org/news-and-stories/nepal-flash-floods-2026-care-emergency-response/ and https://www.care.org/media-and-press/care-nepal-stands-ready-to-support-communities-affected-by-bhote-koshi-river-flash-flood/",
+   "accessed": "2026-09-02"
+  },
+  "press_mortuary_capacity": {
+   "title": "Reporting on body storage and identification: morgue capacity, the temporary facility at Bharatpur, and its wind-down",
+   "publisher": "Kathmandu Post, with Outlook India and The Tribune carrying the same figures",
+   "kind": "press",
+   "retrieve": "https://kathmandupost.com/national/2026/08/28/nepal-struggles-to-store-and-identify-bodies-carried-downstream-by-devastating-flood , https://kathmandupost.com/national/2026/09/01/after-days-of-managing-flood-victims-bharatpur-hospital-returns-to-treating-patients and https://www.outlookindia.com/international/nepal-sets-up-temporary-storage-after-bodies-recovered-far-downstream-overwhelm-morgues",
+   "accessed": "2026-09-02"
+  },
+  "press_ndrrma_3sep": {
+   "title": "NDRRMA search, rescue and relief update of Thursday 3 September 2026, figures to 12 noon",
+   "publisher": "National Disaster Risk Reduction and Management Authority, relayed by WebIndia123",
+   "kind": "press",
+   "retrieve": "https://news.webindia123.com/news/Articles/World/20260903/4494213.html . The bulletin itself is not archived at a stable URL by the authority, which is why the relay is cited. See the ndrrma entry for the portal.",
+   "accessed": "2026-09-03",
+   "_limitation": "A single relay. The district figures it carries were not corroborated by a second outlet at the time of writing, and only five of the eight districts are itemised."
+  },
+  "li2026_glof_stresstest": {
+   "title": "Data and reproducibility materials for 'Beyond source-specific GLOF hazard maps: a two-event empirical stress test of infrastructure exposure in the Gyirong-Trishuli trans-Himalayan corridor'",
+   "publisher": "Li Meng-Lun, Yin Hang, Liu Yanchao, Zheng Yilong, Yu Zhaolin and Hu Fugen, deposited on Zenodo",
+   "kind": "open dataset",
+   "retrieve": "https://doi.org/10.5281/zenodo.22269502 . Their recovery and redamage tables are in data/recovery_redamage_metrics.csv inside the release archive.",
+   "accessed": "2026-09-03",
+   "licence": "CC-BY-4.0",
+   "bib_key": "li2026glof",
+   "_bearing": "An independent study of the same two-event sequence, published 3 September 2026 with an evidence cutoff of 30 August. It reproduces the recurrence interval this study reports and cites several primary sources this package had only through press relays."
+  },
+  "dhm_correspondence": {
+   "title": "Correspondence on rating-curve availability for stations 449.91, 450 and Galchi",
+   "publisher": "Hydrological Data and Network Section, Hydrology Division, Department of Hydrology and Meteorology, Babarmahal, Kathmandu",
+   "kind": "personal communication",
+   "retrieve": "Email exchange of 3 to 4 September 2026, initiated through the data-request form on https://www.dhm.gov.np . The section's replies state what ratings the department holds. Personal addresses are deliberately not recorded here; the route is the department's published data-request channel, and the quoted fee was NPR 540.",
+   "accessed": "2026-09-04",
+   "_limitation": "Correspondence, so it has no permanent public URL. It is cited for statements the department made about its own holdings, which no public page records."
+  },
+  "ndrrma_sitrep_01": {
+   "title": "Rasuwa-Bhotekoshi Flood: Search, Rescue and Relief Response, Situation Report #01, 1 September 2026, 09:00",
+   "publisher": "National Disaster Risk Reduction and Management Authority, Ministry of Home Affairs, Government of Nepal",
+   "kind": "agency document",
+   "retrieve": "https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf (2.7 MB). The authority's portal is https://bipadportal.gov.np and www.bipad.gov.np .",
+   "accessed": "2026-09-06",
+   "bib_key": "ndrrma2026",
+   "_bearing": "The primary, archived source for the casualty series this package had carried through press relays. Its district table for 1 September 09:00 matches the figures adopted here exactly. Only number 01 of the series is retrievable at this URL pattern."
+  },
+  "paudel_centreline": {
+   "title": "River centreline from the scarp to Devghat, digitised for this study",
+   "publisher": "Animesh Paudel (ORCID 0009-0005-3833-2718)",
+   "kind": "personal communication",
+   "retrieve": "Supplied directly on 6 September 2026 and committed to this archive as data/river_centreline_paudel.geojson, a CRS84 LineString of 1024 vertices. Download the archive from https://doi.org/10.5281/zenodo.22679444, release 3.0.0, to obtain the file, or from https://doi.org/10.5281/zenodo.22153581 for the newest release, and run analysis/compare_centreline.py to reproduce the comparison against the geometry measured here.",
+   "accessed": "2026-09-06",
+   "_limitation": "One digitisation of a braided channel that moves within its valley floor from year to year, so it is a realisation rather than a definitive geometry.",
+   "licence": "CC-BY-4.0. The contributor confirmed on 9 September 2026 that inclusion in the archive under these terms, and attribution under his name, are as he wants them. The file carries the same statement in its own _licence field."
+  },
+  "bell1999_tshorolpa": {
+   "title": "Tsho Rolpa GLOF warning system project",
+   "publisher": "W. W. Bell, T. Donich, K. L. Groves and D. Sytsma, in Proceedings of the 28th IAHR World Congress, Graz, 1999",
+   "kind": "conference paper",
+   "retrieve": "https://www.iahr.org/library/infor?pid=13718 . The designers' own description of the installation, including the redundancy of the sensing system and the number of warning stations.",
+   "accessed": "2026-09-06",
+   "bib_key": "bell1999",
+   "_bearing": "Establishes that redundant sensing against this hazard class was designed and installed in Nepal in 1998, so the architecture recommended here is a return to an existing design rather than a new proposal."
+  },
+  "icimod2011_glof": {
+   "title": "Glacial lakes and glacial lake outburst floods in Nepal",
+   "publisher": "International Centre for Integrated Mountain Development, Kathmandu, 2011",
+   "kind": "institutional assessment",
+   "retrieve": "https://documents1.worldbank.org/curated/en/150061467986261271/pdf/98829-WP-Box393178B-PUBLIC-Glacial-lakes-and-glacial-late-outburst-floods-in-Nepal.pdf (4.1 MB, 109 pages, document 98829 in the World Bank repository). The passages used here are in the early warning subsection of the monitoring and early warning chapter.",
+   "accessed": "2026-09-06",
+   "bib_key": "icimod2011",
+   "_bearing": "Records that the Tsho Rolpa system had ceased operating by 2002, and assesses a 2001 system on the other river named Bhote Koshi as yielding six minutes of lead time because every station lay below the border. That is the structural limit this study measures on the Rasuwa corridor, stated a decade earlier for the neighbouring catchment.",
+   "_limitation": "An assessment of a different basin and a different decade. It is cited for what it states about those systems, not as evidence about this event."
+  },
+  "paudel_review": {
+   "title": "Review of the preprint and of the arrival brackets read from the gauge archive",
+   "publisher": "Animesh Paudel (ORCID 0009-0005-3833-2718)",
+   "kind": "co-author review",
+   "retrieve": "Thirty-five comments on an annotated copy of the EarthArXiv preprint, 6 September 2026, transcribed to paper/review/paudel-2026-09-06.md in the project repository, with a follow-up review of 9 September 2026 confirming the Devghat arrival and the two Bhote Koshi station stages. The review correspondence is held by the authors and is not redistributed in this archive.",
+   "accessed": "2026-09-09",
+   "_limitation": "A reading of the same instrument archive by a second hydrologist, so it checks the interpretation rather than supplying an independent measurement."
+  },
+  "press_ndrrma_8sep": {
+   "title": "Bhotekoshi flash flood: 13,583 people rescued",
+   "publisher": "Himalayan Tribune, 8 September 2026, reporting NDRRMA figures",
+   "kind": "press relay of an agency bulletin",
+   "retrieve": "https://himalayantribune.com/2026/09/08/bhotekoshi-flash-flood-13583-people-rescued/",
+   "accessed": "2026-09-09",
+   "_bearing": "The 8 September position, and the first source to give the missing by district. NDRRMA's own bulletin for that date was not located at a stable URL, so this is a relay and graded accordingly.",
+   "_limitation": "Press relay of a bulletin, not the bulletin. Its district figures do not sum to its own total, which is recorded rather than reconciled."
+  }
+ }
+}

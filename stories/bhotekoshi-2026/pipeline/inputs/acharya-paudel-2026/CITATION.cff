@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+title: "The Bhote Koshi-Trishuli flash flood of 26 August 2026, Rasuwa, Nepal: data and analysis code"
+message: "If you use this data package or analysis code, please cite it using the metadata below. The manuscript it supports is 'The Bhote Koshi-Trishuli flash flood of 26 August 2026, Rasuwa, Nepal: warning latency exceeded flood travel time', posted to EarthArXiv at https://doi.org/10.31223/X5HN5H and intended for Natural Hazards and Earth System Sciences."
+type: software
+authors:
+  - family-names: "Acharya"
+    given-names: "Sunim"
+    email: "sunim.54@gmail.com"
+    orcid: "https://orcid.org/0009-0003-1207-3610"
+    affiliation: "Independent researcher, San Francisco, California, United States"
+  - family-names: "Paudel"
+    given-names: "Animesh"
+    orcid: "https://orcid.org/0009-0005-3833-2718"
+    affiliation: "Independent researcher, Perth, Western Australia, Australia"
+license: CC-BY-4.0
+url: "https://doi.org/10.5281/zenodo.22153581"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22153581"
+    description: "Concept DOI, always resolves to the latest version. This is the identifier cited in the manuscript."
+  - type: doi
+    value: "10.5281/zenodo.22679444"
+    description: "Version DOI for release 3.0.0, this release. A major version because a data block was removed and headline results changed: casualties.json no longer carries a response block, analysis/archive was deleted, and the telemetry false-alarm rates were recomputed on a corrected nine-day window."
+  - type: doi
+    value: "10.31223/X5HN5H"
+    description: "EarthArXiv preprint that this data package supports."
+  - type: doi
+    value: "10.5281/zenodo.22236865"
+    description: "Version DOI for release 2.0.0, superseded by 3.0.0. A major version because the data structure and the headline results both changed: the two Bhote Koshi gauging stations are now held separately after being carried as one record, arrival times are read from the instrument series rather than the situation report, and upper-reach celerity and the decay factor moved accordingly."
+  - type: doi
+    value: "10.5281/zenodo.22164426"
+    description: "Version DOI for release 1.2.0. Superseded. Its gauge records fuse the Rasuwagadhi and Syabrubesi stations, and its celerity and lead-time figures follow from that."
+abstract: "Validated data package and analysis code measuring the end-to-end warning chain for the ice-rock avalanche cascade of 26 August 2026 in Rasuwa district, Nepal. Contains the graded data package, the ten-minute gauge stage series behind the official chronology, a measurement of the network's own telemetry gap rate and the false-alarm rate that implies for silence-based alarms, the channel-geometry, lead-time and frictional-melt analyses, and the code that regenerates every figure in the manuscript. Release 2.1.0 adds elevations of the source area measured on the open pre-event Pleiades surface of October 2019. Every source carries a URL, a DOI or the exact query that retrieves it, and one command recomputes and re-checks the whole analysis."
+keywords:
+  - Bhote Koshi
+  - Rasuwa
+  - flash flood
+  - ice-rock avalanche
+  - cascading hazard
+  - flood early warning
+  - lead time
+  - Langtang
+  - Nepal
+  - transboundary risk
+  - Himalaya
+version: 3.0.0
+date-released: 2026-09-09

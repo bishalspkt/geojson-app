@@ -1,0 +1,215 @@
+{
+ "_meta": {
+  "description": "Copernicus Emergency Management Service Rapid Mapping activation EMSR927 (Flood in Nepal), grading products. Damage grading derived from very-high-resolution optical imagery acquired after the 26 August 2026 cascade, for three areas of interest spanning the impacted corridor.",
+  "grade": "A2",
+  "source": "Copernicus Emergency Management Service, EMSR927, European Union / Copernicus EMS Rapid Mapping",
+  "activation": {
+   "code": "EMSR927",
+   "title": "Flood in Nepal",
+   "event_time": "2026-08-25T22:00:00Z",
+   "activation_time": "2026-08-26T09:53:00Z",
+   "closed": false,
+   "portal": "https://mapping.emergency.copernicus.eu/activations/EMSR927/",
+   "api": "https://rapidmapping.emergency.copernicus.eu/backend/dashboard-api/public-activations/?code=EMSR927"
+  },
+  "retrieved": "2026-09-02",
+  "supersedes": "The earlier record of 'more than 240 buildings destroyed in the Syabrubesi area', taken from press description of this activation before the vector products were released. The graded product gives 323 destroyed for the same area of interest.",
+  "method": "Counts are the feature counts of the builtUpP layer grouped by the damage_gra attribute, and areas are the observedEventA polygon areas as reported in the product's own area field in hectares, independently reproduced by geodesic computation on the WGS84 polygons. Population figures are the product's own estimates, which the summary tables state are derived from the Copernicus Global Human Settlement Layer and are not a census.",
+  "licence": "Copernicus EMS products are released under the Copernicus data and information policy, free and open with attribution.",
+  "note": "The observed event is classified in every product as event_type '6-Mass Movement', obj_desc 'Landslide', not as a flood. This is the mapping service's own classification of the deposit imaged after the event.",
+  "grading_method": "Damage assigned by visual interpretation of WorldView-3 imagery of 27 August 2026 at 0.3 m against a Pleiades Neo pre-event image of November 2025. The pre-event reference is a commercial acquisition, not part of the open imagery record enumerated in imagery.json, which is why the EMS grading can resolve change at the settlements while the open record alone cannot.",
+  "_last_verified": "2026-09-09",
+  "_verification_note": "Re-queried 9 Sept against the activation's machine-readable status: AOI04 Bharatpur and AOI06 Kyundi still list no products, and the four delivered are unchanged, so the totals here stand. Earlier revisions: the Phosretar monitoring product superseded its original on 6 Sept, Phosretar was added 2 Sept, and the Bidur monitoring product superseded its original 31 Aug.",
+  "source_ref": [
+   "copernicus_ems"
+  ]
+ },
+ "areas_of_interest": [
+  {
+   "number": 1,
+   "name": "Syapru Besi",
+   "settlement": "Syabrubesi",
+   "district": "Rasuwa",
+   "product": "GRA v1",
+   "status": "finished",
+   "delivered_utc": "2026-08-27T19:03:49",
+   "sensor": "WorldView-3",
+   "acquisition_utc": "2026-08-27T05:05:00",
+   "download": "https://rapidmapping.emergency.copernicus.eu/backend/EMSR927/AOI01/GRA_PRODUCT/EMSR927_AOI01_GRA_PRODUCT_v1.zip",
+   "observed_event_ha": 111.09,
+   "buildings": {
+    "destroyed": 323,
+    "damaged": 32,
+    "possibly_damaged": 78,
+    "total_graded": 433
+   },
+   "population_affected": 450,
+   "population_in_aoi": 750,
+   "bridges_destroyed": 5,
+   "primary_road_destroyed_km": 4.73,
+   "land_cover_affected_ha": {
+    "forest": 61.6,
+    "shrub_herbaceous": 31.8,
+    "inland_wetlands": 12.1,
+    "other": 3.4,
+    "agricultural": 2.1
+   },
+   "roads_affected_km_total": 7.6,
+   "_land_cover_check": "Sums to 111.0 ha against the 111.09 ha observed-event area computed here, an independent confirmation of the extraction."
+  },
+  {
+   "number": 2,
+   "name": "Timure",
+   "settlement": "Timure",
+   "district": "Rasuwa",
+   "product": "GRA v2",
+   "status": "finished",
+   "delivered_utc": "2026-08-28T17:10:43",
+   "sensor": "Legion",
+   "acquisition_utc": "2026-08-27T05:05:00",
+   "download": "https://rapidmapping.emergency.copernicus.eu/backend/EMSR927/AOI02/GRA_PRODUCT/EMSR927_AOI02_GRA_PRODUCT_v2.zip",
+   "observed_event_ha": 129.38,
+   "buildings": {
+    "destroyed": 372,
+    "damaged": 33,
+    "possibly_damaged": 26,
+    "total_graded": 431
+   },
+   "population_affected": 450,
+   "population_in_aoi": 500,
+   "bridges_destroyed": 1,
+   "primary_road_destroyed_km": null
+  },
+  {
+   "number": 3,
+   "name": "Bidur",
+   "settlement": "Bidur",
+   "district": "Nuwakot",
+   "product": "GRA MONIT01 v1 (supersedes GRA PRODUCT v1)",
+   "status": "finished",
+   "delivered_utc": "2026-08-31T01:07:28",
+   "sensor": "BlackSky, Satellogic",
+   "acquisition_utc": null,
+   "download": "https://rapidmapping.emergency.copernicus.eu/backend/EMSR927/AOI03/GRA_MONIT01/EMSR927_AOI03_GRA_MONIT01_v1.zip",
+   "observed_event_ha": 702.63,
+   "buildings": {
+    "destroyed": 2479,
+    "damaged": 246,
+    "possibly_damaged": 333,
+    "total_graded": 3058
+   },
+   "population_affected": 4400,
+   "population_in_aoi": 25000,
+   "bridges_destroyed": 18,
+   "primary_road_destroyed_km": 4.6,
+   "_superseded": {
+    "previous_product": "GRA PRODUCT v1, delivered 2026-08-29T02:57:09",
+    "previous_observed_event_ha": 589.07,
+    "previous_buildings": {
+     "destroyed": 1826,
+     "damaged": 220,
+     "possibly_damaged": 297,
+     "total_graded": 2343
+    },
+    "_note": "The monitoring product is cumulative, not additional: its five observed-event polygons include the original two and add three more. Bidur's extent therefore rose by 113.56 ha and its destroyed count by 653."
+   }
+  },
+  {
+   "number": 4,
+   "name": "Bharatpur",
+   "settlement": "Bharatpur",
+   "district": "Chitwan",
+   "product": "GRA v1",
+   "status": "waiting",
+   "delivered_utc": null,
+   "sensor": "Legion",
+   "acquisition_utc": null,
+   "download": null,
+   "observed_event_ha": null,
+   "buildings": null,
+   "population_affected": null,
+   "population_in_aoi": null,
+   "bridges_destroyed": null,
+   "primary_road_destroyed_km": null,
+   "note": "Requested and still not delivered as of 3 September 2026. A Legion acquisition was listed for 2026-09-03T02:25 UTC and the product had not appeared by the evening of that day. The most downstream area of interest, in the district where most bodies were recovered.",
+   "planned_acquisition_utc": "2026-09-03T02:25:00"
+  },
+  {
+   "number": 5,
+   "name": "Phosretar",
+   "settlement": "Phosretar",
+   "district": "Dhading",
+   "product": "GRA MONIT01 v1 (supersedes GRA PRODUCT v1)",
+   "status": "finished",
+   "delivered_utc": "2026-09-05T00:00:00",
+   "sensor": "Legion, Pleiades Neo",
+   "acquisition_utc": "2026-09-05T06:32:00",
+   "download": "https://rapidmapping.emergency.copernicus.eu/backend/EMSR927/AOI05/GRA_MONIT01/EMSR927_AOI05_GRA_MONIT01_v1.zip",
+   "observed_event_ha": 639.2,
+   "buildings": {
+    "destroyed": 397,
+    "damaged": 116,
+    "possibly_damaged": 250,
+    "total_graded": 763
+   },
+   "population_affected": 1200,
+   "population_in_aoi": 14000,
+   "bridges_destroyed": null,
+   "primary_road_destroyed_km": 2.7,
+   "land_cover_affected_ha": {
+    "heterogeneous_agricultural": 146.8,
+    "shrub_herbaceous": 142.3,
+    "inland_wetlands": 91.7,
+    "forest": 26.0,
+    "other": 15.7
+   },
+   "roads_affected_km_total": 11.0,
+   "_land_cover_check": "Superseded by the monitoring product; the land-cover breakdown is not re-tabulated here.",
+   "_area_check": "The product's own area field sums to 639.20 ha; independent geodesic computation on its 30 mapped polygons gives 641.55 ha, a 0.4 per cent difference. One of the 31 features carries no geometry and is skipped.",
+   "_bridges_note": "This product reports bridges as affected length, 2.5 km of 2.9 km, not as a count, so no count is recorded and the total below is unchanged by it.",
+   "_superseded": {
+    "previous_product": "GRA PRODUCT v1, delivered 2026-09-02T03:21:15",
+    "previous_observed_event_ha": 422.56,
+    "previous_buildings": {
+     "destroyed": 264,
+     "damaged": 69,
+     "possibly_damaged": 230,
+     "total_graded": 563
+    },
+    "_note": "The monitoring product is cumulative, not additional. Phosretar's extent rose by 216.64 ha and its destroyed count by 133."
+   }
+  },
+  {
+   "number": 6,
+   "name": "Kyundi",
+   "settlement": "Kyundi",
+   "district": "Chitwan",
+   "product": "GRA v1",
+   "status": "waiting",
+   "delivered_utc": null,
+   "sensor": null,
+   "acquisition_utc": null,
+   "download": null,
+   "observed_event_ha": null,
+   "buildings": null,
+   "population_affected": null,
+   "population_in_aoi": null,
+   "bridges_destroyed": null,
+   "primary_road_destroyed_km": null,
+   "note": "Added to the activation after 1 September and not yet delivered as of 2 September 2026. On the Narayani downstream of the Trishuli and Kali Gandaki confluence."
+  }
+ ],
+ "totals_delivered": {
+  "areas_of_interest": 4,
+  "observed_event_ha": 1582.3,
+  "observed_event_km2": 15.82,
+  "buildings_destroyed": 3571,
+  "buildings_damaged": 427,
+  "buildings_possibly_damaged": 687,
+  "buildings_graded": 4685,
+  "population_affected": 6500,
+  "population_in_aoi": 40250,
+  "bridges_destroyed": 24,
+  "_bridges_note": "Counts from the areas that report bridges as a count. Phosretar reports affected length instead."
+ }
+}

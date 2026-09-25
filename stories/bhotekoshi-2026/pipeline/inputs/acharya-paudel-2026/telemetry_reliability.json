@@ -1,0 +1,205 @@
+{
+ "_meta": {
+  "description": "How often the corridor gauges drop reports when nothing is happening, measured over the retrievable days before the event, and the false-alarm rate that implies for the two telemetry-loss rules the manuscript discusses.",
+  "_source": "DHM river-watch ten-minute series for the baseline days, retrieved by analysis/telemetry_gaps.py",
+  "_source_ref": [
+   "dhm_riverwatch"
+  ],
+  "_grade": "A1 (instrument record)",
+  "retrieved": "2026-09-01",
+  "_last_verified": "2026-09-09",
+  "baseline_window": {
+   "from": "2026-08-17",
+   "to": "2026-08-26 05:40:00",
+   "days": 9.0,
+   "_days_note": "The window from the first sample to the end of the clean pre-event period. This read 8.0 days until 9 September 2026, which was Galchhi's span: that station came online a day into the window and the code took the minimum across stations, while the gap episodes were summed over each station's own record. The numerator therefore spanned nine days and the denominator eight, and every rate below was about twelve per cent high. Galchhi recorded no episode, so using the union window changes no count, only the divisor."
+  },
+  "_baseline_note": "Ends at 05:40 on 26 August, before the 08:37 detachment, so no event data enters the baseline. The start is set by the service's retention, which reaches back about two weeks.",
+  "_episode_definition": "A gap episode is a contiguous run of missing ten-minute reports. Episodes are counted rather than missing samples, because a station offline for six hours is one alarm to an operator, not thirty-six.",
+  "_limitations": {
+   "window": "8.0 days is short, and it falls in the monsoon, which is the season when both the hazard and the stress on the communications are highest. That is the right season to measure in and too small a sample to settle the rate.",
+   "backfill": "This counts gaps as the archive shows them now. If the service backfills reports that arrived late, a station that transmitted slowly would look complete here while a real-time detector would have seen silence. Every rate below is therefore a lower bound on what a detector would experience live, and the true single-station rate can only be worse. Whether the archive backfills cannot be determined from the archive.",
+   "one_network": "One network in one country over one season. The rates are not transferable, but the method is: any operator can run this on their own history before choosing a rule."
+  },
+  "_not_reproducible_later": "The baseline window is retrievable only while the service retains it, about two weeks. This measurement was taken on 1 September 2026 reaching back to 17 August. Re-running the script after that window has rolled reaches a shorter baseline and will not reproduce these counts, which is why the counts and the series are stored rather than recomputed on demand."
+ },
+ "per_station": {
+  "Rasuwagadhi": {
+   "first_sample": "2026-08-17 05:50:00",
+   "expected_reports": 1296,
+   "received": 1295,
+   "missing": 1,
+   "missing_pct": 0.08,
+   "gap_episodes": 1,
+   "longest_gap_min": 10,
+   "episodes_per_day": 0.11
+  },
+  "Syabrubesi": {
+   "first_sample": "2026-08-17 05:50:00",
+   "expected_reports": 1296,
+   "received": 1275,
+   "missing": 21,
+   "missing_pct": 1.62,
+   "gap_episodes": 5,
+   "longest_gap_min": 170,
+   "episodes_per_day": 0.56
+  },
+  "Betrawati": {
+   "first_sample": "2026-08-17 05:50:00",
+   "expected_reports": 1296,
+   "received": 1296,
+   "missing": 0,
+   "missing_pct": 0.0,
+   "gap_episodes": 0,
+   "longest_gap_min": 0,
+   "episodes_per_day": 0.0
+  },
+  "Galchhi": {
+   "first_sample": "2026-08-18 05:50:00",
+   "expected_reports": 1152,
+   "received": 1152,
+   "missing": 0,
+   "missing_pct": 0.0,
+   "gap_episodes": 0,
+   "longest_gap_min": 0,
+   "episodes_per_day": 0.0
+  },
+  "Kali Khola": {
+   "first_sample": "2026-08-17 05:50:00",
+   "expected_reports": 1296,
+   "received": 1285,
+   "missing": 11,
+   "missing_pct": 0.85,
+   "gap_episodes": 2,
+   "longest_gap_min": 100,
+   "episodes_per_day": 0.22
+  },
+  "Devghat": {
+   "first_sample": "2026-08-17 05:50:00",
+   "expected_reports": 1296,
+   "received": 1295,
+   "missing": 1,
+   "missing_pct": 0.08,
+   "gap_episodes": 1,
+   "longest_gap_min": 10,
+   "episodes_per_day": 0.11
+  },
+  "Betrawati (tributary)": {
+   "first_sample": "2026-08-17 05:50:00",
+   "expected_reports": 1296,
+   "received": 1295,
+   "missing": 1,
+   "missing_pct": 0.08,
+   "gap_episodes": 1,
+   "longest_gap_min": 10,
+   "episodes_per_day": 0.11
+  },
+  "Dhunche": {
+   "first_sample": "2026-08-17 05:50:00",
+   "expected_reports": 1296,
+   "received": 1295,
+   "missing": 1,
+   "missing_pct": 0.08,
+   "gap_episodes": 1,
+   "longest_gap_min": 10,
+   "episodes_per_day": 0.11
+  }
+ },
+ "coincidence_recurrence": {
+  "window_min": 30,
+  "model": "two independent outage processes overlapping within the window, rate = l1*l2*(d1+d2+2W)",
+  "per_adjacent_pair": {
+   "Rasuwagadhi -> Syabrubesi": {
+    "central_per_day": 0.0048,
+    "worst_case_per_day": 0.04784
+   },
+   "Syabrubesi -> Betrawati": {
+    "central_per_day": 0.0,
+    "worst_case_per_day": 0.03548
+   },
+   "Betrawati -> Galchhi": {
+    "central_per_day": 0.0,
+    "worst_case_per_day": 0.00914
+   },
+   "Galchhi -> Kali Khola": {
+    "central_per_day": 0.0,
+    "worst_case_per_day": 0.02337
+   },
+   "Kali Khola -> Devghat": {
+    "central_per_day": 0.00214,
+    "worst_case_per_day": 0.032
+   }
+  },
+  "any_pair_central_per_day": 0.00694,
+  "any_pair_worst_case_per_day": 0.14783,
+  "central_recurrence_days": 144.0,
+  "worst_case_recurrence_days": 6.8,
+  "_what_this_answers": "A coincidence rule raising nothing in 9 days says little on its own. On the observed rates the wait for a false coincidence is about 144 days. Putting every rate at its upper limit at once shortens that to about 7 days. Nine days of history cannot separate those two, and that, rather than the observed zero, is the real limit on this measurement.",
+  "_independence_is_the_weak_point": "This assumes the two failures are independent. Co-located or shared-backhaul sensors are not, and the conditions that produce the hazard stress the communications, so the real rate is worse than either figure. Deliberate redundancy at a single point, with separate power and telemetry, is what would make the assumption defensible, and would also let equipment failure be told apart from site destruction."
+ },
+ "false_alarm_rates": {
+  "stations_on_flow_path": [
+   "Rasuwagadhi",
+   "Syabrubesi",
+   "Betrawati",
+   "Galchhi",
+   "Kali Khola",
+   "Devghat"
+  ],
+  "baseline_days": 9.0,
+  "single_station_alarms": 9,
+  "single_station_per_day": 1.0,
+  "two_station_alarms_by_window_min": {
+   "10": 0,
+   "20": 0,
+   "30": 0
+  },
+  "two_station_per_day_by_window_min": {
+   "10": 0.0,
+   "20": 0.0,
+   "30": 0.0
+  },
+  "two_station_95pct_upper_bound_per_day": 0.333,
+  "_zero_is_not_zero": "No coincident alarm was seen, which is not the same as a rate of zero. For zero events in 9.0 days the one-sided 95 per cent Poisson upper limit is 3 events, or 0.333 per day, about one every three days. That bound, not the observed zero, is what the comparison below rests on.",
+  "_ratio_lower_bound": 3.0
+ },
+ "prior_warning_systems_nepal": {
+  "_source": "Engineering description of the Tsho Rolpa installation by its designers, and the national GLOF assessment published by ICIMOD, which records what became of it and assesses a second system on the other river named Bhote Koshi.",
+  "_source_ref": [
+   "bell1999_tshorolpa",
+   "icimod2011_glof"
+  ],
+  "_grade": "A2 (primary engineering description, and an institutional assessment)",
+  "_why_here": "The architecture section recommends redundant instruments at a point and cameras that fail informatively. Both already have domestic precedent, and the record of what happened to those systems bears on whether adding sensors is the binding constraint. This block holds the values that reach the manuscript.",
+  "tsho_rolpa_1998": {
+   "_source_ref": [
+    "bell1999_tshorolpa"
+   ],
+   "operational_from": 1998,
+   "warning_stations": 17,
+   "_stations_note": "Along the Rolwaling and Tama Koshi valleys, with the sensing equipment immediately downstream of the lake. Warning sounded by air horns backed by electronic sirens, relayed by extended line-of-sight VHF radio.",
+   "sensing_redundant": true,
+   "_redundancy_quote": "The designers state that the sensing system is fully redundant and that multiple sensor failures would have to occur before a false alarm or a missed event could occur, and that failure of two successive stations would be required to stop the warning reaching the most downstream one.",
+   "_bearing": "This is the redundancy the architecture section recommends, built in Nepal against the same hazard class, and it is the reason the recommendation is put as a return to an existing design rather than as a novelty."
+  },
+  "tsho_rolpa_lapse": {
+   "_source_ref": [
+    "icimod2011_glof"
+   ],
+   "not_operating_by": 2002,
+   "_reason_as_given": "The assessment reports that by 2002 the system was no longer operating, in part because local residents assumed the lake had been lowered to a safe level, and that damage was also incurred during a period of unrest and through new downstream development.",
+   "_bearing": "Recorded because the constraint it identifies is sustainment rather than design. The manuscript gives only the first of the reasons the assessment lists, which is the one that bears on warning architecture rather than on circumstance."
+  },
+  "upper_bhote_koshi_2001": {
+   "_source_ref": [
+    "icimod2011_glof"
+   ],
+   "_which_river": "The OTHER river named Bhote Koshi, the one reaching Nepal at Kodari near the Friendship Bridge and draining to the Sun Koshi. NOT the Rasuwa corridor studied here. The two are distinguished in Sect. 2 and in the Fig. 1 inset, and this entry is exactly the confusion that caution exists to prevent.",
+   "installed": 2001,
+   "assessed_lead_time_min": 6,
+   "_lead_time_quote": "The assessment states the system has a lead time of only six minutes as the stations are all within the Nepal part of the catchment, and that to be really effective sensors need to be installed in the upper catchment, which lies in the Tibet Autonomous Region, China.",
+   "still_functioning_at": 2009,
+   "_bearing": "The strongest external support for the structural claim made here. A neighbouring transboundary catchment was instrumented and still yielded six minutes, because every station sat below the border rather than because there were too few. Placement relative to the source, not density, is what bounds lead time."
+  }
+ }
+}

@@ -1,0 +1,15 @@
+as_of_npt,total,Chitwan,Nawalparasi_East,Nawalparasi_West,Nuwakot,Rasuwa,Gorkha,Dhading,Tanahun,Kathmandu_died_in_treatment,source,note
+2026-08-30T09:00,734,259,184,82,52,13,58,50,36,,A&P casualties.json version_e (NDRRMA),
+2026-08-31T09:00,903,272,207,151,95,24,62,55,37,,A&P casualties.json version_f (NDRRMA),
+2026-09-01T09:00,987,321,216,170,95,27,65,55,38,,A&P casualties.json version_g / NDRRMA SitRep ENG #01,
+2026-09-01T18:00,1050,321,216,170,142,41,65,57,38,,NDRRMA SitRep NEP #11 via ADRC,
+2026-09-06T11:00,1341,362,222,220,195,163,74,67,38,,NDRRMA via RSS/The Rising Nepal (ADRC),
+2026-09-08T18:00,1358,363,223,222,197,170,75,70,38,,NDRRMA flash update (ADRC),
+2026-09-12T19:00,1386,364,229,222,199,185,77,70,38,2,NDRRMA SitRep NEP #22 (ADRC),
+2026-09-14T19:00,1395,364,232,222,202,186,77,72,38,2,NDRRMA SitRep ENG #13,
+2026-09-15T19:00,1399,364,232,222,202,189,78,72,38,2,NDRRMA SitRep ENG #14,
+2026-09-16T19:00,1403,364,232,222,202,193,78,72,38,2,NDRRMA SitRep ENG #15,
+2026-09-17T19:00,1410,364,232,222,203,199,78,72,38,2,NDRRMA SitRep ENG #16,
+2026-09-19T19:00,1411,364,232,222,203,199,79,72,38,2,NDRRMA SitRep ENG #18,
+2026-09-21T19:00,1451,367,232,222,203,236,79,72,38,2,NDRRMA SitRep ENG #20 p.4 chart,"p.3 chart of the same report swaps Rasuwa/Nuwakot (shows Nuwakot 236, Rasuwa 203); p.4 values fit the +31 UT-1 tunnel recoveries in Rasuwa and Nepal Police figures"
+2026-09-23T05:00,1452,367,232,222,204,236,79,72,38,2,Nepal Police via Nepalnews,

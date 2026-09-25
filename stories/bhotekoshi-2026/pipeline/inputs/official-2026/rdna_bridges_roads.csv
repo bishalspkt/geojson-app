@@ -1,0 +1,13 @@
+table,district_or_section,item,count,length_m_or_km,damage_npr_crore,note
+T41 motorable bridges,Dhading,partially damaged,3,220 m,,
+T41 motorable bridges,Dhading,washed out,5,613 m,258.65,total damage for district
+T41 motorable bridges,Gorkha,washed out,1,133 m,41.30,
+T41 motorable bridges,Nuwakot,partially damaged,1,20 m,,
+T41 motorable bridges,Nuwakot,washed out,14,1480 m,465.75,total damage for district
+T41 motorable bridges,Rasuwa,washed out,13,566 m,175.74,
+T41 motorable bridges,TOTAL,33 washed out + 4 partial,37,3032 m,941.44,
+T42 trail bridges,TOTAL (9 local levels),49 D-type + 19 N-type spans,68,10670.86 m,193.67,
+T39 roads,Galchhi–Devighat,partial (blacktop),,4 km,,
+T39 roads,Devighat–Trishuli Bazaar–Betrawati,partial (blacktop and gravel),,10 km,,
+T39 roads,Betrawati–Rasuwagadhi,complete (earthen),,55 km,,84.1% of road damage
+T39 roads,TOTAL,,,69 km,2207.25,

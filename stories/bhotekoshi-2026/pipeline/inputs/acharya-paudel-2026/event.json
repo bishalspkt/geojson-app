@@ -1,0 +1,614 @@
+{
+ "_meta": {
+  "description": "Trigger, chronology, hydrology and channel geometry for the 26 August 2026 Bhote Koshi-Trishuli cascade. Every field carries a source and evidence grade.",
+  "timezone": "NPT = UTC+05:45",
+  "retrieved": "2026-08-28",
+  "grades": "A1 machine-readable primary instrument record | A2 named agency document | B1 named domain scientist | B2 government figures via wire | C media",
+  "_last_verified": "2026-09-01",
+  "_verification_note": "Re-verified 30 Aug: USGS and GEOFON solutions unchanged."
+ },
+ "seismic": {
+  "_source": "USGS Earthquake Hazards Program FDSN event web service, queried directly 2026-08-28",
+  "_grade": "A1",
+  "_url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tbwb",
+  "primary": {
+   "event_id": "us7000tbwb",
+   "origin_utc": "2026-08-26T02:52:10Z",
+   "origin_npt": "2026-08-26T08:37:10+05:45",
+   "magnitude": 5.2,
+   "magnitude_type": "ms_vx",
+   "event_type": "landslide",
+   "review_status": "reviewed",
+   "lat": 28.271,
+   "lon": 85.515,
+   "depth_km": 0
+  },
+  "secondary": {
+   "event_id": "us7000tc90",
+   "origin_utc": "2026-08-26T06:00:35Z",
+   "origin_npt": "2026-08-26T11:45:35+05:45",
+   "magnitude": 4.2,
+   "magnitude_type": "ms_vx",
+   "event_type": "landslide",
+   "review_status": "reviewed",
+   "lat": 28.27,
+   "lon": 85.515,
+   "depth_km": 0,
+   "interval_after_primary_s": 11305
+  },
+  "initial_misclassification": {
+   "magnitude": 4.4,
+   "reported_as": "earthquake",
+   "attributed_to": "Department of Mines and Geology, Nepal",
+   "_source": "DHM technical situation report, section 2 (08:37 entry, स्रोत: खानी तथा भूगर्भ विभाग)",
+   "_grade": "A2",
+   "_note": "The M4.4 tectonic solution logged in Nepal's operational chronology came from DMG Nepal, not USGS. USGS independently catalogued the signal as type=landslide, M5.2.",
+   "_source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  "_source_ref": [
+   "usgs_fdsn"
+  ]
+ },
+ "alert": {
+  "_source": "DHM Flood Forecasting Division technical situation report, sections 2 and 5",
+  "_grade": "A2",
+  "first_notification_npt": "2026-08-26T09:00:00+05:45",
+  "first_notification_route": "District Administration Office Rasuwa, and staff of the Betrawati hydrological station, to the Flood Forecasting Division",
+  "confirmation_npt": "2026-08-26T09:15:00+05:45",
+  "sms_dispatch_npt": "2026-08-26T09:16:00+05:45",
+  "sms_total": 679295,
+  "sms_by_carrier": {
+   "Nepal Telecom": 435635,
+   "Ncell": 243660
+  },
+  "sms_districts": [
+   "Rasuwa",
+   "Nuwakot",
+   "Dhading",
+   "Chitwan"
+  ],
+  "latency_from_origin_min": 38.8,
+  "_latency_note": "09:16:00 minus 08:37:10 = 38.8 min. Using the 09:15 confirmation instead gives 37.8 min. Both are defensible; the analysis uses 09:16 (the actual mass dispatch) and reports 09:15 as the lower bound.",
+  "_notification_contradiction": "This package records 09:00 from the sitrep extraction. Three independent press reproductions quoting the same document (Kathmandu Post, Nepalnews, Ratopati) give 09:05. The difference is 5 min in a 38.8 min budget and does not affect any conclusion; both are carried. Analyses use 09:00, the earlier and therefore conservative value for institutional latency.",
+  "_source_ref": [
+   "dhm_sitrep"
+  ]
+ },
+ "hydrology_devghat": {
+  "_source": "DHM technical situation report, section 3.1",
+  "_grade": "A2",
+  "station": "Narayani at Devghat",
+  "rise_window_npt": [
+   "2026-08-26T14:10:00+05:45",
+   "2026-08-26T18:00:00+05:45"
+  ],
+  "peak_discharge_m3s": 5850,
+  "peak_discharge_npt": "2026-08-26T16:00:00+05:45",
+  "base_flow_m3s": 2600,
+  "total_volume_m3": 57400000,
+  "excess_flood_volume_m3": 19960000,
+  "peak_stage_m": 6.57,
+  "forecast_stage_m": 8.0,
+  "return_period_years": [
+   2,
+   3
+  ],
+  "_return_period_note": "DHM section 9: the Devghat stage corresponded to a 2-3 year return period flood, NOT an extreme long-return-period event. Catastrophic in the near field, ordinary 168 km downstream.",
+  "_volume_arithmetic_note": "DHM's total (57.40e6 m3) minus its excess (19.96e6 m3) leaves 37.44e6 m3 of base flow, which at 2,600 m3/s implies exactly 4.00 h of integration. The stated rise window 14:10-18:00 is 3.83 h and would give an excess of 21.52e6 m3. The 8 % difference is immaterial to the melt comparison, in which the flood volume is a denominator. Reported as DHM gives it, with the discrepancy carried.",
+  "_rating_curve_caveat": "All discharge and volume quantities are rating-curve derived from stage during a sediment-laden flood at the tail of a debris-flow cascade, with four upstream stations destroyed. Hyperconcentrated flow and event-scale aggradation or scour can shift a stage-discharge rating by tens of per cent. The department has since confirmed that the most recent rating it holds for this station, number 450, runs to 2023, three years before the event. Treat as order-of-magnitude, not measured.",
+  "_return_period_attribution": "The 2-3 year return period is DHM's stage-based assessment (section 9), adopted here as DHM's statement, not independently verified.",
+  "_source_ref": [
+   "dhm_sitrep"
+  ],
+  "_rating_curve_vintage": {
+   "_source": "Department of Hydrology and Meteorology, Hydrological Data and Network Section, in reply to a data request, 3 September 2026",
+   "_source_ref": [
+    "dhm_correspondence"
+   ],
+   "_grade": "A2 (statement by the holding agency about its own holdings)",
+   "station_450_devghat_rating_to_year": 2023,
+   "station_449_91_kali_khola_rating_to_year": 2019,
+   "galchi_rating": "not held by the department",
+   "_bearing": "The discharge and volume figures this study reports for Devghat rest on a rating last revised three years before the event, on a channel that has since carried a hyperconcentrated debris flow. That is a sharper statement of the existing caveat than the caveat itself, and it is the agency's own. No rating exists for Galchi at all, so that station can never yield discharge, only stage and the arrival time this study takes from it.",
+   "_status": "Requested through the department's data-request channel. As of 9 September 2026 the department has supplied neither the rating curve nor a confirmed price, the NPR 540 having been a verbal quote. The request is still open. Nothing in this study depends on the curve arriving, and the vintage statements above stand whether it does or not."
+  }
+ },
+ "channel_distances_km": {
+  "_note": "Three independent estimates. They disagree; the disagreement is recorded rather than averaged.",
+  "dhm_reported": {
+   "_source": "DHM technical situation report, section 4",
+   "_grade": "A2",
+   "_reliability": "APPROXIMATE - at least one value is geometrically impossible (see _warning)",
+   "border_to_rasuwagadhi": 9,
+   "rasuwagadhi_to_betrawati": 36,
+   "betrawati_to_malekhu": 56,
+   "malekhu_to_kalikhola": 36,
+   "kalikhola_to_bhole": 13,
+   "bhole_to_devghat": 18,
+   "border_to_devghat_total": 168,
+   "_warning": "The stated 36 km Rasuwagadhi->Betrawati is SHORTER than the 38.8 km great-circle separation of those settlements, which is impossible for a channel distance. DHM values are prefixed करिब ('approximately'). Do not use for celerity without independent check.",
+   "_source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  "osm_dem_derived": {
+   "_source": "asoto59g/Nepal, resultado_manning.json. Channel traced on OpenStreetMap waterway=river, elevations from NASA HMA 8 m DEM mosaic tile-675 (Shean 2017, WGS84 ellipsoidal).",
+   "_grade": "B2 (independent third-party analysis, method documented and reproducible)",
+   "_url": "https://github.com/asoto59g/Nepal",
+   "rasuwagadhi_to_syabrubesi": 15.0,
+   "syabrubesi_to_betrawati": 30.0,
+   "rasuwagadhi_to_devighat_hep": 58.68,
+   "z_rasuwagadhi_m": 1767.2,
+   "z_devighat_hep_m": 440.0,
+   "relief_m": 1327.1,
+   "mean_slope_pct": 2.262,
+   "_note": "Devighat HEP (Nuwakot, 27.888N 85.134E) is NOT Devghat (Chitwan/Tanahun, 27.8105N 84.3671E). Distinct places; the paper uses the latter.",
+   "_source_ref": [
+    "asoto"
+   ]
+  },
+  "great_circle_this_study": {
+   "_source": "Computed here from OpenStreetMap Nominatim settlement coordinates",
+   "_grade": "A1 (geometric, reproducible)",
+   "_note": "Lower bound on channel distance. Implied sinuosity against the OSM/DEM channel lengths: Rasuwagadhi->Syabrubesi 1.119, Syabrubesi->Betrawati 1.163.",
+   "source_scar_to_rasuwagadhi": 13.5,
+   "rasuwagadhi_to_syabrubesi": 13.4,
+   "syabrubesi_to_betrawati": 25.8,
+   "measured_sinuosity_mean": 1.14,
+   "_correction": "source_scar_to_rasuwagadhi previously read 17.6 km. That value was the sum of the source->Timure->Rasuwagadhi legs produced by the misordered polyline (14.66 + 2.98 km) and is withdrawn. The direct great-circle separation is 13.46 km.",
+   "sinuosity_range_carried": [
+    1.119,
+    1.163
+   ],
+   "_sinuosity_caveat": "The mean sinuosity 1.14 is measured on two upper-gorge reaches only (1.119 Rasuwagadhi-Syabrubesi, 1.163 Syabrubesi-Betrawati). It is applied to the whole corridor because no lower-corridor tracing exists. Celerities scale linearly with sinuosity; lead times do not, because sinuosity cancels.",
+   "_source_ref": [
+    "osm_nominatim",
+    "this_study"
+   ]
+  },
+  "_superseded": "Reach lengths are now MEASURED along the OpenStreetMap river centreline; see data/channel.json and analysis/build_channel.py. The great-circle-times-sinuosity estimates below are retained for comparison only. The single corridor sinuosity of 1.14 was measured on two upper-gorge reaches and understates the lower corridor, where measured sinuosity reaches 1.81."
+ },
+ "barrier_lake": {
+  "_source": "DHM technical situation report sections 2 (13:35 entry) and 7; Chinese Ministry of Water Resources advisories via Global Times/CGTN",
+  "_grade": "A2/B2",
+  "status_at_report": "not fully drained",
+  "volume_m3": 2000000,
+  "forecast_inflow_3d_m3": 3000000,
+  "alert_level": "China Level-IV",
+  "location": "Gyirong County, Tibet A.R.; confluence of Chhochen Khola and Purepu Tsangpo",
+  "resolution": {
+   "_source": "Chinese authorities via wire reporting, corroborated by third-party Sentinel-1 and Sentinel-2 change detection",
+   "_grade": "B2",
+   "drained_on": "2026-08-30",
+   "evidence": "Sentinel-1 of 28 August 12:21 UTC already shows the lower lake overflowing. Chinese authorities reported it emptied on 30 August, and remote sensing shows the lake surface reduced to effective drainage.",
+   "second_lake": {
+    "area_m2": 14000,
+    "status": "monitored, overflow probability assessed low"
+   },
+   "_note": "The immediate threat of a second surge is therefore over. The manuscript describes the lake as it stood within 24 h of the cascade, which remains accurate for that period.",
+   "_source_ref": [
+    "press_relay",
+    "geopera"
+   ]
+  },
+  "_location_disagreement": {
+   "recorded_here": "Confluence of Chhochen Khola and Purepu Tsangpo, Gyirong County, from Chinese Ministry of Water Resources advisories relayed by Global Times and CGTN.",
+   "satellite_candidate": "28.294 N, 85.511 E, about 20 ha on Satellogic optical of 27 August, with 3.72 ha of new Sentinel-2 water 0.12 km away.",
+   "separation_km": 4.77,
+   "_status": "UNRESOLVED. The agency-reported position and the satellite-detected new water are 4.8 km apart. The advisory names a confluence, the detection finds water elsewhere. Neither is adopted over the other here; the manuscript cites only the reported volume and alert level, neither of which depends on the position.",
+   "_grade": "B2 for both candidates"
+  },
+  "_source_ref": [
+   "dhm_sitrep",
+   "press_relay"
+  ]
+ },
+ "source_geometry": {
+  "_note": "Reported source-area geometry. Values disagree between sources; the disagreement is carried, not averaged. The 1,900 m drop used in an earlier draft appears in no source and has been withdrawn.",
+  "detachment_elevation_m": {
+   "low": 4880,
+   "high": 5400,
+   "_source": "Reported variously as about 4,880 m and as 5,200-5,400 m in early assessments",
+   "_grade": "B1/C",
+   "_source_ref": [
+    "landslide_blog",
+    "davies_blog"
+   ]
+  },
+  "vertical_drop_m": {
+   "low": 1200,
+   "high": 1830,
+   "_source": "About 1,200 m in early glaciological commentary; about 6,000 ft (1,830 m) attributed to B. Mirus (USGS) in media briefings, 27 Aug 2026",
+   "_grade": "B1",
+   "_note": "1,830 m is 6,000 ft converted. Used as the upper bound of the detachment fall, i.e. face to valley floor, NOT the full runout drop.",
+   "_source_ref": [
+    "davies_blog",
+    "usgs_landslide_program",
+    "press_relay"
+   ]
+  },
+  "peak_elevation_m": 7227,
+  "peak_name": "Langtang Lirung",
+  "_peak_source": "Langtang Lirung summit elevation, standard topographic references; the massif the detachment flank belongs to.",
+  "_peak_grade": "A2",
+  "_peak_source_ref": [
+   "osm_nominatim"
+  ],
+  "_pleiades_2019_measurement": {
+   "_source": "Pre-event Pleiades tri-stereo digital elevation model of the source area, 13 October 2019, 20 m product, sampled at each initiation estimate by analysis/source_elevations.py",
+   "_source_ref": [
+    "pleiades_pre_event",
+    "this_study"
+   ],
+   "_grade": "A1 (geometric, measured on an open surface)",
+   "elevation_at_initiation_estimates_m": {
+    "gfz_seismic": 3819,
+    "glaciological_assessment": 4831,
+    "planet_imagery": 4821,
+    "usgs_seismic": 5073
+   },
+   "measured_spread_m": [
+    3819,
+    5073
+   ],
+   "georeferencing_check": {
+    "highest_cell_m": 7198,
+    "catalogued_summit_m": 7227,
+    "offset_from_summit_m": 67,
+    "_note": "The model's highest cell lands on Langtang Lirung, which fixes the georeferencing independently of anything this study supplies. The 20 m product smooths a sharp summit, which is why it reads slightly low."
+   },
+   "relief_within_100m_m": {
+    "gfz_seismic": 93,
+    "glaciological_assessment": 79,
+    "planet_imagery": 94,
+    "usgs_seismic": 155
+   },
+   "_bearing_on_reported_values": {
+    "reported_detachment_elevation_m": [
+     4880,
+     5400
+    ],
+    "_note": "No named estimate matches either reported figure exactly, but the lower one is corroborated and the upper one is not. The Planet and glaciological estimates sit at 4821 and 4831 m, within about 60 m of the reported 4880 m. The USGS hypocentre sits at 5073 m, between the two reported figures. Nothing reaches 5200 m, let alone 5400, so the upper reported cluster is unsupported at all four positions, although it may describe the top of a scar that none of these points marks.",
+    "_lowest_estimate": "The GEOFON epicentre sits about a kilometre below the other three, at 3819 m. A teleseismic epicentre carries horizontal uncertainty of that order in this terrain, and the relief figures show how steep the ground is, so this is a caution about using any single seismic position as an initiation point rather than evidence about where the mass left the slope."
+   },
+   "_does_not_settle": "The detachment fall height, which the melt budget uses, is not measured here. That needs the extent of the scar, which is the difference between this surface and a post-event one. The post-event surface had not been released at the time of writing, so the fall height stays as its sources give it."
+  }
+ },
+ "source_location_estimates": {
+  "_note": "Four independent estimates of the initiation point: two reviewed seismic solutions (USGS and GFZ), an imagery-mapped initiation point and a published glaciological assessment. Maximum pairwise separation computed here by haversine.",
+  "usgs_seismic": {
+   "lat": 28.271,
+   "lon": 85.515,
+   "_source": "USGS FDSN event us7000tbwb hypocentre",
+   "_grade": "A1",
+   "_source_ref": [
+    "usgs_fdsn"
+   ]
+  },
+  "planet_imagery": {
+   "lat": 28.2765,
+   "lon": 85.5194,
+   "_source": "Initiation point mapped on Planet imagery, reported in early expert commentary",
+   "_grade": "B1",
+   "_source_ref": [
+    "landslide_blog",
+    "planet_sourcecoop"
+   ]
+  },
+  "glaciological_assessment": {
+   "lat": 28.2853,
+   "lon": 85.5252,
+   "_source": "Published glaciological assessment of the source area (B. Davies)",
+   "_grade": "B1",
+   "_source_ref": [
+    "davies_blog"
+   ]
+  },
+  "max_pairwise_separation_km": 3.54,
+  "_computed": "haversine, R = 6371.0088 km; recomputed by analysis/validate.py",
+  "territory": {
+   "finding": "The detachment initiated on Nepali territory, in Rasuwa district, on the northern flank of the Langtang massif.",
+   "distance_south_of_border_km": 6.6,
+   "_method": "All four independent source estimates lie between 28.271 and 28.300 N. The Nepal-China boundary at those longitudes, from OpenStreetMap admin_level=2, lies at about 28.33 N. Every estimate is inside Nepal, by 3.3 to 6.6 km. The GFZ solution is the northernmost and sets the lower bound.",
+   "_grade": "A1 (geometric, from open boundary data)",
+   "_significance": "The SOURCE was domestic; the FLOW PATH was transboundary. The Lhende Khola drains north across the border, joins the Bhote Koshi (Kyirong Tsangpo) in Gyirong County, Tibet, and the combined flow re-enters Nepal at Rasuwagadhi. This is why the residual blockage impounded a barrier lake on Chinese territory. Operationally it matters: instrumenting the source zone requires no cross-border agreement, whereas monitoring the blockage does.",
+   "distance_south_of_border_range_km": [
+    3.3,
+    6.6
+   ],
+   "_source": "Nepal-China boundary from OpenStreetMap admin_level=2; the three initiation estimates named in the sibling blocks.",
+   "_source_ref": [
+    "osm_overpass",
+    "this_study"
+   ]
+  },
+  "gfz_seismic": {
+   "lat": 28.3,
+   "lon": 85.5,
+   "_source": "GEOFON event gfz2026qrfy, GFZ Helmholtz Centre for Geosciences; Mw 5.7, event type Landslide, origin 2026-08-26T02:52:23.1Z, depth 0 km, status manually revised",
+   "_grade": "A1",
+   "_source_ref": [
+    "geofon"
+   ]
+  }
+ },
+ "volume_estimate": {
+  "total_mobilised_m3": 100000000.0,
+  "_total_source": "Attributed to B. Mirus, research geologist, USGS Landslide Hazards Program, in media briefings 27 Aug 2026 ('more than 100 million cubic metres'). NOT an institutional USGS estimate and not a published measurement.",
+  "_total_grade": "B1",
+  "_total_note": "This figure explicitly includes material entrained along the runout. Entrained channel and valley fill contains no glacier ice, so it does not set the ice budget.",
+  "detachment_range_m3": [
+   10000000.0,
+   30000000.0
+  ],
+  "_detachment_source": "Range adopted in this study, bracketing the largest documented Himalayan bedrock-ice detachments (Chamoli 2021, 27e6 m3, Shugar et al. 2021) and the reported source-area geometry.",
+  "_detachment_grade": "C (assumption, stated as such)",
+  "_resolution": "Decisive measurement is DEM differencing of the source area, not possible from the open imagery record (see data/imagery.json).",
+  "_total_source_ref": [
+   "usgs_landslide_program",
+   "press_relay"
+  ],
+  "_detachment_source_ref": [
+   "this_study"
+  ]
+ },
+ "flow_path_nodes": {
+  "_note": "Ordered downstream. Rasuwagadhi is UPSTREAM of Timure: the Bhote Koshi crosses the border at Rasuwagadhi and flows south past Timure to Syabrubesi. An earlier version of analysis/leadtime.py listed Timure first, which routed the wave 3 km upstream and back and inflated the source-to-Syabrubesi channel distance by 4.8 km.",
+  "_coord_source": "OpenStreetMap Nominatim, verified individually. Devghat and Galchhi were previously rural-municipality centroids; the Tanahun 'Devghat' centroid lies 9.4 km from the Trishuli-Kali Gandaki confluence where the Narayani gauge sits. Both corrected. All eight nodes now lie within 0.6 km of the mapped river centreline (data/channel.json), which is an independent check on their positions. Gauge positions published by the river-watch service are now recorded separately and snapped to the centreline in data/channel.json under gauge_chainage; where they are precise enough they supersede the settlement centroids for kinematics.",
+  "_uncertainty": {
+   "position_km": 0.6,
+   "_note": "Maximum offset of any node from the mapped OSM river centreline. Supersedes the earlier 1-2 km settlement-centroid estimate."
+  },
+  "nodes": [
+   {
+    "name": "Source scar",
+    "lat": 28.271,
+    "lon": 85.515,
+    "arrival_npt": "08:37:10",
+    "kind": "trigger",
+    "grade": "A1"
+   },
+   {
+    "name": "Rasuwagadhi",
+    "lat": 28.2778,
+    "lon": 85.3778,
+    "arrival_npt": "08:50",
+    "kind": "gauge_lost",
+    "grade": "A1",
+    "arrival_bracket_npt": [
+     "08:40",
+     "08:50"
+    ],
+    "_note": "A gauging station stands here, Bhotekoshi at Rasuwagadi, station 4913. Its series ends with a normal 1.62 m at 08:40 and the 08:50 report never came, so the front reached it inside that interval. The station has not reported since.",
+    "_arrival_source": "Instrument record: DHM river-watch ten-minute series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+    "_arrival_grade": "A1",
+    "_arrival_source_ref": [
+     "dhm_riverwatch"
+    ]
+   },
+   {
+    "name": "Timure",
+    "lat": 28.2528,
+    "lon": 85.3667,
+    "arrival_npt": null,
+    "kind": "settlement",
+    "grade": "A1"
+   },
+   {
+    "name": "Syabrubesi",
+    "lat": 28.1628,
+    "lon": 85.3378,
+    "arrival_npt": "09:00",
+    "kind": "gauge_lost",
+    "grade": "A1",
+    "arrival_bracket_npt": [
+     "08:50",
+     "09:00"
+    ],
+    "_note": "Bhote Koshi at Shyaprubesi, station 191, a different instrument from the one at Rasuwagadhi. Its series ends with a normal 3.80 m at 08:50 and the 09:00 report never came. An earlier version of this study fused the two stations, taking this one's cessation time together with the Rasuwagadhi station's stage and threshold.",
+    "_arrival_source": "Instrument record: DHM river-watch ten-minute series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+    "_arrival_grade": "A1",
+    "_arrival_source_ref": [
+     "dhm_riverwatch"
+    ]
+   },
+   {
+    "name": "Betrawati",
+    "lat": 27.9731,
+    "lon": 85.186,
+    "arrival_npt": "09:30",
+    "kind": "gauge_lost",
+    "grade": "A1",
+    "arrival_bracket_npt": [
+     "09:20",
+     "09:30"
+    ],
+    "_note": "Trishuli at Betrawati, station 52. Series ends with a normal 3.55 m at 09:20, matching the situation report's telemetry-loss time, and the 09:30 report never came, so the front arrived after the last reading rather than at it.",
+    "_arrival_source": "Instrument record: DHM river-watch ten-minute series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+    "_arrival_grade": "A1",
+    "_arrival_source_ref": [
+     "dhm_riverwatch"
+    ]
+   },
+   {
+    "name": "Galchhi",
+    "lat": 27.7974,
+    "lon": 85.0005,
+    "arrival_npt": "10:30",
+    "kind": "gauge",
+    "grade": "A1",
+    "_note": "Trishuli at Galchi, station 5705, gauges absolute water level. Flat at 360.62 m at 10:20 and 363.58 m at 10:30, peaking at 369.45 m at 10:50, so this is a measured arrival and no longer the forecast time it was carried as. The forecast bulletin gave 10:28, inside the measured interval.",
+    "_coord_correction": "was 27.7792, 84.9873 (rural-municipality centroid); corrected to the settlement/confluence position",
+    "arrival_bracket_npt": [
+     "10:20",
+     "10:30"
+    ],
+    "_arrival_source": "Instrument record: DHM river-watch ten-minute series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+    "_arrival_grade": "A1",
+    "_arrival_source_ref": [
+     "dhm_riverwatch"
+    ]
+   },
+   {
+    "name": "Malekhu",
+    "lat": 27.8137,
+    "lon": 84.8272,
+    "arrival_npt": "11:26",
+    "kind": "threshold",
+    "grade": "A2",
+    "arrival_bracket_npt": [
+     "11:26",
+     "11:50"
+    ],
+    "_note": "Front arrival taken as the Phurke gauge warning crossing at 11:26, co-located with the settlement. A threshold crossing follows the front rather than marking it, and the river-watch service exposes no series for this station, so the node is excluded from reach celerity. The DHM chronology also logs 11:50 'flood reaches Malekhu bazaar', a later confirmation."
+   },
+   {
+    "name": "Mugling",
+    "lat": 27.8562,
+    "lon": 84.561,
+    "arrival_npt": "13:00",
+    "kind": "bound",
+    "grade": "A2",
+    "_note": "Logged as confirmed-past, so this is an upper bound on front arrival rather than a detection. No station series is retrievable here, and the node is excluded from reach celerity for that reason."
+   },
+   {
+    "name": "Kali Khola",
+    "lat": 27.833,
+    "lon": 84.546,
+    "arrival_npt": "13:20",
+    "kind": "gauge",
+    "grade": "A1",
+    "arrival_bracket_npt": [
+     "13:10",
+     "13:20"
+    ],
+    "_note": "Trishuli River at Kali Khola, station 4781, between Mugling and Devghat, where the study previously had no node. Flat at 6.74 m at 13:10 and rising from 13:20, crossing its 12.1 m danger level at 14:20 and peaking at 12.35 m, against the situation report's 14:14 crossing and 12.3 m peak.",
+    "_arrival_source": "Instrument record: DHM river-watch ten-minute series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+    "_arrival_grade": "A1",
+    "_arrival_source_ref": [
+     "dhm_riverwatch"
+    ]
+   },
+   {
+    "name": "Devghat",
+    "lat": 27.7429,
+    "lon": 84.4231,
+    "arrival_npt": "14:40",
+    "kind": "gauge",
+    "grade": "A1",
+    "_coord_correction": "was 27.8105, 84.3671 (rural-municipality centroid); corrected to the settlement/confluence position",
+    "arrival_bracket_npt": [
+     "14:30",
+     "14:40"
+    ],
+    "_note": "Narayani at Devghat, station 265. Flat at 4.69 m at 14:30 and rising from 14:40, peaking at 6.57 m at 16:00 exactly as the situation report gives it. The report's 15:20 entry, read as the arrival in an earlier version of this study, falls mid-rise at 5.70 m.",
+    "_arrival_source": "Instrument record: DHM river-watch ten-minute series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+    "_arrival_grade": "A1",
+    "_arrival_source_ref": [
+     "dhm_riverwatch"
+    ]
+   }
+  ],
+  "_grade": "A1 for coordinates, A2 for arrival times from the DHM situation report",
+  "_instrument_record": "Arrival times at the gauged nodes are now read from the ten-minute stage series rather than from the situation report's prose. Each destroyed station brackets the front between its last successful transmission and the report it failed to send; each surviving station brackets it between the last sample at its local level and the first sample risen above it. Malekhu is the one gauged node without a retrievable series and is still taken from the report.",
+  "_celerity_rule": "Reach celerity uses only nodes where an instrument recorded the front itself: the six stations with retrievable ten-minute series. Nodes carrying a forecast time, a threshold crossing or a confirmed-past bound appear in the chronology but are excluded, because each of those follows or precedes the front by an unknown margin.",
+  "_coord_source_ref": [
+   "osm_nominatim"
+  ]
+ },
+ "official_response": {
+  "_source": "Ministry of Home Affairs notice in the Nepal Gazette under Section 32(1) of the DRRM Act 2017, as reported by the Kathmandu Post and Ratopati. The gazette itself was not retrieved.",
+  "_grade": "A2",
+  "crisis_declaration": {
+   "action": "Affected local units declared disaster crisis zones",
+   "legal_basis": "Section 32(1), Disaster Risk Reduction and Management Act 2017, by notice in the Nepal Gazette",
+   "duration_months": 3,
+   "districts_reported": [
+    "Rasuwa",
+    "Nuwakot",
+    "Dhading",
+    "Tanahun",
+    "Gorkha"
+   ],
+   "declared": "2026-08-29",
+   "_note": "Recorded as context for the reconstruction cycle. Not used in the warning-chain analysis, which concerns the interval between detachment and public message.",
+   "local_units": {
+    "total": 15,
+    "Rasuwa": 4,
+    "Nuwakot": 4,
+    "Dhading": 4,
+    "Tanahun": 2,
+    "Gorkha": 1
+   },
+   "_resolved_2026_09_02": "The fifth district was recorded as reported but unnamed. It is Tanahun, and the notice covers 15 local units: four each in Rasuwa, Nuwakot and Dhading, two in Tanahun and one in Gorkha. In Rasuwa they are Uttargaya, Gosainkunda, Kalika and Amachhodingmo rural municipalities."
+  },
+  "_source_ref": [
+   "press_crisis_declaration"
+  ]
+ },
+ "_provenance_resolved": {
+  "dhm_sitrep": {
+   "status": "CONFIRMED as the officially released document",
+   "evidence": "Independently reported by Kathmandu Post ('How the Bhotekoshi flood unfolded over 10 hours', 27 Aug 2026), Nepalnews ('Technical report: 20 million cubic meters of excess surge...'), and Ratopati ('Rasuwa Flood: Initial Technical Report Released'), all quoting figures that match the PDF (09:05 notification; 10:28 Galchhi; 11:50 Malekhu; 13:00 Mugling; 15:20 Devghat; ~20e6 m3 excess volume).",
+   "note": "No dhm.gov.np direct URL located. Cite as: Department of Hydrology and Meteorology, Flood Forecasting Division, technical situation report on the 2083 Bhote Koshi-Trishuli-Narayani flood, 2083 Bhadra 10 (26 August 2026), 9 pp., released publicly 27 August 2026."
+  },
+  "copernicus_emsr927_vectors": {
+   "status": "NOT PUBLICLY AVAILABLE as of 2026-08-28",
+   "evidence": "Three candidate API endpoints return 404. Independently confirmed by asoto59g/Nepal, who state no public Copernicus vector existed at analysis time and approximated the inundation with a HAND model instead.",
+   "consequence": "Independent inundation-extent validation is not possible from open data."
+  },
+  "bipad_portal": {
+   "status": "QUERIED SUCCESSFULLY; CONTAINS NO LOSS DATA FOR THIS EVENT",
+   "api": "https://bipadportal.gov.np/api/v1/incident/",
+   "finding": "For 26-29 August 2026, BIPAD returns 8 flood-hazard incidents on the affected corridor. Their linked loss records report 0 deaths, 0 missing and 2 injured in total. No incident records exist for the core impact zone in Rasuwa. The only event container is the seasonal 'Monsoon 2083' record opened 22 June 2026; no event record was created for this cascade.",
+   "significance": "Nepal's official machine-readable disaster database did not carry the country's deadliest flood of the year in its structured loss fields three days after it happened. Every casualty figure in circulation, including those used here, therefore traces to press releases rather than to the portal.",
+   "grade": "A1 (queried directly)",
+   "caveat": "BIPAD may be backfilled later. This records the state on 2026-08-28.",
+   "_source": "Direct query of https://bipadportal.gov.np/api/v1/incident/ on 29 August 2026.",
+   "_source_ref": [
+    "ndrrma"
+   ]
+  }
+ },
+ "_ndrrma_sitrep_01_crosscheck": {
+  "_source": "NDRRMA Situation Report #01, 1 September 2026, 09:00",
+  "_source_ref": [
+   "ndrrma_sitrep_01"
+  ],
+  "_grade": "A2 (primary agency document, archived at a stable URL)",
+  "confirms": {
+   "chronology": "Galchhi 10:28, Malekhu 11:50, Mugling 13:00, Devghat 15:20, Devghat peak 5,850 m3/s at 16:00, total flow 57.40e6 m3, excess 19.96e6 m3, 679,295 warning messages. Every one matches the figures carried here from the DHM report.",
+   "seismic_is_consequence": "States that the greater-than-5 Mw signal near Langtang Lirung was generated by the mass movement and was not the triggering cause, which is the reading this study adopts from the USGS event type.",
+   "headwater_length": "Describes the source as approximately 20 km upstream of Rasuwagadhi. The headwater traced here on GLO-30 is 20.1 to 24.0 km, so the agency's own figure sits at the lower edge of the traced range. This is the first independent statement of that distance from a source that is not a reimplementation of this study's method."
+  },
+  "adds": {
+   "detachment_area_km2": 1.0,
+   "_detachment_area_note": "An estimated 1 km2 section of rock-glacier material, from preliminary high-resolution satellite analysis. Recorded as a new constraint on the source geometry. Not converted to a volume here, because no thickness is given.",
+   "people_impacted_approx": 1600000,
+   "districts_severely_affected": [
+    "Rasuwa",
+    "Nuwakot"
+   ],
+   "districts_moderately_affected": [
+    "Dhading",
+    "Gorkha",
+    "Chitwan"
+   ],
+   "bridges_washed_away": 41,
+   "bridges_damaged": 4,
+   "_bridges_note": "The authority's own count, which is a different scope from the 59-bridge field survey recorded in damage_independent.json and is not merged with it.",
+   "isolated_households": 3702,
+   "isolated_people": 14461,
+   "_isolation_note": "In Gosaikunda and Amachhodingmo rural municipalities, Rasuwa, cut off for up to six days with road, electricity and communications disrupted.",
+   "rescued_total": 11814,
+   "foreign_nationals_rescued": 253,
+   "security_personnel_deployed": 21011
+  },
+  "_contradicts": {
+   "station_attribution": "States that the Bhote Koshi-Syafrubesi station stopped transmitting at about 08:50 with a last water level of 1.62 m. The instrument archive shows 1.62 m is the last reading of the Rasuwagadhi station, number 4913, whose warning stage is 6.0 m, while the Syabrubesi station, number 191, last read 3.80 m against a 5.50 m warning stage. The conflation this study corrected is present in the official record itself, not only in the relays of it.",
+   "devghat_arrival": "Gives 15:20 for Devghat. The station's own ten-minute series is at background until 14:30 and rising from 14:40, and reads 5.70 m at 15:20, so the reported time is mid-rise rather than the front."
+  }
+ }
+}

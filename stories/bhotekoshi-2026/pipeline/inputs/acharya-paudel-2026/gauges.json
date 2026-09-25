@@ -1,0 +1,406 @@
+{
+ "_meta": {
+  "description": "DHM Nepal hydrological stations on the Bhote Koshi-Trishuli-Narayani corridor, with official warning/danger thresholds and their state during the 26 August 2026 event.",
+  "retrieved": "2026-09-01",
+  "units": {
+   "level_m": "stage, metres",
+   "discharge_m3s": "m^3 s^-1"
+  },
+  "_last_verified": "2026-09-09",
+  "_verification_note": "Rebuilt 1 Sept from the DHM river-watch ten-minute series. Two corrections followed. The corridor has two Bhote Koshi stations, one at Rasuwagadhi and one at Syabrubesi, and this package previously carried a single record fusing them: the Rasuwagadhi station's stage and thresholds under the Syabrubesi name, with the Syabrubesi station's cessation time. A fifth silent station, Phalakhu Khola at Betrawati, was not in the report's list of four. Front arrival times are now read from the series rather than from the report's prose.",
+  "_source": "Department of Hydrology and Meteorology, Flood Forecasting Division (बाढी पूर्वानुमान महाशाखा), Babarmahal, Kathmandu. Technical situation report on the 2083 Bhote Koshi-Trishuli-Narayani flood, 2083 Bhadra 10 (26 August 2026), 9 pp.",
+  "_secondary_source": "https://www.dhm.gov.np/hydrology/hms-Single/{station_id} and its getRiverWatchBySeriesId_Single endpoint, retrieved by analysis/fetch_dhm_series.py into data/gauge_timeseries.json",
+  "_grade": "A1 for the instrument series, A2 for the situation report",
+  "_source_ref": [
+   "dhm_sitrep"
+  ],
+  "_secondary_source_ref": [
+   "dhm_riverwatch"
+  ],
+  "_station_index_confirmed": "The department's own correspondence of 3 September 2026 refers to station 449.91 as Trishuli at Kali Khola and station 450 as Narayani at Devghat, and states that Galchi has no station number. Those are the station_index values recorded here, and Galchhi's is empty, so the identification this package rebuilt from the river-watch service agrees with the department's own numbering.",
+  "_silence_note": "still_silent_as_of stays at 2 September 2026, the last date the service's retention window reached when that check was made. A re-query on 9 September found the four stations still returning nothing, but retention had rolled forward past the dates needed to extend the observation, so the earlier date is the last one the record supports."
+ },
+ "stations": [
+  {
+   "name": "Bhotekoshi at Rasuwagadhi",
+   "dhm_name": "Bhotekoshi at Rasuwagadi",
+   "district": "Rasuwa",
+   "station_id": 4913,
+   "series_id": 23251,
+   "station_index": "446.22",
+   "lat": 28.271297,
+   "lon": 85.377649,
+   "_coord_source": "Position published by the DHM river-watch service, superseding the OpenStreetMap settlement centroid used earlier",
+   "warning_m": 6.0,
+   "danger_m": 7.0,
+   "name_np": "भोटेकोशी रसुवागढी",
+   "last_level_m": 1.62,
+   "last_observation_npt": "2026-08-26T08:40:00+05:45",
+   "telemetry_ceased_npt": "2026-08-26T08:50:00+05:45",
+   "_ceased_definition": "The first ten-minute report the station failed to send. Its last successful report is last_observation_npt.",
+   "front_arrival_bracket_npt": [
+    "08:40",
+    "08:50"
+   ],
+   "crossed_warning": false,
+   "crossed_danger": false,
+   "still_silent_as_of": "2026-09-02",
+   "fate": "destroyed",
+   "_source": "Instrument record: DHM river-watch ten-minute stage series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+   "_grade": "A1 (instrument record)",
+   "fraction_of_warning_stage": 0.27,
+   "note": "Destroyed at 27% of its warning threshold, further below its trigger than any other station on the corridor. Never triggered. This is the station the situation report lists as 'Rasuwa Bhote Koshi'.",
+   "_coord_source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_source_ref": [
+    "dhm_riverwatch"
+   ]
+  },
+  {
+   "name": "Bhote Koshi at Syabrubesi",
+   "dhm_name": "Bhote Koshi at Shyaprubesi",
+   "district": "Rasuwa",
+   "station_id": 191,
+   "series_id": 2810,
+   "station_index": "446.25",
+   "lat": 28.17065,
+   "lon": 85.342554,
+   "_coord_source": "Position published by the DHM river-watch service, superseding the OpenStreetMap settlement centroid used earlier",
+   "warning_m": 5.5,
+   "danger_m": null,
+   "name_np": "भोटेकोशी स्याफ्रुबेसी",
+   "last_level_m": 3.8,
+   "last_observation_npt": "2026-08-26T08:50:00+05:45",
+   "telemetry_ceased_npt": "2026-08-26T09:00:00+05:45",
+   "_ceased_definition": "The first ten-minute report the station failed to send. Its last successful report is last_observation_npt.",
+   "front_arrival_bracket_npt": [
+    "08:50",
+    "09:00"
+   ],
+   "crossed_warning": false,
+   "crossed_danger": false,
+   "still_silent_as_of": "2026-09-02",
+   "fate": "destroyed",
+   "_source": "Instrument record: DHM river-watch ten-minute stage series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+   "_grade": "A1 (instrument record)",
+   "fraction_of_warning_stage": 0.691,
+   "note": "Destroyed at 69% of its warning threshold. Never triggered. Listed by the situation report as 'Rasuwa Syabrubesi'.",
+   "_coord_source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_source_ref": [
+    "dhm_riverwatch"
+   ]
+  },
+  {
+   "name": "Trishuli at Betrawati",
+   "dhm_name": "Trishuli at Betrawati",
+   "district": "Nuwakot",
+   "station_id": 52,
+   "series_id": 943,
+   "station_index": "447",
+   "lat": 27.97,
+   "lon": 85.18,
+   "_coord_source": "Position published by the DHM river-watch service, superseding the OpenStreetMap settlement centroid used earlier",
+   "warning_m": 4.1,
+   "danger_m": 5.0,
+   "name_np": "बेत्रावती त्रिशूली",
+   "last_level_m": 3.55,
+   "last_observation_npt": "2026-08-26T09:20:00+05:45",
+   "telemetry_ceased_npt": "2026-08-26T09:30:00+05:45",
+   "_ceased_definition": "The first ten-minute report the station failed to send. Its last successful report is last_observation_npt.",
+   "front_arrival_bracket_npt": [
+    "09:20",
+    "09:30"
+   ],
+   "crossed_warning": false,
+   "crossed_danger": false,
+   "still_silent_as_of": "2026-09-02",
+   "fate": "destroyed",
+   "_source": "Instrument record: DHM river-watch ten-minute stage series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+   "_grade": "A1 (instrument record)",
+   "fraction_of_warning_stage": 0.866,
+   "note": "Destroyed at 87% of its warning threshold. Never triggered.",
+   "_coord_source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_source_ref": [
+    "dhm_riverwatch"
+   ]
+  },
+  {
+   "name": "Phalakhu Khola at Betrawati",
+   "dhm_name": "Phalakhu Khola at Betrawati",
+   "district": "Nuwakot",
+   "station_id": 4658,
+   "series_id": 19926,
+   "station_index": "446.8",
+   "lat": 27.974259,
+   "lon": 85.185829,
+   "_coord_source": "Position published by the DHM river-watch service, superseding the OpenStreetMap settlement centroid used earlier",
+   "warning_m": 2.6,
+   "danger_m": 3.1,
+   "last_level_m": 1.93,
+   "last_observation_npt": "2026-08-26T09:20:00+05:45",
+   "telemetry_ceased_npt": "2026-08-26T09:30:00+05:45",
+   "_ceased_definition": "The first ten-minute report the station failed to send. Its last successful report is last_observation_npt.",
+   "front_arrival_bracket_npt": [
+    "09:20",
+    "09:30"
+   ],
+   "crossed_warning": false,
+   "crossed_danger": false,
+   "still_silent_as_of": "2026-09-02",
+   "fate": "destroyed",
+   "_source": "Instrument record: DHM river-watch ten-minute stage series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+   "_grade": "A1 (instrument record)",
+   "fraction_of_warning_stage": 0.742,
+   "in_flood_path": false,
+   "note": "Destroyed at 74% of its warning threshold. Gauges the Phalakhu Khola, which joins the Trishuli at Betrawati, so it does not time the front along the modelled path. Its loss in the same ten-minute window as the Trishuli station is a fourth simultaneous signal.",
+   "_coord_source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_source_ref": [
+    "dhm_riverwatch"
+   ]
+  },
+  {
+   "name": "Trishuli at Galchi",
+   "dhm_name": "Trishuli at Galchi",
+   "district": "Dhading",
+   "station_id": 5705,
+   "series_id": 36628,
+   "station_index": null,
+   "lat": 27.802328,
+   "lon": 85.00305,
+   "_coord_source": "Position published by the DHM river-watch service, superseding the OpenStreetMap settlement centroid used earlier",
+   "warning_m": 367.0,
+   "danger_m": null,
+   "event_peak_m": 369.45,
+   "event_peak_npt": "2026-08-26T10:50:00+05:45",
+   "front_arrival_bracket_npt": [
+    "10:20",
+    "10:30"
+   ],
+   "fate": "survived",
+   "_source": "Instrument record: DHM river-watch ten-minute stage series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+   "_grade": "A1 (instrument record)",
+   "crossed_warning": true,
+   "crossed_warning_npt": "2026-08-26T10:40:00+05:45",
+   "crossed_danger": false,
+   "note": "Gauges absolute water level rather than stage above a local datum, so its 367 m threshold and 369.45 m peak are elevations. Rose 8.8 m above its pre-wave level and crossed its threshold at 10:40. This station supplies the measured arrival that replaces the forecast time carried earlier.",
+   "_coord_source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_source_ref": [
+    "dhm_riverwatch"
+   ]
+  },
+  {
+   "name": "Trishuli at Phurke Khola (Malekhu)",
+   "name_np": "फुर्के (मलेखु)",
+   "district": "Dhading",
+   "station_id": 5611,
+   "lat": 27.8137,
+   "lon": 84.8272,
+   "coord_source": "OpenStreetMap Nominatim (settlement centroid, not surveyed station position)",
+   "warning_m": 7.0,
+   "danger_m": 8.0,
+   "crossed_warning_npt": "2026-08-26T11:26:00+05:45",
+   "crossed_danger_npt": "2026-08-26T11:43:00+05:45",
+   "last_level_m": 10.48,
+   "last_observation_npt": "2026-08-26T11:40:00+05:45",
+   "fate": "washed away",
+   "crossed_warning": true,
+   "crossed_danger": true,
+   "note": "Only in-path station that crossed its thresholds before being destroyed. Station and the adjacent bridge were swept away immediately after 11:43.",
+   "_chronology_contradiction": "The 11:40 live-station reading of 10.48 m is already 2.48 m above the 8.0 m danger threshold, yet the sitrep logs the danger crossing at 11:43, three minutes later. The two come from different sources (live station JSON, grade B1; sitrep, grade A2) and cannot both be right. Most likely the 11:43 entry marks the destruction of the station and bridge rather than the threshold crossing. The manuscript therefore does not describe the second detachment as following the danger crossing by two minutes.",
+   "_front_arrival_npt": "2026-08-26T11:26:00+05:45",
+   "_front_arrival_note": "Front arrival at this node is taken as the 11:26 warning crossing, not the 11:50 'flood reaches Malekhu bazaar' entry. The gauge is co-located with the settlement, so 11:50 is a later confirmation and using it understates celerity on the Betrawati-Malekhu reach and produces a spurious non-monotonic profile.",
+   "crossed_danger_npt_disputed": true,
+   "_source": "DHM technical situation report. The river-watch service exposes no series for this station, so it is the one corridor gauge still taken from the report.",
+   "_grade": "A2 (agency document)",
+   "_source_ref": [
+    "dhm_sitrep"
+   ]
+  },
+  {
+   "name": "Trishuli River at Kali Khola",
+   "dhm_name": "Trishuli River at Kali Khola",
+   "district": "Chitwan",
+   "station_id": 4781,
+   "series_id": 19583,
+   "station_index": "449.91",
+   "lat": 27.833,
+   "lon": 84.546,
+   "_coord_source": "Position published by the DHM river-watch service, superseding the OpenStreetMap settlement centroid used earlier",
+   "warning_m": 10.8,
+   "danger_m": 12.1,
+   "event_peak_m": 12.35,
+   "event_peak_npt": "2026-08-26T14:20:00+05:45",
+   "front_arrival_bracket_npt": [
+    "13:10",
+    "13:20"
+   ],
+   "fate": "survived",
+   "_source": "Instrument record: DHM river-watch ten-minute stage series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+   "_grade": "A1 (instrument record)",
+   "crossed_warning": true,
+   "crossed_warning_npt": "2026-08-26T14:00:00+05:45",
+   "crossed_danger": true,
+   "crossed_danger_npt": "2026-08-26T14:20:00+05:45",
+   "note": "Crossed its danger level at 14:20 and peaked at 12.35 m, against the situation report's 14:14 crossing and 12.3 m peak, an independent check on the series reconstruction. Between Mugling and Devghat, where the study previously had no node.",
+   "_coord_source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_source_ref": [
+    "dhm_riverwatch"
+   ]
+  },
+  {
+   "name": "Narayani at Devghat",
+   "dhm_name": "Narayani at Devghat",
+   "district": "Chitwan / Tanahun",
+   "station_id": 265,
+   "series_id": 4140,
+   "station_index": "450",
+   "lat": 27.71,
+   "lon": 84.43,
+   "_coord_source": "Position published by the DHM river-watch service, superseding the OpenStreetMap settlement centroid used earlier",
+   "warning_m": 7.3,
+   "danger_m": 9.0,
+   "event_peak_m": 6.57,
+   "event_peak_npt": "2026-08-26T16:00:00+05:45",
+   "front_arrival_bracket_npt": [
+    "14:30",
+    "14:40"
+   ],
+   "fate": "survived",
+   "_source": "Instrument record: DHM river-watch ten-minute stage series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+   "_grade": "A1 (instrument record)",
+   "crossed_warning": false,
+   "crossed_danger": false,
+   "note": "Peak 6.57 m at 16:00 matches the situation report exactly. Stayed below the 7.3 m warning threshold. The report's 15:20 entry, read as the front arrival in an earlier version of this study, falls mid-rise at 5.70 m.",
+   "_coord_source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_source_ref": [
+    "dhm_riverwatch"
+   ]
+  },
+  {
+   "name": "Trishuli Khola at Dhunche",
+   "dhm_name": "Trishuli Khola at Dhunche",
+   "district": "Rasuwa",
+   "station_id": 4657,
+   "series_id": 19916,
+   "station_index": "446.3",
+   "lat": 28.098163,
+   "lon": 85.318589,
+   "_coord_source": "Position published by the DHM river-watch service, superseding the OpenStreetMap settlement centroid used earlier",
+   "warning_m": 3.2,
+   "danger_m": null,
+   "event_peak_m": 2.44,
+   "event_peak_npt": "2026-08-26T20:20:00+05:45",
+   "front_arrival_bracket_npt": null,
+   "fate": "survived",
+   "_source": "Instrument record: DHM river-watch ten-minute stage series, data/gauge_timeseries.json, fetched by analysis/fetch_dhm_series.py",
+   "_grade": "A1 (instrument record)",
+   "_no_front": "The detector finds no front in this station's series on the event day.",
+   "crossed_warning": false,
+   "crossed_danger": false,
+   "in_flood_path": false,
+   "note": "Gauges the Trishuli above its confluence with the Bhote Koshi, so it is off the flow path. Its series shows no front all day, which is the control this reconstruction needs: the detector finds a front at every station on the path and none here.",
+   "_coord_source_ref": [
+    "dhm_riverwatch"
+   ],
+   "_source_ref": [
+    "dhm_riverwatch"
+   ]
+  }
+ ],
+ "stations_destroyed": {
+  "_source": "DHM technical situation report section 3.1 for the named four; the river-watch series for the fifth and for every cessation time",
+  "_grade": "A1 for the series, A2 for the report",
+  "names_reported_by_dhm": [
+   "Rasuwa Bhote Koshi",
+   "Rasuwa Syabrubesi",
+   "Nuwakot Betrawati",
+   "Dhading Malekhu"
+  ],
+  "count_reported_by_dhm": 4,
+  "resolved_to_instruments": {
+   "Rasuwa Bhote Koshi": "Bhotekoshi at Rasuwagadi, station 4913, silent after 08:40",
+   "Rasuwa Syabrubesi": "Bhote Koshi at Shyaprubesi, station 191, silent after 08:50",
+   "Nuwakot Betrawati": "Trishuli at Betrawati, station 52, silent after 09:20",
+   "Dhading Malekhu": "Trishuli at Phurke Khola, station 5611, no series exposed"
+  },
+  "count_silent_in_feed": 5,
+  "_fifth_station": "Phalakhu Khola at Betrawati, station 4658, went silent after 09:20 in the same ten-minute window as the Trishuli station beside it and has not reported since. It is not in the report's list of four. It gauges a tributary, so it is excluded from the flow-path analysis and counted only as a telemetry signal.",
+  "count": 5,
+  "_count_definition": "Stations on or adjacent to the corridor that stopped reporting on 26 August and had not resumed by 2 September. Four are named by DHM; the fifth is visible only in the feed. Phurke is reported washed away but exposes no series, so its silence cannot be confirmed the same way.",
+  "_source_ref": [
+   "dhm_sitrep",
+   "dhm_riverwatch"
+  ]
+ },
+ "_threshold_summary": {
+  "_source": "Computed from the station records in this file",
+  "_grade": "A1",
+  "destroyed_total": 5,
+  "destroyed_in_path_with_published_thresholds": 4,
+  "destroyed_below_own_warning_threshold": 4,
+  "_named": [
+   "Bhotekoshi at Rasuwagadhi",
+   "Bhote Koshi at Syabrubesi",
+   "Trishuli at Betrawati",
+   "Phalakhu Khola at Betrawati"
+  ],
+  "fraction_of_warning_when_lost": {
+   "Bhotekoshi at Rasuwagadhi": 0.27,
+   "Bhote Koshi at Syabrubesi": 0.691,
+   "Phalakhu Khola at Betrawati": 0.742,
+   "Trishuli at Betrawati": 0.866
+  },
+  "_gradient": "Along the main stem the fraction rises downstream, 0.27 at Rasuwagadhi, 0.69 at Syabrubesi and 0.87 at Betrawati. Every one of the four was destroyed below its own warning stage, so a threshold-triggered system would have produced no alert from any of them.",
+  "_supersedes": "This package previously recorded three destroyed stations with published thresholds and two below their warning stage, because two instruments were held as one record and the Rasuwagadhi station was thought to have no published threshold. It has one: 6.0 m warning, 7.0 m danger.",
+  "_source_ref": [
+   "this_study"
+  ]
+ },
+ "telemetry_loss_as_a_signal": {
+  "_source": "Cessation times from the DHM river-watch series; the operational objection from an external practitioner review of the preprint, 30 August 2026.",
+  "_grade": "A1 for the timings, expert opinion for the objection",
+  "losses_npt": {
+   "Bhotekoshi at Rasuwagadhi": {
+    "last_report": "08:40",
+    "first_missing": "08:50"
+   },
+   "Bhote Koshi at Syabrubesi": {
+    "last_report": "08:50",
+    "first_missing": "09:00"
+   },
+   "Trishuli at Betrawati": {
+    "last_report": "09:20",
+    "first_missing": "09:30"
+   },
+   "Phalakhu Khola at Betrawati": {
+    "last_report": "09:20",
+    "first_missing": "09:30"
+   }
+  },
+  "first_two_separation_min": 10,
+  "division_notified_npt": "09:00",
+  "public_alert_npt": "09:16",
+  "single_station_rule_fires_npt": "08:50",
+  "two_station_rule_fires_npt": "09:00",
+  "_finding": "The two uppermost stations fall silent ten minutes apart, not thirty. A rule acting on one missing report could have fired at 08:50, ten minutes before the Division was notified and twenty-six before the public alert. A rule requiring two stations on the same stem could have fired at 09:00, at the same moment the human relay reached the Division and sixteen minutes before the alert. Coincidence detection therefore costs ten minutes against single-station triggering on this event, rather than being unavailable.",
+  "_supersedes": "The earlier record put the two documented losses thirty minutes apart with the second falling after the public alert, and concluded that a coincidence rule could not have fired in time. That rested on the fused station record, which hid the 08:40 loss at Rasuwagadhi. With both Bhote Koshi stations separated the coincidence was available, and the question this package previously recorded as undeterminable is answered.",
+  "_independence_caveat": "The false-alarm advantage of coincidence detection assumes station failures are independent. Stations sharing power or transmission backhaul are not, and monsoon conditions that produce the hazard also stress the communications, so failures may be positively correlated with the event the detector is meant to catch. The Phalakhu and Trishuli stations at Betrawati going silent in the same ten-minute window is consistent either with one flood destroying both or with a shared backhaul failing once. No topology or outage history for the DHM network is public, so the assumption still cannot be tested.",
+  "_consequence": "The manuscript's telemetry passage is rewritten again: the coincidence rule is now shown to have been available, with its cost stated in minutes.",
+  "_source_ref": [
+   "dhm_riverwatch"
+  ]
+ }
+}

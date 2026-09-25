@@ -4,7 +4,7 @@ Notable changes to geojson.app. Format loosely follows [Keep a Changelog](https:
 
 ## Unreleased — 2026-09
 
-Analysis features for time-varying, terrain-heavy data, and a faster, redesigned and hardened base app.
+Analysis features for time-varying, terrain-heavy data; a faster, redesigned and hardened base app; and the first built-in story: the Bhote Koshi–Trishuli disaster of 26 August 2026.
 
 ### Added
 - **Imagery layers** (`useImageryStore`, `core/imagery`): XYZ tiles and georeferenced images beneath data and basemap labels, per-layer opacity, `{time}` templates that follow the timeline; imagery preset registry (`extensions/imagery`) with NASA GIBS products in the layers panel's *Add imagery* menu.
@@ -21,6 +21,7 @@ Analysis features for time-varying, terrain-heavy data, and a faster, redesigned
 - **Compare scene pickers**: `leftOptions` / `rightOptions` turn the swipe labels into menus of alternative scenes; a side can stack several layers (e.g. a drone strip over a full scene).
 - **Media on the map**: features with `image` / `video` / `url` / `credit` / `license` show a hover preview and a media card (see docs/styling.md).
 - Story charts: multi-series line charts with legends, dashed series and threshold lines; story bodies support bullet lists.
+- **The Bhote Koshi–Trishuli disaster, 26 August 2026** story (`/stories/bhotekoshi-2026/`, 31 chapters) with a rebuildable open-data pipeline (`stories/bhotekoshi-2026/pipeline`): minute-by-minute chase of the debris-flow front with captions; town-by-town before/after of the sharpest open imagery (Vantor and Planet scenes, 3.5–6 cm NEA drone orthophotos, HOT's post-event mosaic); UNOSAT detachment zone, barrier lakes and flow extent; DHM hydrographs and warning lead times; hydropower losses; the government's damage assessment (buildings, bridges, debris, costs); tolls and where bodies were recovered; crowdsourced photos, street-level frames and videos.
 
 ### Changed — a faster, calmer, safer base app
 - **Every dependency on its latest release**, including MapLibre GL JS 6 (ESM, WebGL 2), TypeScript 7 (native `tsc`; ESLint keeps the TS 6 API via an alias until typescript-eslint supports 7), Vitest 5, geotiff 3, React 19.3 and Vite 8.3. Node ≥ 22.12.

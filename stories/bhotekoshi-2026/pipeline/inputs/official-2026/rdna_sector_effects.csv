@@ -1,0 +1,21 @@
+sector,subsector,damage_npr_crore,losses_npr_crore,total_effects_npr_crore,total_effects_usd_m,recovery_needs_npr_crore,recovery_needs_usd_m
+Social,Private buildings,6388.48,,6388.48,421.74,9582.72,632.61
+Social,Public buildings and facilities,264.59,,264.59,17.47,423.35,27.95
+Social,Education,93.73,,93.73,6.19,234.32,15.47
+Social,Health,23.66,,23.66,1.56,78.00,5.15
+Social,Cultural heritage,14.64,2.00,16.64,1.10,36.60,2.42
+Productive,Agriculture,109.30,,109.30,7.22,142.10,9.38
+Productive,Fisheries,71.59,,71.59,4.73,107.39,7.09
+Productive,Livestock,144.81,,144.81,9.56,173.77,11.47
+Productive,Banking,72.40,19.59,91.99,6.07,108.60,7.17
+Productive,Economic activities / livelihoods,3030.43,11589.30,14619.73,965.13,4545.65,300.08
+Infrastructure,Energy (hydropower and grid),13469.76,1634.69,15104.45,997.13,39062.30,2578.71
+Infrastructure,Household renewable energy,56.84,,56.84,3.75,164.82,10.88
+Infrastructure,Roads,2207.25,135.00,2342.25,154.62,5518.13,364.28
+Infrastructure,Bridges,1135.11,,1135.11,74.93,1816.17,119.90
+Infrastructure,Telecommunication,62.87,,62.87,4.15,94.30,6.23
+Infrastructure,WASH,138.11,,138.11,9.12,207.16,13.68
+Infrastructure,Irrigation and river training,164.77,,164.77,10.88,494.30,32.63
+Cross-cutting,Debris,,,,,51.54,3.40
+Cross-cutting,Disaster risk reduction,,,,,9475.31,625.52
+TOTAL,All sectors,27448.32,13380.58,40828.91,2695.33,72331.52,4774.99

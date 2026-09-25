@@ -10,7 +10,7 @@ Where geojson.app is heading, in rough priority order. The philosophy behind eve
 - Unified command surface (`src/integrations`) — embed SDK, URL params, and future MCP execute identical commands; SDK gained `listLayers` / `setLayerVisibility` (additive v1).
 - Toolchain: TypeScript 6, Vite 8 (Rolldown), ESLint 10, React 19, MapLibre 5.24, zustand state.
 
-- **Time, terrain, imagery, compare, stories (2026-09)** — timeline with animated tracks and chase camera, 3D terrain + hillshade, imagery layers (NASA GIBS presets, georeferenced chips), before/after swipe, and JSON stories. Base app pass: dependencies on latest (MapLibre 6, TypeScript 7), lazy-loaded features with an initial-load budget, redesigned mobile/embed chrome with dark mode, CSP and security headers. Partly delivers "bring-your-own tiles" (raster XYZ overlays) and "richer data on the shared tiles" (terrain) from the longer-term list.
+- **Time, terrain, imagery, compare, stories (2026-09)** — timeline with animated tracks and chase camera, 3D terrain + hillshade, imagery layers (NASA GIBS presets, georeferenced chips), before/after swipe, and JSON stories with a built-in story on the Bhote Koshi–Trishuli disaster (26 Aug 2026). Base app pass: dependencies on latest (MapLibre 6, TypeScript 7), lazy-loaded features with an initial-load budget, redesigned mobile/embed chrome with dark mode, CSP and security headers. Partly delivers "bring-your-own tiles" (raster XYZ overlays) and "richer data on the shared tiles" (terrain) from the longer-term list.
 
 ## Near term
 

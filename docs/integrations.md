@@ -33,7 +33,7 @@ The simplest integration is a link. All parameters work on `https://geojson.app/
 | `center`, `zoom` | `?center=85.3,27.7&zoom=11` | Initial camera. |
 | `theme`, `projection` | `?theme=dark&projection=globe` | Appearance. |
 | `interactive`, `chrome`, `attribution` | | Embed behavior — see `docs/developers-api.md`. |
-| `story`, `chapter` | `?story=/stories/<name>/story.json&chapter=<id>` | Opens a [story](stories.md) (additive). Works with or without `embed=1`. |
+| `story`, `chapter` | `?story=/stories/bhotekoshi-2026/story.json&chapter=syabrubesi` | Opens a [story](stories.md) (additive). Works with or without `embed=1`. |
 
 Parameter names are frozen (v1 contract).
 
