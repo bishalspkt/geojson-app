@@ -24,3 +24,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Story data pipelines (raw downloads + deps)
+stories/*/pipeline/node_modules
+stories/*/pipeline/.cache

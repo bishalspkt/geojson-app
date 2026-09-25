@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 
 export interface ToolContext {
   map: maplibregl.Map;

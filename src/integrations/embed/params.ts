@@ -10,6 +10,10 @@ export interface EmbedConfig {
   theme: MapTheme;
   projection: MapProjection;
   geojsonUrl: string | null;
+  /** `?story=<url>` — story document to open (embed and main app). */
+  storyUrl: string | null;
+  /** `?chapter=<index|id>` — initial story chapter. */
+  storyChapter: string | null;
   interactive: boolean;
   /** Legacy alias: true ≡ chrome === 'full'. */
   controls: boolean;
@@ -34,6 +38,8 @@ export function parseEmbedParams(search: string = window.location.search): Embed
   const enabled = params.has('embed');
 
   const geojsonUrl = params.get('geojson') || null;
+  const storyUrl = params.get('story') || null;
+  const storyChapter = params.get('chapter') || null;
 
   if (!enabled) {
     return {
@@ -43,6 +49,8 @@ export function parseEmbedParams(search: string = window.location.search): Embed
       theme: 'light',
       projection: 'mercator',
       geojsonUrl,
+      storyUrl,
+      storyChapter,
       interactive: true,
       controls: true,
       chrome: 'full',
@@ -108,6 +116,8 @@ export function parseEmbedParams(search: string = window.location.search): Embed
     theme,
     projection,
     geojsonUrl,
+    storyUrl,
+    storyChapter,
     interactive,
     controls,
     chrome,

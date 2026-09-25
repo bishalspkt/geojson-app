@@ -32,7 +32,7 @@ contextMenuRegistry.register({
 
 4. **Embed rules**: destructive/editing actions must set `isVisible: (ctx) => !ctx.isEmbed`. Read-only actions may stay visible in embeds.
 
-5. **Copy-to-clipboard actions** must strip internal properties (`_fid`, `_search_result`) — see the `copy-geojson` builtin for the pattern.
+5. **Copy-to-clipboard actions** must strip internal properties — use `externalFeature()` from `@/lib/external-feature` (see the `copy-geojson` builtin), and confirm with `notify(…, "info")` from `@/state/notify-store`.
 
 ## Verify
 

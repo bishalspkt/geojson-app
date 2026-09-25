@@ -1,131 +1,201 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Locate, Navigation } from 'lucide-react';
-import { listPanels } from '@/extensions/panels/registry';
+import { listPanels, type PanelDefinition } from '@/extensions/panels/registry';
 import { useLayersStore } from '@/state/layers-store';
 import { useMapStore } from '@/state/map-store';
 import { useToolsStore } from '@/state/tools-store';
 import { useUiStore } from '@/state/ui-store';
-import { getCurrentPosition } from '@/core';
+import { getCurrentPosition } from '@/core/camera/focus';
 import { useEmbed } from '@/integrations/embed/embed-context';
+import { useIsMobile } from '@/lib/use-media-query';
+import { IconButton } from '@/components/ui/icon-button';
+import { cn } from '@/lib/utils';
+import { afterMapIdle } from '@/lib/after-map-idle';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { isChunkLoadError } from '@/lib/chunk-error';
+import { PanelError, PanelSkeleton } from './Panel';
 import { setPanelWithPolicy, togglePanelWithPolicy } from './panel-policy';
+import { notify } from '@/state/notify-store';
 
-function useCompassBearing(): number {
+/**
+ * Reset-to-north button, shown while the map is rotated. The chase camera
+ * turns the map every frame, so the icon is rotated directly on the DOM and
+ * React re-renders only when the button appears or disappears.
+ */
+function CompassButton() {
   const map = useMapStore((s) => s.map);
-  const [bearing, setBearing] = useState(0);
-
+  const [rotated, setRotated] = useState(false);
+  const iconRef = useRef<SVGSVGElement>(null);
   useEffect(() => {
     if (!map) return;
-    const update = () => setBearing(map.getBearing());
+    const update = () => {
+      const bearing = map.getBearing();
+      setRotated(Math.abs(bearing) > 0.5);
+      if (iconRef.current) iconRef.current.style.transform = `rotate(${-bearing}deg)`;
+    };
     update();
     map.on('rotate', update);
-    map.on('rotateend', update);
     return () => {
       map.off('rotate', update);
-      map.off('rotateend', update);
     };
   }, [map]);
+  useLayoutEffect(() => {
+    if (rotated && iconRef.current && map) iconRef.current.style.transform = `rotate(${-map.getBearing()}deg)`;
+  }, [rotated, map]);
+  if (!rotated) return null;
+  return (
+    <IconButton
+      label="Reset bearing to north"
+      size="lg"
+      tone="plain"
+      className="glass text-primary hover:bg-hover"
+      onClick={() => map?.easeTo({ bearing: 0, pitch: 0, duration: 400 })}
+    >
+      <Navigation ref={iconRef} fill="currentColor" />
+    </IconButton>
+  );
+}
 
-  return bearing;
+/** Panels follow what the user does elsewhere (context menu, map clicks). */
+function usePanelAutomation() {
+  // The measure tool started externally (context menu) → its panel.
+  const activeTool = useToolsStore((s) => s.activeTool);
+  useEffect(() => {
+    if (activeTool === 'measure' && useUiStore.getState().activePanel !== 'measure') setPanelWithPolicy('measure');
+  }, [activeTool]);
+
+  // A feature selected on the map → the layers panel, except while reading a
+  // story (selection and media cards must not pull the reader away).
+  const selectedFeatureId = useLayersStore((s) => s.selection?.featureId ?? null);
+  useEffect(() => {
+    const active = useUiStore.getState().activePanel;
+    if (selectedFeatureId && active !== 'layers' && active !== 'story') setPanelWithPolicy('layers');
+  }, [selectedFeatureId]);
+}
+
+const neverHidden = () => false;
+const noBadge = () => null;
+
+function ToolbarButton({ panel, active, compact }: { panel: PanelDefinition; active: boolean; compact: boolean }) {
+  const useHidden = panel.useHidden ?? neverHidden;
+  const useBadge = panel.useBadge ?? noBadge;
+  const hidden = useHidden();
+  const badge = useBadge();
+  if (hidden) return null;
+  const Icon = panel.icon;
+  return (
+    <button
+      type="button"
+      onClick={() => togglePanelWithPolicy(panel.id)}
+      onPointerEnter={panel.preload}
+      onFocus={panel.preload}
+      aria-pressed={active}
+      aria-label={badge ? `${panel.title} (${badge})` : undefined}
+      className={cn(
+        'relative flex items-center justify-center font-bold transition-colors duration-150 active:scale-95',
+        compact
+          ? 'flex-1 flex-col gap-0.5 rounded-xl py-1.5 text-[10.5px]'
+          : 'gap-1.5 rounded-xl px-3 py-2 text-xs',
+        active
+          ? compact
+            ? 'text-primary'
+            : 'bg-primary text-primary-foreground shadow-md'
+          : 'text-muted-foreground hover:bg-hover hover:text-foreground',
+      )}
+    >
+      <span className={cn('relative flex items-center justify-center', compact && 'h-7 w-12 rounded-full', compact && active && 'bg-primary/12')}>
+        <Icon className="h-[18px] w-[18px] sm:h-4 sm:w-4" aria-hidden />
+        {compact && badge !== null && badge > 0 && (
+          <span className="absolute -top-0.5 right-1.5 min-w-4 rounded-full bg-accent px-1 text-center text-[9.5px] font-extrabold leading-4 text-accent-foreground tabular-nums">
+            {badge > 99 ? '99+' : badge}
+          </span>
+        )}
+      </span>
+      <span>{panel.title}</span>
+      {!compact && badge !== null && badge > 0 && (
+        <span
+          className={cn(
+            'min-w-[18px] rounded-full px-1.5 text-center text-[10px] leading-[18px] font-extrabold tabular-nums',
+            active ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-primary/12 text-primary',
+          )}
+        >
+          {badge > 99 ? '99+' : badge}
+        </span>
+      )}
+    </button>
+  );
 }
 
 /**
- * The control bar: one button per registered panel, plus locate + compass.
- * Panels come from the registry (`extensions/panels`) — adding a panel there
- * adds its button here with no changes to this component.
+ * The control bar (one button per registered panel), the active panel, and
+ * the floating locate/compass buttons. Panels come from the registry
+ * (`extensions/panels`) — registering one adds its button here.
  */
 export default function MapControls() {
   const embed = useEmbed();
+  const mobile = useIsMobile();
   const activePanel = useUiStore((s) => s.activePanel);
-  const map = useMapStore((s) => s.map);
-  const bearing = useCompassBearing();
-  const showCompass = Math.abs(bearing) > 0.5;
+  usePanelAutomation();
 
-  // Auto-open the measure panel when the measure tool starts externally
-  // (e.g. from the context menu).
-  const activeTool = useToolsStore((s) => s.activeTool);
-  useEffect(() => {
-    if (activeTool === 'measure' && useUiStore.getState().activePanel !== 'measure') {
-      useUiStore.getState().setActivePanel('measure');
-    }
-  }, [activeTool]);
-
-  // Auto-open the layers panel when a feature gets selected (map click).
-  const selectedFeatureId = useLayersStore((s) => s.selection?.featureId ?? null);
-  useEffect(() => {
-    if (selectedFeatureId && useUiStore.getState().activePanel !== 'layers') {
-      setPanelWithPolicy('layers');
-    }
-  }, [selectedFeatureId]);
+  // Warm the most-used panels once the map has drawn, so first opens are instant.
+  useEffect(
+    () =>
+      afterMapIdle(() => {
+        for (const p of listPanels()) if (p.id === 'layers' || p.id === 'upload') p.preload?.();
+      }),
+    [],
+  );
 
   const locateUser = async () => {
     try {
       const position = await getCurrentPosition();
-      useUiStore.getState().requestFocus({
-        kind: 'location',
-        longitude: position.longitude,
-        latitude: position.latitude,
-      });
+      useUiStore.getState().requestFocus({ kind: 'location', longitude: position.longitude, latitude: position.latitude });
     } catch (error: unknown) {
-      alert((error as Error).message);
+      notify((error as GeolocationPositionError)?.message || 'Could not get your location');
     }
   };
 
-  const panels = listPanels().filter((p) => (embed.enabled ? p.embedVisible : true));
-  const activeDefinition = panels.find((p) => p.id === activePanel);
+  const panels = listPanels().filter((p) =>
+    embed.enabled ? p.embedVisible : mobile ? p.mobileVisible !== false : true,
+  );
+  const active = panels.find((p) => p.id === activePanel);
+  const ActivePanel = active?.component;
+  const compact = mobile;
 
   return (
     <>
-      {/* Floating Locate + Compass stack — top right (below search on mobile) */}
       {!embed.enabled && (
-        <div className="fixed top-16 right-3 sm:top-3 sm:right-3 z-30 flex flex-col gap-2">
-          <button
-            onClick={locateUser}
-            aria-label="Locate me"
-            className="h-11 w-11 flex items-center justify-center rounded-2xl bg-white/70 backdrop-blur-2xl border border-white/30 shadow-lg shadow-black/5 active:scale-95 transition-transform duration-150 text-primary hover:text-primary hover:bg-white/90"
-          >
-            <Locate className="h-4.5 w-4.5" />
-          </button>
-          {showCompass && (
-            <button
-              onClick={() => map?.easeTo({ bearing: 0, duration: 300 })}
-              aria-label="Reset bearing to north"
-              className="h-11 w-11 flex items-center justify-center rounded-2xl bg-white/70 backdrop-blur-2xl border border-white/30 shadow-lg shadow-black/5 active:scale-95 transition-transform duration-150 text-primary hover:text-primary hover:bg-white/90"
-            >
-              <Navigation
-                className="h-4.5 w-4.5"
-                style={{ transform: `rotate(${-bearing}deg)`, transition: 'transform 0.1s linear' }}
-                fill="currentColor"
-              />
-            </button>
-          )}
+        <div className="fixed right-3 top-[4.25rem] z-30 flex flex-col gap-2 sm:top-3">
+          <IconButton label="Show my location" size="lg" tone="plain" className="glass text-primary hover:bg-hover" onClick={locateUser}>
+            <Locate />
+          </IconButton>
+          <CompassButton />
         </div>
       )}
 
-      {/* Panel toolbar */}
-      <div className="fixed bottom-0 left-0 right-0 sm:bottom-3 sm:left-3 sm:right-auto sm:w-fit z-30 flex items-center gap-0.5 p-1.5 sm:p-1 sm:rounded-2xl bg-white/70 backdrop-blur-xl border-t sm:border border-white/30 shadow-lg shadow-black/5">
-        {panels.map((panel) => {
-          const Icon = panel.icon;
-          const isActive = activePanel === panel.id;
-          return (
-            <button
-              key={panel.id}
-              onClick={() => togglePanelWithPolicy(panel.id)}
-              aria-label={panel.title}
-              className={`flex flex-1 sm:flex-none items-center justify-center sm:justify-start gap-1.5 px-3 py-3 sm:py-2 rounded-xl text-xs font-bold transition-colors duration-150 active:scale-95 ${
-                isActive
-                  ? 'bg-primary text-primary-foreground shadow-md'
-                  : 'text-gray-600 hover:bg-white/40 hover:text-gray-900'
-              }`}
-            >
-              <Icon className="h-4 w-4" />
-              <span className="text-[11px] sm:text-xs">{panel.title}</span>
-            </button>
-          );
-        })}
-      </div>
+      <nav
+        aria-label="Map tools"
+        className={cn(
+          'glass fixed z-30 flex items-stretch',
+          compact
+            ? 'inset-x-0 bottom-0 h-[calc(var(--tabbar-h)+env(safe-area-inset-bottom,0px))] rounded-none border-x-0 border-b-0 px-1 pt-1 pb-safe'
+            : embed.enabled
+              ? 'bottom-2 left-2 gap-0.5 rounded-2xl p-1'
+              : 'bottom-3 left-3 gap-0.5 rounded-2xl p-1',
+        )}
+      >
+        {panels.map((panel) => (
+          <ToolbarButton key={panel.id} panel={panel} active={activePanel === panel.id} compact={compact} />
+        ))}
+      </nav>
 
-      {/* Active panel */}
-      {activeDefinition && <activeDefinition.component />}
+      {active && ActivePanel && (
+        <ErrorBoundary key={active.id} name={`${active.id} panel`} fallback={(retry, error) => <PanelError panelId={active.id} retry={isChunkLoadError(error) ? null : retry} />}>
+          <Suspense fallback={<PanelSkeleton panelId={active.id} />}>
+            <ActivePanel />
+          </Suspense>
+        </ErrorBoundary>
+      )}
     </>
   );
 }

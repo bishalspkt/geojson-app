@@ -4,7 +4,7 @@ geojson.app is scriptable. This document describes how external callers — web 
 
 ## The core idea
 
-There is exactly **one** description of what an external caller can do to a map: [`src/integrations/commands.ts`](../src/integrations/commands.ts). Camera, appearance, data, and inspection commands plus the event set (`load`, `move`, `moveend`, `click`, `theme:change`, `projection:change`, `error`).
+There is exactly **one** description of what an external caller can do to a map: [`src/integrations/commands.ts`](../src/integrations/commands.ts). Camera, appearance, data, inspection, imagery, terrain, timeline, compare, and story commands plus the event set (`load`, `move`, `moveend`, `click`, `theme:change`, `projection:change`, `error`, `story:chapter`).
 
 Every command executes through [`src/integrations/executor.ts`](../src/integrations/executor.ts), which talks to the zustand stores and the live MapLibre instance. Transports are thin adapters that parse their channel's envelope, call `executeCommand(name, args)`, and ship the result back.
 
@@ -33,6 +33,7 @@ The simplest integration is a link. All parameters work on `https://geojson.app/
 | `center`, `zoom` | `?center=85.3,27.7&zoom=11` | Initial camera. |
 | `theme`, `projection` | `?theme=dark&projection=globe` | Appearance. |
 | `interactive`, `chrome`, `attribution` | | Embed behavior — see `docs/developers-api.md`. |
+| `story`, `chapter` | `?story=/stories/<name>/story.json&chapter=<id>` | Opens a [story](stories.md) (additive). Works with or without `embed=1`. |
 
 Parameter names are frozen (v1 contract).
 
@@ -41,7 +42,7 @@ Parameter names are frozen (v1 contract).
 `https://geojson.app/embed.js` (~2 kB gzipped, zero deps) creates an iframe and drives it over a versioned postMessage protocol. Full reference: [`docs/developers-api.md`](developers-api.md).
 
 - Protocol v1 wire format is **frozen**: envelope `{source: "geojson.app.embed", v: 1, …}`, method names, event names, error codes.
-- v1 grew two **additive** methods in the 2026 rewrite: `listLayers()` and `setLayerVisibility(id, visible)`. Additions are backward-compatible; old SDKs simply don't call them.
+- v1 grew two **additive** methods in the 2026 rewrite: `listLayers()` and `setLayerVisibility(id, visible)`, then imagery/terrain/time/story methods (`addImagery`, `removeImagery`, `listImagery`, `setTerrain`, `setTime`, `setCompare`, `loadStory`, `setStoryChapter`) and the `story:chapter` event. Additions are backward-compatible; old SDKs simply don't call them.
 - In-iframe half: `src/integrations/embed/bridge.ts` (validation + envelope only — all behavior lives in the executor).
 - Host half: `src/integrations/embed/sdk.ts`, built standalone by `vite.embed.config.ts`.
 

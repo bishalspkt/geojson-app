@@ -11,6 +11,8 @@ export interface ToolsState {
 
   setActiveTool(tool: ToolId | null): void;
   addMeasurePoint(point: MeasurePoint): void;
+  /** Remove the most recent measure point (undo). */
+  undoMeasurePoint(): void;
   clearMeasurePoints(): void;
 }
 
@@ -27,6 +29,7 @@ export const useToolsStore = create<ToolsState>()(
       })),
     addMeasurePoint: (point) =>
       set((state) => ({ measurePoints: [...state.measurePoints, point] })),
+    undoMeasurePoint: () => set((state) => ({ measurePoints: state.measurePoints.slice(0, -1) })),
     clearMeasurePoints: () => set({ measurePoints: [] }),
   })),
 );

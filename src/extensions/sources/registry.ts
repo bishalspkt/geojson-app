@@ -1,8 +1,9 @@
 import { Feature, FeatureCollection } from 'geojson';
-import { LayerId, LayerOrigin } from '@/types';
+import { LayerDisplay, LayerId, LayerOrigin, LegendSpec, TemporalConfig } from '@/types';
 import { useLayersStore } from '@/state/layers-store';
 import { useUiStore } from '@/state/ui-store';
 import { getBoundingBox } from '@/core/camera/focus';
+import { detectTemporalConfig } from '@/core/time/temporal';
 
 /** The ways data can enter the app. Providers declare which they understand. */
 export type SourceInput =
@@ -56,6 +57,12 @@ export interface IngestOptions {
   paint?: Record<string, unknown>;
   /** Fit the camera to the new data (default true). */
   fit?: boolean;
+  /** Timeline config; `false` disables auto-detection. Default: auto-detect from property names. */
+  temporal?: TemporalConfig | false;
+  display?: LayerDisplay;
+  legend?: LegendSpec;
+  attribution?: string;
+  visible?: boolean;
 }
 
 export interface IngestResult {
@@ -64,16 +71,20 @@ export interface IngestResult {
   featureCount: number;
 }
 
+/** Find a provider and load input into a FeatureCollection, without adding a layer. */
+export async function loadSource(input: SourceInput): Promise<LoadedData> {
+  const provider = providers.find((p) => p.canHandle(input));
+  if (!provider) throw new Error('No source provider can handle this input');
+  return provider.load(input);
+}
+
 /**
  * The one entry point for data ingestion: find a provider, load, add the
  * layer, and focus the camera. UI surfaces (panels, drag-drop, URL loader,
  * embed bridge) all call this.
  */
 export async function ingest(input: SourceInput, opts: IngestOptions = {}): Promise<IngestResult> {
-  const provider = providers.find((p) => p.canHandle(input));
-  if (!provider) throw new Error('No source provider can handle this input');
-
-  const { collection, name } = await provider.load(input);
+  const { collection, name } = await loadSource(input);
   const layers = useLayersStore.getState();
 
   const layerName = opts.name ?? name;
@@ -82,6 +93,12 @@ export async function ingest(input: SourceInput, opts: IngestOptions = {}): Prom
     origin: opts.origin,
     layerId: opts.layerId,
     paint: opts.paint,
+    temporal:
+      opts.temporal === false ? undefined : (opts.temporal ?? detectTemporalConfig(collection.features)),
+    display: opts.display,
+    legend: opts.legend,
+    attribution: opts.attribution,
+    visible: opts.visible,
   };
   const layerId = opts.replace
     ? layers.replaceLayers(collection, layerOpts)

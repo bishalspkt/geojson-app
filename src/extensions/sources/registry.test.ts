@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Feature } from 'geojson';
+import { nameFromFile } from './builtin/geojson';
 import { resetLayerIdCounter, useLayersStore } from '@/state/layers-store';
 import { useUiStore } from '@/state/ui-store';
 import {
@@ -81,5 +82,13 @@ describe('ingest', () => {
   it('does not emit a focus request for empty collections', async () => {
     await ingest({ kind: 'data', data: { type: 'FeatureCollection', features: [] } }, {});
     expect(useUiStore.getState().focusRequest).toBeNull();
+  });
+});
+
+describe('nameFromFile', () => {
+  it('strips .geojson / .json', () => {
+    expect(nameFromFile('national-parks.geojson')).toBe('national-parks');
+    expect(nameFromFile('Data.JSON')).toBe('Data');
+    expect(nameFromFile('notes.txt')).toBe('notes.txt');
   });
 });

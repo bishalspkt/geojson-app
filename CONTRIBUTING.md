@@ -7,7 +7,7 @@ Thanks for helping build the open web-mapping toolkit. This guide covers setup, 
 ```bash
 git clone https://github.com/bishalspkt/geojson-app
 cd geojson-app
-npm install        # Node ≥ 20.19
+npm install        # Node ≥ 22.12 (.nvmrc = 24)
 npm run dev        # http://localhost:5173
 ```
 
@@ -19,9 +19,10 @@ No env vars are required for local development. Analytics (PostHog) only activat
 npm run lint       # ESLint 10 flat config — zero warnings policy
 npm test           # Vitest — stores, executor, ingestion, params (all React-free)
 npm run build      # tsc type-check + app build + embed SDK build — must pass
+npm run size       # initial-load budget (after build) — lazy-load optional features
 ```
 
-CI runs the same three gates plus an embed-size guard on every push/PR (`.github/workflows/ci.yml`).
+CI runs the same gates plus the embed-size guard on every push/PR (`.github/workflows/ci.yml`).
 
 **Testing**: unit tests live next to their modules (`*.test.ts`) and run in Node with no mocks — the `core/`/`state/`/`integrations/` layers are framework-free by design. New store logic, executor commands, and source providers should land with tests; UI components are currently covered by the manual checklist below (`npm run test:watch` for TDD).
 
@@ -31,8 +32,10 @@ Then verify by hand in the dev server:
 2. Click a feature on the map — it highlights and the Layers panel selects it.
 3. Toggle visibility (feature and layer level) — map updates.
 4. Right-click → Zoom to Feature / View Properties / Delete.
-5. Measure two points; switch theme to dark; switch projection to globe.
-6. If you touched embed/integration code: open `/?embed=1&geojson=<url>&chrome=full` and check the panel + data load.
+5. Measure two points (Backspace undoes); switch theme to Dark — panels turn dark too; switch projection to globe.
+6. Phone width (375 px): the tab bar fits, panels open as bottom sheets, the header collapses them.
+7. If you touched embed/integration code: open `/?embed=1&geojson=<url>&chrome=full` at ~800 px and ~360 px wide and check the panel + data load.
+8. If you touched stories, terrain or imagery: open a story chapter link (`/?story=…&chapter=…`) and step a few chapters.
 
 ## Where things live
 
@@ -54,8 +57,8 @@ The architecture, layer model, and invariants: [docs/architecture.md](docs/archi
 - **Commits**: conventional-style prefixes, as in the existing history — `feat: …`, `fix: …`, `chore: …`, optional scope (`feat(embed): …`). Imperative mood, no trailing period.
 - **TypeScript**: strict; avoid `any` (the style resolver's MapLibre expression builders are the one sanctioned exception, kept behind eslint-disable lines).
 - **Formatting**: match the file you're in; 2-space indent, single quotes in new modules.
-- **Styling**: Tailwind utility classes inline, shadcn/ui primitives in `src/components/ui`. The glassy design language (rounded-2xl, `bg-white/70 backdrop-blur`) is deliberate — reuse existing patterns.
-- **Analytics**: `posthog.capture('<noun>_<verb>', …)` from UI code only; include `map_center_lat/lng` where relevant. Never in `core/`.
+- **Styling**: Tailwind utility classes inline with the semantic theme tokens (`glass`, `text-muted-foreground`, `bg-hover`, `eyebrow`; see docs/styling.md) so light and dark chrome both work; primitives in `src/components/ui`. No raw greys or `bg-white/…` in app chrome.
+- **Analytics**: `track('<noun>_<verb>', …)` (`src/lib/analytics.ts`) from UI code only; include `map_center_lat/lng` where relevant. Never in `core/`.
 - **Docs**: user-visible or SDK-visible changes update the matching doc in the same PR (`docs/developers-api.md` for SDK, README for app features).
 
 ## Public contracts (be careful)

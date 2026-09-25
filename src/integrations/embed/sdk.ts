@@ -43,6 +43,10 @@ type GeoJSONInput = string | Record<string, unknown>;
 
 export interface EmbedOptions {
   element: string | HTMLElement;
+  /** Story document URL (layers + chapters) to open on load. */
+  story?: string;
+  /** Initial story chapter (index or id). */
+  chapter?: number | string;
   center?: LngLat;
   zoom?: number;
   theme?: 'light' | 'dark' | 'white' | 'grayscale' | 'black';
@@ -92,6 +96,59 @@ export interface LayerInfo {
   visible: boolean;
 }
 
+export interface AddImageryArgs {
+  id: string;
+  name?: string;
+  tiles?: string[];
+  tileSize?: number;
+  minzoom?: number;
+  maxzoom?: number;
+  bounds?: [number, number, number, number];
+  url?: string;
+  coordinates?: [LngLat, LngLat, LngLat, LngLat];
+  /** Cloud-optimised GeoTIFF URL, streamed at full resolution (bounds clips it). */
+  cog?: string;
+  opacity?: number;
+  visible?: boolean;
+  attribution?: string;
+  time?: { format: 'date' | 'datetime' | 'month'; default: string; stepMinutes?: number };
+}
+
+export interface ImageryInfo {
+  id: string;
+  name: string;
+  origin: string;
+  visible: boolean;
+  opacity: number;
+}
+
+export interface SetTimeArgs {
+  enabled?: boolean;
+  start?: string | number;
+  end?: string | number;
+  current?: string | number;
+  playing?: boolean;
+  duration?: number;
+  window?: number | null;
+  loop?: boolean;
+  timeZone?: string | null;
+  follow?: { layer: string; zoom?: number; pitch?: number; bearing?: number | 'track'; maxViewSpeed?: number } | null;
+  captions?: { time: string | number; text: string }[];
+}
+
+export interface SetCompareArgs {
+  enabled?: boolean;
+  left?: string | string[];
+  leftLabel?: string;
+  rightLabel?: string;
+  position?: number;
+}
+
+export interface StoryInfo {
+  title: string;
+  chapters: { id: string; title: string }[];
+}
+
 export type EmbedInstance = {
   iframe: HTMLIFrameElement;
   destroy(): void;
@@ -116,6 +173,15 @@ export type EmbedInstance = {
   getZoom(): Promise<number>;
   getBearing(): Promise<number>;
   getBounds(): Promise<Bounds>;
+
+  addImagery(spec: AddImageryArgs): Promise<void>;
+  removeImagery(id: string): Promise<void>;
+  listImagery(): Promise<ImageryInfo[]>;
+  setTerrain(enabled: boolean, opts?: { exaggeration?: number; hillshade?: boolean }): Promise<void>;
+  setTime(opts: SetTimeArgs): Promise<void>;
+  setCompare(opts: SetCompareArgs): Promise<void>;
+  loadStory(url: string, chapter?: number | string): Promise<StoryInfo>;
+  setStoryChapter(chapter: number | string): Promise<void>;
 
   on(event: EmbedEventName, cb: (payload: unknown) => void): () => void;
   off(event: EmbedEventName, cb: (payload: unknown) => void): void;
@@ -170,6 +236,8 @@ function buildEmbedUrl(options: EmbedOptions): string {
     params.set('controls', 'true');
   }
   if (options.attribution) params.set('attribution', options.attribution);
+  if (options.story) params.set('story', options.story);
+  if (options.chapter != null) params.set('chapter', String(options.chapter));
 
   return `${ORIGIN}/?${params.toString()}`;
 }
@@ -397,6 +465,17 @@ function createEmbed(options: EmbedOptions): EmbedInstance {
     getZoom: () => controller.call<number>('getZoom'),
     getBearing: () => controller.call<number>('getBearing'),
     getBounds: () => controller.call<Bounds>('getBounds'),
+
+    addImagery: (spec) => controller.call('addImagery', spec).then(() => undefined),
+    removeImagery: (id) => controller.call('removeImagery', { id }).then(() => undefined),
+    listImagery: () => controller.call<ImageryInfo[]>('listImagery'),
+    setTerrain: (enabled, opts) =>
+      controller.call('setTerrain', { enabled, ...(opts ?? {}) }).then(() => undefined),
+    setTime: (opts) => controller.call('setTime', opts).then(() => undefined),
+    setCompare: (opts) => controller.call('setCompare', opts).then(() => undefined),
+    // Stories fetch several layers — allow longer than the default timeout.
+    loadStory: (url, chapter) => controller.call<StoryInfo>('loadStory', { url, chapter }, 60_000),
+    setStoryChapter: (chapter) => controller.call('setStoryChapter', { chapter }).then(() => undefined),
 
     on: (event, cb) => controller.on(event, cb),
     off: (event, cb) => controller.off(event, cb),

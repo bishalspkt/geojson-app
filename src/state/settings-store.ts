@@ -11,6 +11,9 @@ export interface SettingsState extends MapSettings {
 export const DEFAULT_SETTINGS: MapSettings = {
   theme: 'light',
   projection: 'mercator',
+  terrain: false,
+  terrainExaggeration: 1.5,
+  hillshade: false,
 };
 
 export const useSettingsStore = create<SettingsState>()(

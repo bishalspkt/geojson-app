@@ -1,27 +1,39 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { create } from 'zustand';
 import {
-  ChevronDown,
   ChevronRight,
+  Clock,
   Eye,
   EyeOff,
+  ImagePlus,
+  Import,
   Info,
   Layers2,
   MapPin,
-  RotateCcw,
   Shapes,
   Trash2,
   Waypoints,
 } from 'lucide-react';
 import { length } from '@turf/length';
 import { area } from '@turf/area';
-import { Button } from '@/components/ui/button';
 import { DataLayer, GeometryCategory, IdentifiedFeature, categorizeGeometry } from '@/types';
 import { useLayersStore } from '@/state/layers-store';
 import { useUiStore } from '@/state/ui-store';
+import { useTimeStore } from '@/state/time-store';
+import { useImageryStore } from '@/state/imagery-store';
 import { useEmbed } from '@/integrations/embed/embed-context';
+import Legend from '@/features/legend/Legend';
+import { IconButton } from '@/components/ui/icon-button';
+import { Segmented } from '@/components/ui/segmented';
+import { cn } from '@/lib/utils';
 import Panel from '../Panel';
 import { setPanelWithPolicy } from '../panel-policy';
+
+const ImageryList = lazy(() => import('@/features/imagery/ImageryList'));
+const AddImageryMenu = lazy(() => import('@/features/imagery/AddImageryMenu'));
+
+/** Rows rendered per section before "Show more" (big layers stay responsive). */
+const PAGE = 150;
 
 function formatNumber(value: number): string {
   if (value >= 1e9) return `${(value / 1e9).toFixed(1)}B`;
@@ -32,362 +44,403 @@ function formatNumber(value: number): string {
   return value.toFixed(4);
 }
 
-const CATEGORY_CONFIG: { type: GeometryCategory; label: string; icon: typeof MapPin }[] = [
-  { type: 'point', label: 'Markers', icon: MapPin },
-  { type: 'line', label: 'LineStrings', icon: Waypoints },
+const CATEGORIES: { type: GeometryCategory; label: string; icon: typeof MapPin }[] = [
+  { type: 'point', label: 'Points', icon: MapPin },
+  { type: 'line', label: 'Lines', icon: Waypoints },
   { type: 'polygon', label: 'Polygons', icon: Shapes },
 ];
 
 type SortOrder = 'original' | 'alpha' | 'size';
 
+/** Area (km²) or length (km) per feature — computed once per (immutable) feature. */
+const sizeCache = new WeakMap<IdentifiedFeature, number>();
+function featureSize(f: IdentifiedFeature, cat: GeometryCategory): number {
+  let v = sizeCache.get(f);
+  if (v === undefined) {
+    v = cat === 'polygon' ? area(f) / 1e6 : cat === 'line' ? length(f) : 0;
+    sizeCache.set(f, v);
+  }
+  return v;
+}
+
+const featureName = (f: IdentifiedFeature) =>
+  (f.properties?.name ?? f.properties?.title ?? f.properties?.label ?? '') as string;
+
 /**
- * Panel-local UI state that must survive close/reopen (registry panels take
- * no props). Sections are collapsed by default; `expanded` tracks exceptions,
- * keyed "<layerId>:<category>".
+ * Panel-local UI state that survives close/reopen (registry panels take no
+ * props). Section keys are "<layerId>:<category>".
  */
-const usePanelUiStore = create<{
+const usePanelUi = create<{
   sortOrder: SortOrder;
-  expanded: Set<string>;
+  /** Sections the user opened or closed; others use their default. */
+  open: Record<string, boolean>;
+  shown: Record<string, number>;
   setSortOrder(order: SortOrder): void;
-  toggleExpanded(key: string): void;
-  expand(key: string): void;
+  setOpen(key: string, open: boolean): void;
+  showMore(key: string): void;
 }>((set) => ({
   sortOrder: 'original',
-  expanded: new Set<string>(),
+  open: {},
+  shown: {},
   setSortOrder: (sortOrder) => set({ sortOrder }),
-  toggleExpanded: (key) =>
-    set((s) => {
-      const expanded = new Set(s.expanded);
-      if (expanded.has(key)) expanded.delete(key);
-      else expanded.add(key);
-      return { expanded };
-    }),
-  expand: (key) =>
-    set((s) => {
-      if (s.expanded.has(key)) return s;
-      const expanded = new Set(s.expanded);
-      expanded.add(key);
-      return { expanded };
-    }),
+  setOpen: (key, open) => set((s) => (s.open[key] === open ? s : { open: { ...s.open, [key]: open } })),
+  showMore: (key) => set((s) => ({ shown: { ...s.shown, [key]: (s.shown[key] ?? PAGE) + PAGE } })),
 }));
 
-function sortFeatures(
-  features: IdentifiedFeature[],
-  cat: GeometryCategory,
-  order: SortOrder,
-): IdentifiedFeature[] {
+function sortFeatures(features: IdentifiedFeature[], cat: GeometryCategory, order: SortOrder): IdentifiedFeature[] {
   if (order === 'original') return features;
-  const getSortName = (f: IdentifiedFeature) =>
-    (f.properties?.name || f.properties?.label || f.properties?.title || '') as string;
   if (order === 'alpha' || cat === 'point') {
-    return [...features].sort((a, b) => getSortName(a).localeCompare(getSortName(b)));
+    return [...features].sort((a, b) => featureName(a).localeCompare(featureName(b)));
   }
-  if (cat === 'polygon') return [...features].sort((a, b) => area(b) - area(a));
-  return [...features].sort((a, b) => length(b) - length(a));
+  return [...features].sort((a, b) => featureSize(b, cat) - featureSize(a, cat));
+}
+
+function FeatureRow({
+  feature,
+  cat,
+  index,
+  active,
+  hidden,
+  rowRef,
+}: {
+  feature: IdentifiedFeature;
+  cat: GeometryCategory;
+  index: number;
+  active: boolean;
+  hidden: boolean;
+  rowRef: (el: HTMLElement | null) => void;
+}) {
+  const Icon = CATEGORIES.find((c) => c.type === cat)!.icon;
+  const name = featureName(feature) || `${cat === 'polygon' ? 'Polygon' : cat === 'line' ? 'Line' : 'Point'} ${index + 1}`;
+  const size = cat === 'point' ? null : featureSize(feature, cat);
+  const select = () => {
+    const store = useLayersStore.getState();
+    if (active) {
+      store.selectFeature(null);
+      return;
+    }
+    store.selectFeature(feature.id);
+    if (!hidden) useUiStore.getState().requestFocus({ kind: 'feature', featureId: feature.id });
+  };
+  return (
+    <li
+      ref={rowRef}
+      className={cn(
+        'group flex scroll-mt-10 items-center gap-2 rounded-xl py-1.5 pl-7 pr-1 transition-colors',
+        active ? 'bg-selected text-selected-foreground ring-1 ring-accent/40' : 'hover:bg-hover',
+        hidden && 'opacity-45',
+      )}
+    >
+      <button type="button" onClick={select} className="flex min-w-0 flex-1 items-center gap-2.5 text-left" aria-pressed={active}>
+        <span className={cn('flex h-7 w-7 shrink-0 items-center justify-center rounded-lg', active ? 'bg-accent/20 text-accent' : 'bg-primary/8 text-primary/80')}>
+          <Icon className="h-3.5 w-3.5" aria-hidden />
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-[13px] font-bold">{name}</span>
+          {size !== null && (
+            <span className="block text-[11px] text-subtle-foreground">
+              {formatNumber(size)} {cat === 'polygon' ? 'km²' : 'km'}
+            </span>
+          )}
+        </span>
+      </button>
+      {/* Phones only: desktop has the right-click menu and hover card. */}
+      <IconButton label="View properties" className="sm:hidden" onClick={() => useUiStore.getState().showProperties(feature.id)}>
+        <Info />
+      </IconButton>
+      <IconButton label={hidden ? 'Show feature' : 'Hide feature'} onClick={() => useLayersStore.getState().toggleFeatureVisibility(feature.id)}>
+        {hidden ? <EyeOff /> : <Eye />}
+      </IconButton>
+    </li>
+  );
+}
+
+function CategorySection({
+  layer,
+  cat,
+  features,
+  selectedId,
+  hiddenIds,
+  rowRefs,
+  defaultOpen,
+}: {
+  layer: DataLayer;
+  cat: (typeof CATEGORIES)[number];
+  features: IdentifiedFeature[];
+  selectedId: string | null;
+  hiddenIds: Set<string>;
+  rowRefs: React.RefObject<Map<string, HTMLElement>>;
+  /** Open unless the user closed it (a layer's only, reasonably small section). */
+  defaultOpen: boolean;
+}) {
+  const key = `${layer.id}:${cat.type}`;
+  const expanded = usePanelUi((s) => s.open[key] ?? defaultOpen);
+  const shown = usePanelUi((s) => s.shown[key] ?? PAGE);
+  const ids = useMemo(() => features.map((f) => f.id), [features]);
+  const allHidden = ids.every((id) => hiddenIds.has(id));
+  // Keep the selected feature renderable even past the current page.
+  const selectedIndex = selectedId ? features.findIndex((f) => f.id === selectedId) : -1;
+  const limit = Math.max(shown, selectedIndex + 1);
+
+  return (
+    <div>
+      <div className="sticky top-0 z-10 flex items-center gap-1.5 bg-glass-strong px-2 py-1">
+        <button
+          type="button"
+          onClick={() => usePanelUi.getState().setOpen(key, !expanded)}
+          aria-expanded={expanded}
+          className="flex min-w-0 flex-1 items-center gap-1.5 rounded-lg px-1 py-1 text-left hover:bg-hover"
+        >
+          <ChevronRight className={cn('h-3.5 w-3.5 text-subtle-foreground transition-transform', expanded && 'rotate-90')} aria-hidden />
+          <cat.icon className="h-3.5 w-3.5 text-primary/70" aria-hidden />
+          <span className="font-heading text-xs font-extrabold">{cat.label}</span>
+          <span className="text-[11px] font-semibold text-subtle-foreground tabular-nums">{features.length.toLocaleString()}</span>
+        </button>
+        <IconButton
+          label={allHidden ? `Show all ${cat.label.toLowerCase()}` : `Hide all ${cat.label.toLowerCase()}`}
+          size="xs"
+          onClick={() => useLayersStore.getState().setFeaturesVisibility(ids, allHidden)}
+        >
+          {allHidden ? <EyeOff /> : <Eye />}
+        </IconButton>
+      </div>
+      {expanded && (
+        <ul className="flex flex-col gap-0.5 px-1.5 pb-1.5">
+          {features.slice(0, limit).map((f, i) => (
+            <FeatureRow
+              key={f.id}
+              feature={f}
+              cat={cat.type}
+              index={i}
+              active={selectedId === f.id}
+              hidden={hiddenIds.has(f.id)}
+              rowRef={(el) => {
+                if (el) rowRefs.current.set(f.id, el);
+                else rowRefs.current.delete(f.id);
+              }}
+            />
+          ))}
+          {features.length > limit && (
+            <li>
+              <button
+                type="button"
+                onClick={() => usePanelUi.getState().showMore(key)}
+                className="ml-7 rounded-lg px-2 py-1.5 text-xs font-bold text-primary hover:bg-hover"
+              >
+                Show {Math.min(PAGE, features.length - limit).toLocaleString()} more of {(features.length - limit).toLocaleString()}
+              </button>
+            </li>
+          )}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function LayerGroup({
+  layer,
+  selectedId,
+  hiddenIds,
+  sortOrder,
+  editable,
+  rowRefs,
+}: {
+  layer: DataLayer;
+  selectedId: string | null;
+  hiddenIds: Set<string>;
+  sortOrder: SortOrder;
+  editable: boolean;
+  rowRefs: React.RefObject<Map<string, HTMLElement>>;
+}) {
+  const buckets = useMemo(() => {
+    const out: Record<GeometryCategory, IdentifiedFeature[]> = { point: [], line: [], polygon: [] };
+    for (const f of layer.features) if (f.geometry) out[categorizeGeometry(f.geometry.type)].push(f);
+    return {
+      point: sortFeatures(out.point, 'point', sortOrder),
+      line: sortFeatures(out.line, 'line', sortOrder),
+      polygon: sortFeatures(out.polygon, 'polygon', sortOrder),
+    };
+  }, [layer.features, sortOrder]);
+  const store = useLayersStore.getState();
+  const sections = CATEGORIES.filter((c) => buckets[c.type].length > 0);
+  const openByDefault = sections.length === 1 && layer.features.length <= 300;
+
+  return (
+    <div className="border-b border-glass-border last:border-b-0">
+      <div className="flex items-center gap-2 px-3.5 py-2">
+        <Layers2 className={cn('h-4 w-4 shrink-0', layer.visible ? 'text-primary' : 'text-subtle-foreground')} aria-hidden />
+        <span className={cn('font-heading min-w-0 truncate text-[13px] font-extrabold', !layer.visible && 'text-subtle-foreground')} title={layer.name}>
+          {layer.name}
+        </span>
+        <span className="text-[11px] font-semibold text-subtle-foreground tabular-nums">{layer.features.length.toLocaleString()}</span>
+        {layer.temporal && <Clock className="h-3.5 w-3.5 shrink-0 text-primary/70" aria-label="Has timestamps" />}
+        <span className="flex-1" />
+        <IconButton label={layer.visible ? `Hide ${layer.name}` : `Show ${layer.name}`} onClick={() => store.setLayerVisible(layer.id, !layer.visible)}>
+          {layer.visible ? <Eye /> : <EyeOff />}
+        </IconButton>
+        {editable && layer.origin !== 'story' && (
+          <IconButton label={`Remove ${layer.name}`} tone="danger" onClick={() => store.removeLayer(layer.id)}>
+            <Trash2 />
+          </IconButton>
+        )}
+      </div>
+      {(layer.legend || layer.attribution) && layer.visible && (
+        <div className="flex flex-col gap-1 px-3.5 pb-2">
+          {layer.legend && <Legend spec={layer.legend} />}
+          {layer.attribution && (
+            <p className="truncate text-[10.5px] text-subtle-foreground" title={layer.attribution}>
+              Source: {layer.attribution}
+            </p>
+          )}
+        </div>
+      )}
+      {sections.map((cat) => (
+        <CategorySection
+          key={cat.type}
+          layer={layer}
+          cat={cat}
+          features={buckets[cat.type]}
+          selectedId={selectedId}
+          hiddenIds={hiddenIds}
+          rowRefs={rowRefs}
+          defaultOpen={openByDefault}
+        />
+      ))}
+    </div>
+  );
+}
+
+/** Keep the selected feature in view: expand its section and scroll to it. */
+function useRevealSelection(selectedId: string | null, rowRefs: React.RefObject<Map<string, HTMLElement>>) {
+  useEffect(() => {
+    if (!selectedId) return;
+    for (const layer of useLayersStore.getState().layers) {
+      const f = layer.features.find((x) => x.id === selectedId);
+      if (f?.geometry) {
+        usePanelUi.getState().setOpen(`${layer.id}:${categorizeGeometry(f.geometry.type)}`, true);
+        break;
+      }
+    }
+    const timer = setTimeout(() => rowRefs.current.get(selectedId)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 120);
+    return () => clearTimeout(timer);
+  }, [selectedId, rowRefs]);
 }
 
 export default function LayersPanel() {
   const embed = useEmbed();
   const layers = useLayersStore((s) => s.layers);
-  const selection = useLayersStore((s) => s.selection);
-  const hiddenFeatureIds = useLayersStore((s) => s.hiddenFeatureIds);
-  const store = useLayersStore.getState();
-  const { sortOrder, expanded, setSortOrder, toggleExpanded, expand } = usePanelUiStore();
-  const featureRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const selectedId = useLayersStore((s) => s.selection?.featureId ?? null);
+  const hiddenIds = useLayersStore((s) => s.hiddenFeatureIds);
+  const sortOrder = usePanelUi((s) => s.sortOrder);
+  const hasImagery = useImageryStore((s) => s.layers.length > 0);
+  const timelineOn = useTimeStore((s) => s.enabled);
+  const [addingImagery, setAddingImagery] = useState(false);
+  const rowRefs = useRef(new Map<string, HTMLElement>());
+  useRevealSelection(selectedId, rowRefs);
 
-  const selectedFeatureId = selection?.featureId ?? null;
+  const dataLayers = layers.filter((l) => l.features.length > 0);
+  const hasTemporal = dataLayers.some((l) => l.temporal && l.visible);
+  const editable = !embed.enabled;
 
-  // Auto-expand the section containing a newly selected feature.
-  useEffect(() => {
-    if (!selectedFeatureId) return;
-    for (const layer of useLayersStore.getState().layers) {
-      const feature = layer.features.find((f) => f.id === selectedFeatureId);
-      if (feature) {
-        expand(`${layer.id}:${categorizeGeometry(feature.geometry.type)}`);
-        break;
-      }
-    }
-  }, [selectedFeatureId, expand]);
-
-  // Scroll to the selected feature once its section has expanded.
-  useEffect(() => {
-    if (!selectedFeatureId) return;
-    const timer = setTimeout(() => {
-      const el = featureRefs.current.get(selectedFeatureId);
-      if (!el) return;
-      const scrollContainer = el.closest<HTMLElement>('[data-scroll-container]');
-      if (scrollContainer) {
-        const containerRect = scrollContainer.getBoundingClientRect();
-        const elRect = el.getBoundingClientRect();
-        const STICKY_HEADER_HEIGHT = 36;
-        const target =
-          scrollContainer.scrollTop + (elRect.top - containerRect.top) - STICKY_HEADER_HEIGHT;
-        scrollContainer.scrollTo({ top: target, behavior: 'smooth' });
-      } else {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 150);
-    return () => clearTimeout(timer);
-  }, [selectedFeatureId]);
-
-  const featuresByLayerAndCategory = useMemo(() => {
-    const result = new Map<string, Record<GeometryCategory, IdentifiedFeature[]>>();
-    for (const layer of layers) {
-      const buckets: Record<GeometryCategory, IdentifiedFeature[]> = {
-        point: [],
-        line: [],
-        polygon: [],
-      };
-      for (const f of layer.features) buckets[categorizeGeometry(f.geometry.type)].push(f);
-      result.set(layer.id, {
-        point: sortFeatures(buckets.point, 'point', sortOrder),
-        line: sortFeatures(buckets.line, 'line', sortOrder),
-        polygon: sortFeatures(buckets.polygon, 'polygon', sortOrder),
-      });
-    }
-    return result;
-  }, [layers, sortOrder]);
-
-  const handleFeatureClick = (feature: IdentifiedFeature) => {
-    if (selectedFeatureId === feature.id) {
-      store.selectFeature(null);
-    } else {
-      store.selectFeature(feature.id);
-      if (!hiddenFeatureIds.has(feature.id)) {
-        useUiStore.getState().requestFocus({ kind: 'feature', featureId: feature.id });
-      }
-    }
-  };
-
-  const getFeatureName = (feature: IdentifiedFeature, cat: GeometryCategory, idx: number) => {
-    const name = feature.properties?.name;
-    if (name) return name as string;
-    const label = cat === 'polygon' ? 'Polygon' : cat === 'line' ? 'Line' : 'Point';
-    return `${label} ${idx + 1}`;
-  };
-
-  const getSubtitle = (feature: IdentifiedFeature, cat: GeometryCategory) => {
-    if (cat === 'polygon') return `${formatNumber(area(feature) / 1e6)} sq km`;
-    if (cat === 'line') return `${formatNumber(length(feature))} km`;
-    return undefined;
-  };
-
-  const hasData = layers.some((l) => l.features.length > 0);
-  const showLayerHeaders = layers.length > 1;
-
-  const renderCategory = (layer: DataLayer, cat: GeometryCategory, label: string, Icon: typeof MapPin) => {
-    const features = featuresByLayerAndCategory.get(layer.id)?.[cat] ?? [];
-    if (features.length === 0) return null;
-
-    const key = `${layer.id}:${cat}`;
-    const isExpanded = expanded.has(key);
-    const catIds = features.map((f) => f.id);
-    const allCatHidden = catIds.every((id) => hiddenFeatureIds.has(id));
-
-    return (
-      <div key={key}>
-        {/* Sticky category header */}
-        <div
-          role="button"
-          tabIndex={0}
-          className="sticky top-0 z-10 flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-white/60 transition-colors duration-150 select-none bg-white/90 backdrop-blur-sm border-b border-white/20"
-          onClick={() => toggleExpanded(key)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              toggleExpanded(key);
-            }
-          }}
+  const footer = editable && (
+    <div className="relative flex shrink-0 items-center gap-1 border-t border-glass-border px-2 py-1.5">
+      <button
+        type="button"
+        onClick={() => setAddingImagery((o) => !o)}
+        aria-expanded={addingImagery}
+        className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold text-primary hover:bg-hover"
+      >
+        <ImagePlus className="h-4 w-4" aria-hidden /> Add imagery
+      </button>
+      <span className="flex-1" />
+      {dataLayers.length > 0 && (
+        <button
+          type="button"
+          onClick={() => useLayersStore.getState().clearLayers()}
+          className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
         >
-          {isExpanded ? (
-            <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
-          ) : (
-            <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
-          )}
-          <Icon className="h-3.5 w-3.5 text-violet-400" />
-          <span className="text-xs font-extrabold text-gray-700 tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
-            {label}
-          </span>
-          <span className="text-[11px] font-semibold text-gray-400">{features.length}</span>
-          <div className="flex-1" />
-          <button
-            className="shrink-0 p-1.5 rounded-lg transition-colors duration-150 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
-            onClick={(e) => {
-              e.stopPropagation();
-              store.setFeaturesVisibility(catIds, allCatHidden);
-            }}
-            aria-label={allCatHidden ? `Show all ${label.toLowerCase()}` : `Hide all ${label.toLowerCase()}`}
-          >
-            {allCatHidden ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-          </button>
-        </div>
-        {isExpanded && (
-          <ul className="px-1 pb-1">
-            {features.map((feature, idx) => {
-              const active = selectedFeatureId === feature.id;
-              const hidden = hiddenFeatureIds.has(feature.id);
-              return (
-                <li key={feature.id}>
-                  <div
-                    ref={(el) => {
-                      if (el) featureRefs.current.set(feature.id, el);
-                      else featureRefs.current.delete(feature.id);
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    className={`flex items-center gap-2.5 w-full pl-8 pr-2 py-2.5 sm:py-2 rounded-xl text-left transition-colors duration-150 cursor-pointer active:scale-[0.98] scroll-mt-10 ${
-                      active ? 'bg-orange-50 ring-1 ring-orange-300' : 'hover:bg-white/40'
-                    } ${hidden ? 'opacity-40' : ''}`}
-                    onClick={() => handleFeatureClick(feature)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleFeatureClick(feature);
-                      }
-                    }}
-                  >
-                    <div className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${active ? 'bg-orange-100' : 'bg-violet-50'}`}>
-                      <Icon className={`h-3.5 w-3.5 ${active ? 'text-orange-500' : 'text-violet-400'}`} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className={`text-sm font-bold truncate ${active ? 'text-orange-800' : 'text-gray-900'}`}>
-                        {getFeatureName(feature, cat, idx)}
-                      </p>
-                      {getSubtitle(feature, cat) && (
-                        <p className="text-[11px] text-gray-400">{getSubtitle(feature, cat)}</p>
-                      )}
-                    </div>
-                    {/* Info button — mobile only */}
-                    <button
-                      className="sm:hidden shrink-0 p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        useUiStore.getState().showProperties(feature.id);
-                      }}
-                      aria-label="View properties"
-                    >
-                      <Info className="h-3.5 w-3.5" />
-                    </button>
-                    {/* Visibility toggle */}
-                    <button
-                      className={`shrink-0 p-2 sm:p-1 rounded-lg transition-colors duration-150 ${
-                        hidden
-                          ? 'text-gray-300 hover:text-gray-500 hover:bg-gray-100'
-                          : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        store.toggleFeatureVisibility(feature.id);
-                      }}
-                      aria-label={hidden ? 'Show feature' : 'Hide feature'}
-                    >
-                      {hidden ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-    );
-  };
+          <Trash2 className="h-3.5 w-3.5" aria-hidden /> Clear all
+        </button>
+      )}
+      {addingImagery && (
+        <Suspense fallback={null}>
+          <AddImageryMenu onClose={() => setAddingImagery(false)} />
+        </Suspense>
+      )}
+    </div>
+  );
 
   return (
-    <Panel panelId="layers">
-      <>
-        {!hasData && (
-          <div className="p-3">
-            <p className="text-sm font-bold text-gray-900">No features</p>
-            {!embed.enabled && (
-              <>
-                <p className="text-gray-500 text-xs mt-0.5">Import GeoJSON to see features here</p>
-                <div className="pt-3">
-                  <Button className="rounded-xl text-xs font-bold h-8" onClick={() => setPanelWithPolicy('upload')}>
-                    Import GeoJSON
-                  </Button>
-                </div>
-              </>
-            )}
-          </div>
-        )}
-        {hasData && (
-          <div className="pb-2">
-            {/* Sort bar */}
-            <div className="flex items-center gap-1 px-3 py-1.5 border-b border-white/30 bg-white/60 backdrop-blur-sm">
-              <span className="text-[10px] font-semibold text-gray-400 mr-0.5">Sort:</span>
-              {(['original', 'alpha', 'size'] as SortOrder[]).map((order) => (
-                <button
-                  key={order}
-                  onClick={() => setSortOrder(order)}
-                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors duration-150 ${
-                    sortOrder === order
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-gray-400 hover:text-gray-600 hover:bg-white/60'
-                  }`}
-                >
-                  {order === 'original' ? 'Original' : order === 'alpha' ? 'A–Z' : 'Size'}
-                </button>
-              ))}
-            </div>
+    <Panel panelId="layers" footer={footer || undefined}>
+      {(hasTemporal || dataLayers.length > 0) && (
+        <div className="flex items-center gap-2 border-b border-glass-border px-3 py-2">
+          {hasTemporal && (
+            <button
+              type="button"
+              onClick={() => (timelineOn ? useTimeStore.getState().disable() : useTimeStore.getState().enable())}
+              aria-pressed={timelineOn}
+              title="Your data has timestamps — play it on a timeline"
+              className={cn(
+                'flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold transition-colors',
+                timelineOn ? 'bg-primary text-primary-foreground' : 'bg-primary/10 text-primary hover:bg-primary/15',
+              )}
+            >
+              <Clock className="h-3.5 w-3.5" aria-hidden /> Timeline
+            </button>
+          )}
+          <span className="flex-1" />
+          <Segmented
+            label="Sort features"
+            size="xs"
+            value={sortOrder}
+            onChange={(v) => usePanelUi.getState().setSortOrder(v)}
+            options={[
+              { value: 'original', label: 'Original' },
+              { value: 'alpha', label: 'A–Z' },
+              { value: 'size', label: 'Size' },
+            ]}
+          />
+        </div>
+      )}
 
-            {layers.map((layer) => {
-              if (layer.features.length === 0) return null;
-              const layerFeatureIds = layer.features.map((f) => f.id);
-              const layerHidden = !layer.visible;
-              return (
-                <div key={layer.id}>
-                  {showLayerHeaders && (
-                    <div className="flex items-center gap-2 px-3 py-2 bg-violet-50/60 border-b border-white/20">
-                      <Layers2 className="h-3.5 w-3.5 text-violet-500 shrink-0" />
-                      <span
-                        className={`text-xs font-extrabold tracking-tight truncate ${layerHidden ? 'text-gray-400' : 'text-violet-900'}`}
-                        style={{ fontFamily: 'var(--font-heading)' }}
-                        title={layer.name}
-                      >
-                        {layer.name}
-                      </span>
-                      <span className="text-[11px] font-semibold text-gray-400">
-                        {layerFeatureIds.length}
-                      </span>
-                      <div className="flex-1" />
-                      <button
-                        className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-white/70 transition-colors duration-150"
-                        onClick={() => store.setLayerVisible(layer.id, !layer.visible)}
-                        aria-label={layer.visible ? `Hide layer ${layer.name}` : `Show layer ${layer.name}`}
-                      >
-                        {layer.visible ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
-                      </button>
-                      {!embed.enabled && (
-                        <button
-                          className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
-                          onClick={() => store.removeLayer(layer.id)}
-                          aria-label={`Remove layer ${layer.name}`}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </button>
-                      )}
-                    </div>
-                  )}
-                  {CATEGORY_CONFIG.map(({ type, label, icon }) => renderCategory(layer, type, label, icon))}
-                </div>
-              );
-            })}
+      {hasImagery && (
+        <Suspense fallback={null}>
+          <ImageryList removable={editable} />
+        </Suspense>
+      )}
 
-            {!embed.enabled && (
-              <div className="flex justify-end px-2 pt-1 border-t border-white/30">
-                <button
-                  onClick={() => store.clearLayers()}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-semibold text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                >
-                  <RotateCcw className="h-3 w-3" />
-                  Reset
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </>
+      {dataLayers.map((layer) => (
+        <LayerGroup
+          key={layer.id}
+          layer={layer}
+          selectedId={selectedId}
+          hiddenIds={hiddenIds}
+          sortOrder={sortOrder}
+          editable={editable}
+          rowRefs={rowRefs}
+        />
+      ))}
+
+      {dataLayers.length === 0 && !hasImagery && (
+        <div className="flex flex-col items-center gap-2 px-6 py-8 text-center">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <Layers2 className="h-5 w-5" aria-hidden />
+          </span>
+          <p className="font-heading text-sm font-extrabold">Nothing on the map yet</p>
+          <p className="text-xs text-muted-foreground">
+            {editable ? 'Import a GeoJSON file, paste a link, or open a demo.' : 'Data added to this map appears here.'}
+          </p>
+          {editable && (
+            <button
+              type="button"
+              onClick={() => setPanelWithPolicy('upload')}
+              className="mt-1 flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-primary-foreground shadow-md active:scale-95"
+            >
+              <Import className="h-4 w-4" aria-hidden /> Import data
+            </button>
+          )}
+        </div>
+      )}
     </Panel>
   );
 }

@@ -1,6 +1,12 @@
 {
-  "name": "GeoJSON App",
-  "short_name": "GeoJSON App",
+  "name": "geojson.app",
+  "short_name": "geojson.app",
+  "description": "View, explore and share GeoJSON on an open-source map.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#4a24b8",
+  "background_color": "#e8edf5",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -14,8 +20,5 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  ]
 }

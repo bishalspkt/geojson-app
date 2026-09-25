@@ -1,10 +1,11 @@
-import maplibregl from 'maplibre-gl';
-import { Feature } from 'geojson';
+import type * as maplibregl from 'maplibre-gl';
 import { useLayersStore } from '@/state/layers-store';
 import { useSettingsStore } from '@/state/settings-store';
+import { useStoryStore } from '@/state/story-store';
 import { whenMapReady } from '@/state/map-store';
 import { queryDataFeatures } from '@/core/layers/interactions';
 import { executeCommand } from '../executor';
+import { externalFeature } from '@/lib/external-feature';
 import { isCommandName } from '../commands';
 import {
   PROTOCOL_SOURCE,
@@ -57,13 +58,6 @@ function emit(target: Window, event: EmbedEventName, payload?: unknown) {
   send(target, { source: PROTOCOL_SOURCE, v: PROTOCOL_VERSION, event, payload });
 }
 
-/** Strip internal bookkeeping before features cross the protocol boundary. */
-function cleanFeature(f: { geometry: unknown; properties: unknown }): Feature {
-  const properties = { ...(f.properties as Record<string, unknown> | null) };
-  delete properties._fid;
-  delete properties._search_result;
-  return { type: 'Feature', geometry: f.geometry, properties } as Feature;
-}
 
 /**
  * The in-iframe half of the embed protocol: receives commands from the host
@@ -87,6 +81,17 @@ export function startEmbedBridge(): () => void {
     useSettingsStore.subscribe(
       (s) => s.projection,
       (projection) => emit(parent, 'projection:change', { projection }),
+    ),
+  );
+
+  // ---- Story navigation ----
+  cleanups.push(
+    useStoryStore.subscribe(
+      (s) => (s.status === 'ready' ? s.chapterIndex : -1),
+      (index) => {
+        const chapter = useStoryStore.getState().story?.chapters[index];
+        if (chapter) emit(parent, 'story:chapter', { index, id: chapter.id, title: chapter.title });
+      },
     ),
   );
 
@@ -129,7 +134,7 @@ export function startEmbedBridge(): () => void {
       const onClick = (e: maplibregl.MapMouseEvent) => {
         // Only surface data-layer features, never the basemap.
         const features = queryDataFeatures(m, useLayersStore.getState().layers, e.point).map(
-          cleanFeature,
+          externalFeature,
         );
         emit(parent, 'click', { lngLat: [e.lngLat.lng, e.lngLat.lat] as LngLat, features });
       };

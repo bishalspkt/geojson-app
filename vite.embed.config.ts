@@ -4,12 +4,12 @@ import path from 'path'
 export default defineConfig({
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/integrations/embed/sdk.ts'),
+      entry: path.resolve(import.meta.dirname, 'src/integrations/embed/sdk.ts'),
       name: 'GeoJSONApp',
       formats: ['iife'],
       fileName: () => 'embed.js',

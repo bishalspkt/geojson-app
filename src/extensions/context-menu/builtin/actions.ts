@@ -1,3 +1,5 @@
+import { externalFeature } from '@/lib/external-feature';
+import { notify } from '@/state/notify-store';
 import { contextMenuRegistry } from '../registry';
 import { useLayersStore } from '@/state/layers-store';
 import { useToolsStore } from '@/state/tools-store';
@@ -78,14 +80,10 @@ export function registerBuiltinContextMenuActions(): void {
     isVisible: (ctx) => ctx.feature !== null && !ctx.isEmbed,
     execute: (ctx) => {
       if (!ctx.feature) return;
-      const cleanProps: Record<string, unknown> = { ...ctx.feature.properties };
-      delete cleanProps._fid;
-      const clean = {
-        type: 'Feature' as const,
-        geometry: ctx.feature.geometry,
-        properties: cleanProps,
-      };
-      navigator.clipboard.writeText(JSON.stringify(clean, null, 2));
+      navigator.clipboard.writeText(JSON.stringify(externalFeature(ctx.feature), null, 2)).then(
+        () => notify('Copied the feature as GeoJSON', 'info'),
+        () => notify("Couldn't copy to the clipboard"),
+      );
     },
   });
 

@@ -16,8 +16,8 @@ import Panel from '../Panel';
 
 export default function <Name>Panel() {
   return (
-    <Panel panelId="<id>" className="p-3">
-      {/* panel body */}
+    <Panel panelId="<id>" className="p-3.5">
+      {/* panel body; sticky controls go in footer={…} / header actions={…} */}
     </Panel>
   );
 }
@@ -25,18 +25,21 @@ export default function <Name>Panel() {
 
 - Read app state with store hooks: `useLayersStore`, `useToolsStore`, `useSettingsStore`, `useUiStore` from `@/state/*`.
 - Panels take NO props. State that must survive close/reopen goes in a colocated micro zustand store (pattern: `LayersPanel.tsx` → `usePanelUiStore`).
-- Match the visual language: `p-3` body, `text-sm font-bold` headings, `text-xs text-gray-400` hints, rounded-xl buttons. Copy structure from `MeasurePanel.tsx` (simplest full example).
+- Match the visual language with theme tokens so dark mode works: `font-heading text-sm font-extrabold` headings, `eyebrow` section labels, `text-xs text-muted-foreground` hints, `bg-hover` hovers, `IconButton` / `Segmented` from `@/components/ui`. Never raw greys or `bg-white/…`. Copy structure from `MeasurePanel.tsx` (simplest full example; shows `footer`).
+- Analytics: `track('<noun>_<verb>', {...})` from `@/lib/analytics`. User-facing errors: `notify(message)` from `@/state/notify-store` (no `alert()`).
 
 2. **Register it** in `src/features/controls/register-panels.ts` inside `registerBuiltinPanels()`:
 
 ```ts
 registerPanel({
   id: '<id>',            // lowercase string, becomes activePanel value
-  title: '<Label>',      // toolbar button text
+  title: '<Label>',      // toolbar button text (keep it one short word: the phone tab bar fits ~5)
   icon: <LucideIcon>,    // import from 'lucide-react'
-  component: <Name>Panel,
-  order: <N>,            // 10=Import, 20=Layers, 30=Measure, 40=Embed; pick a gap
+  order: <N>,            // 10=Import, 20=Layers, 30=Stories, 40=Measure, 50=Embed; pick a gap
+  ...lazyPanel(() => import('./panels/<Name>Panel')), // code-split; preloaded on toolbar hover
   embedVisible: false,   // true → also shown in embed chrome=full
+  // mobileVisible: false  → desktop-only (like Embed)
+  // useHidden / useBadge  → hooks for conditional visibility / a count badge
 });
 ```
 
@@ -46,5 +49,5 @@ registerPanel({
 
 ## Verify
 
-- `npm run build && npm run lint` — must be clean (zero warnings).
-- Dev server: button appears in toolbar, opens/closes exclusively with other panels, works on mobile width (375px), and (if `embedVisible`) in `/?embed=1&chrome=full`.
+- `npm run lint && npm test && npm run build && npm run size` — clean, and the initial-load budget still holds (a lazily registered panel adds ~nothing).
+- Dev server: button appears in the toolbar, opens/closes exclusively with other panels, Escape closes it, it works as a bottom sheet at 375 px, in a dark basemap theme, and (if `embedVisible`) in `/?embed=1&chrome=full` at 800 and 360 px wide.

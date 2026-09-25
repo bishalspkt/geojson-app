@@ -1,4 +1,4 @@
-import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
+import type { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import { layers as protomapsLayers, namedFlavor } from '@protomaps/basemaps';
 import { MapTheme } from '@/types';
 

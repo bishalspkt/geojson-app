@@ -28,8 +28,8 @@ export function setPanelWithPolicy(panelId: string | null): void {
     tools.setActiveTool(null);
   }
 
-  // Selection belongs to the layers panel.
-  if (panelId !== 'layers' && layers.selection) {
+  // Selection belongs to the layers panel (and the story reader, which highlights in place).
+  if (panelId !== 'layers' && panelId !== 'story' && layers.selection) {
     layers.selectFeature(null);
   }
 }

@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 import { Feature } from 'geojson';
 import { DEFAULTS } from '@/style';
 import { sysId } from '../layers/ids';

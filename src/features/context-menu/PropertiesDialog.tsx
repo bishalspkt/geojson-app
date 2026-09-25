@@ -9,7 +9,8 @@ import {
 } from '@/components/ui/dialog';
 import { findFeature, useLayersStore } from '@/state/layers-store';
 import { useUiStore } from '@/state/ui-store';
-import { getFeatureDetails, INTERNAL_PROPERTY_KEYS } from './feature-details';
+import { withoutInternalProperties } from '@/lib/external-feature';
+import { getFeatureDetails } from './feature-details';
 
 const GEOMETRY_LABELS: Record<string, string> = {
   Point: 'Point', MultiPoint: 'MultiPoint',
@@ -46,15 +47,7 @@ export default function PropertiesDialog() {
 
   // Clean properties (hide internal bookkeeping keys) used for both the
   // rendered list and the copy-to-clipboard payload.
-  const cleanProperties = useMemo(() => {
-    if (!feature?.properties) return {};
-    const out: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(feature.properties)) {
-      if (INTERNAL_PROPERTY_KEYS.includes(key)) continue;
-      out[key] = value;
-    }
-    return out;
-  }, [feature]);
+  const cleanProperties = useMemo(() => withoutInternalProperties(feature?.properties), [feature]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(JSON.stringify(cleanProperties, null, 2));
@@ -73,12 +66,12 @@ export default function PropertiesDialog() {
   return (
     <Dialog open onOpenChange={(open) => { if (!open) close(); }}>
       <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-hidden flex flex-col gap-0 p-0 rounded-2xl">
-        <DialogHeader className="px-5 pt-5 pb-3 border-b border-gray-200/60">
-          <DialogTitle className="text-base font-extrabold text-gray-900 truncate pr-8">
+        <DialogHeader className="px-5 pt-5 pb-3 border-b border-border">
+          <DialogTitle className="font-heading text-base font-extrabold truncate pr-8">
             {name ?? 'Feature properties'}
           </DialogTitle>
           <DialogDescription asChild>
-            <div className="flex items-center gap-1.5 text-[11px] text-gray-400 mt-1">
+            <div className="flex items-center gap-1.5 text-[11px] text-subtle-foreground mt-1">
               <GeomIcon className="h-3 w-3 shrink-0" />
               <span>{geomLabel}</span>
               {detail && <span className="ml-auto">{detail}</span>}
@@ -88,15 +81,15 @@ export default function PropertiesDialog() {
 
         <div className="flex-1 overflow-y-auto px-5 py-3">
           {propertyEntries.length === 0 ? (
-            <p className="text-sm text-gray-400 py-6 text-center">No properties</p>
+            <p className="text-sm text-subtle-foreground py-6 text-center">No properties</p>
           ) : (
             <dl className="flex flex-col gap-2">
               {propertyEntries.map(([key, value]) => (
-                <div key={key} className="grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-3 py-1.5 border-b border-gray-100 last:border-0">
-                  <dt className="text-[11px] font-bold text-gray-400 uppercase tracking-wider truncate pt-0.5">
+                <div key={key} className="grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-3 py-1.5 border-b border-border/60 last:border-0">
+                  <dt className="text-[11px] font-bold text-subtle-foreground uppercase tracking-wider truncate pt-0.5" title={key}>
                     {key}
                   </dt>
-                  <dd className="text-xs text-gray-800 break-words whitespace-pre-wrap font-mono">
+                  <dd className="text-xs break-words whitespace-pre-wrap font-mono">
                     {stringifyValue(value)}
                   </dd>
                 </div>
@@ -106,10 +99,10 @@ export default function PropertiesDialog() {
         </div>
 
         {propertyEntries.length > 0 && (
-          <div className="px-5 py-3 border-t border-gray-200/60 flex justify-end">
+          <div className="px-5 py-3 border-t border-border flex justify-end">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-gray-500 hover:bg-black/5 transition-colors duration-150"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-muted-foreground hover:bg-hover transition-colors duration-150"
             >
               {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
               {copied ? 'Copied' : 'Copy JSON'}

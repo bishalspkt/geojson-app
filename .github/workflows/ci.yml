@@ -14,7 +14,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - name: Install
@@ -28,6 +28,11 @@ jobs:
 
       - name: Build (type-check + app + embed SDK)
         run: npm run build
+
+      # What every visitor downloads before the map draws. Optional features
+      # must stay lazy (docs/architecture.md, "Performance").
+      - name: Initial-load budget
+        run: npm run size
 
       # embed.js ships on third-party pages — keep it small. Hard ceiling 6 KB gzipped.
       - name: Embed SDK size guard

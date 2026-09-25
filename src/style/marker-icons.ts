@@ -1,86 +1,73 @@
-import maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 
 const MAKI_CDN = 'https://cdn.jsdelivr.net/npm/@mapbox/maki@8.0.1/icons';
 const ICON_SIZE = 12;
 const SDF_BUFFER = 5;
 const CANVAS_SIZE = ICON_SIZE + SDF_BUFFER * 2;
-const ICON_PREFIX = 'maki-';
-
-const loadedIcons = new Set<string>();
-const pendingLoads = new Map<string, Promise<void>>();
+/** Style-image id prefix for simplestyle `marker-symbol` icons. */
+export const MARKER_IMAGE_PREFIX = 'maki-';
+const SYMBOL_NAME = /^[a-z0-9-]{1,64}$/;
 
 /**
- * Ensures a Maki icon is available in the map's image store.
- * Fetches the SVG from CDN, renders to canvas, and adds as an SDF image.
- * Returns true if the icon was loaded (or already exists), false on failure.
+ * Rasterised icons by symbol name, shared by every map instance (the main map,
+ * the compare map, and each map after a style swap all need their own
+ * `addImage`, but the SVG only has to be fetched and drawn once).
+ */
+const iconCache = new Map<string, Promise<ImageData | null>>();
+
+/** Names the CDN answered 404 for — not worth asking again. */
+const missing = new Set<string>();
+
+function rasterisedIcon(symbolName: string): Promise<ImageData | null> {
+  if (missing.has(symbolName)) return Promise.resolve(null);
+  let pending = iconCache.get(symbolName);
+  if (!pending) {
+    pending = (async () => {
+      try {
+        const response = await fetch(`${MAKI_CDN}/${symbolName}.svg`);
+        if (!response.ok) {
+          if (response.status === 404) missing.add(symbolName);
+          return null;
+        }
+        return await svgToImageData(await response.text());
+      } catch {
+        return null; // offline
+      }
+    })();
+    iconCache.set(symbolName, pending);
+    // Let a failed load be retried later (e.g. after going back online).
+    void pending.then((data) => {
+      if (!data) iconCache.delete(symbolName);
+    });
+  }
+  return pending;
+}
+
+/** Drawn instead of a `marker-symbol` that Maki doesn't have (e.g. a typo). */
+const FALLBACK_SYMBOL = 'marker';
+
+/**
+ * Ensures a Maki icon is in this map's image store: fetched from the CDN once,
+ * rendered to canvas, added as an SDF image (so `marker-color` tints it).
+ * Unknown names get a generic marker. Returns true if an icon is (now) in the map.
  */
 export async function ensureMarkerIcon(map: maplibregl.Map, symbolName: string): Promise<boolean> {
-  const imageId = ICON_PREFIX + symbolName;
-
-  if (map.hasImage(imageId) || loadedIcons.has(imageId)) return true;
-
-  // Deduplicate concurrent loads of the same icon
-  if (pendingLoads.has(imageId)) {
-    await pendingLoads.get(imageId);
-    return map.hasImage(imageId);
+  const imageId = MARKER_IMAGE_PREFIX + symbolName;
+  if (map.hasImage(imageId)) return true;
+  const imageData =
+    (SYMBOL_NAME.test(symbolName) ? await rasterisedIcon(symbolName) : null) ?? (await rasterisedIcon(FALLBACK_SYMBOL));
+  if (!imageData) return false;
+  try {
+    if (!map.hasImage(imageId)) map.addImage(imageId, imageData, { sdf: true, pixelRatio: 1 });
+    return true;
+  } catch {
+    return false; // map removed meanwhile
   }
-
-  const loadPromise = (async () => {
-    try {
-      const url = `${MAKI_CDN}/${symbolName}.svg`;
-      const response = await fetch(url);
-      if (!response.ok) return;
-
-      const svgText = await response.text();
-      const imageData = await svgToImageData(svgText);
-      if (!imageData) return;
-
-      if (!map.hasImage(imageId)) {
-        map.addImage(imageId, imageData, { sdf: true, pixelRatio: 1 });
-      }
-      loadedIcons.add(imageId);
-    } catch {
-      // Icon not found or load failed — silently skip
-    } finally {
-      pendingLoads.delete(imageId);
-    }
-  })();
-
-  pendingLoads.set(imageId, loadPromise);
-  await loadPromise;
-  return map.hasImage(imageId);
 }
 
-/**
- * Load all unique marker-symbol values from features into the map.
- * Returns the set of symbol names that were successfully loaded.
- */
-export async function loadMarkerIcons(
-  map: maplibregl.Map,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  features: { properties?: Record<string, any> | null }[],
-): Promise<Set<string>> {
-  const symbols = new Set<string>();
-  for (const f of features) {
-    const sym = f.properties?.['marker-symbol'];
-    if (typeof sym === 'string' && sym.length > 0) {
-      symbols.add(sym);
-    }
-  }
-
-  const loaded = new Set<string>();
-  await Promise.all(
-    Array.from(symbols).map(async (sym) => {
-      const ok = await ensureMarkerIcon(map, sym);
-      if (ok) loaded.add(sym);
-    }),
-  );
-  return loaded;
-}
-
-/** Get the MapLibre image ID for a marker-symbol name */
+/** The MapLibre image id for a marker-symbol name. */
 export function getMarkerImageId(symbolName: string): string {
-  return ICON_PREFIX + symbolName;
+  return MARKER_IMAGE_PREFIX + symbolName;
 }
 
 // -- SVG to ImageData conversion --
@@ -88,20 +75,24 @@ export function getMarkerImageId(symbolName: string): string {
 function svgToImageData(svgText: string): Promise<ImageData | null> {
   return new Promise((resolve) => {
     const img = new Image();
+    const url = URL.createObjectURL(new Blob([svgText], { type: 'image/svg+xml' }));
     img.onload = () => {
+      URL.revokeObjectURL(url);
       const canvas = document.createElement('canvas');
       canvas.width = CANVAS_SIZE;
       canvas.height = CANVAS_SIZE;
       const ctx = canvas.getContext('2d');
-      if (!ctx) { resolve(null); return; }
-
-      // Draw SVG centered with buffer
+      if (!ctx) {
+        resolve(null);
+        return;
+      }
       ctx.drawImage(img, SDF_BUFFER, SDF_BUFFER, ICON_SIZE, ICON_SIZE);
       resolve(ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE));
     };
-    img.onerror = () => resolve(null);
-
-    const blob = new Blob([svgText], { type: 'image/svg+xml' });
-    img.src = URL.createObjectURL(blob);
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(null);
+    };
+    img.src = url;
   });
 }

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 
 /**
  * Holds the live MapLibre map instance so both React components and

@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { resetLayerIdCounter, useLayersStore } from '@/state/layers-store';
 import { useSettingsStore, DEFAULT_SETTINGS } from '@/state/settings-store';
 import { useUiStore } from '@/state/ui-store';
+import { useImageryStore } from '@/state/imagery-store';
+import { useCompareStore } from '@/state/compare-store';
+import { useTimeStore } from '@/state/time-store';
 import { registerSourceProvider } from '@/extensions/sources/registry';
 import { geojsonDataProvider } from '@/extensions/sources/builtin/geojson';
 import { executeCommand, resetExecutorState, PRIMARY_LAYER_ID } from './executor';
@@ -120,5 +123,76 @@ describe('data commands', () => {
     await expect(executeCommand('setLayerVisibility', { id: 'route', visible: 'yes' })).rejects.toThrow(
       'visible must be boolean',
     );
+  });
+});
+
+describe('imagery, terrain, time and compare commands', () => {
+  beforeEach(() => {
+    useImageryStore.setState({ layers: [] });
+    useCompareStore.getState().stop();
+    useTimeStore.setState({ enabled: false, extent: null, extentLocked: false, playing: false, window: null });
+  });
+
+  it('addImagery validates and namespaces caller ids; listImagery reports them back', async () => {
+    await executeCommand('addImagery', {
+      id: 'sat',
+      tiles: ['https://tiles.example/{time}/{z}/{x}/{y}.jpg'],
+      opacity: 0.6,
+      time: { format: 'date', default: '2024-10-05' },
+    });
+    const layer = useImageryStore.getState().layers[0];
+    expect(layer).toMatchObject({ id: 'sdk-sat', origin: 'sdk', opacity: 0.6 });
+    expect(layer.time).toEqual({ format: 'date', default: '2024-10-05' });
+    expect(await executeCommand('listImagery', {})).toEqual([
+      { id: 'sat', name: 'sat', origin: 'sdk', visible: true, opacity: 0.6 },
+    ]);
+    await expect(executeCommand('addImagery', { id: 'x', tiles: ['javascript:alert(1)'] })).rejects.toThrow(
+      'http(s)',
+    );
+    await expect(executeCommand('addImagery', { id: 'x', url: 'https://a/b.png' })).rejects.toThrow('corners');
+    await executeCommand('removeImagery', { id: 'sat' });
+    expect(useImageryStore.getState().layers).toHaveLength(0);
+  });
+
+  it('setTerrain toggles terrain with hillshade following by default', async () => {
+    await executeCommand('setTerrain', { enabled: true, exaggeration: 2 });
+    expect(useSettingsStore.getState()).toMatchObject({ terrain: true, terrainExaggeration: 2, hillshade: true });
+    await executeCommand('setTerrain', { enabled: false });
+    expect(useSettingsStore.getState()).toMatchObject({ terrain: false, hillshade: false });
+    await expect(executeCommand('setTerrain', { enabled: 'yes' })).rejects.toThrow();
+  });
+
+  it('setTime configures, locks the extent, and plays', async () => {
+    await executeCommand('setTime', {
+      start: '2024-09-27',
+      end: '2024-09-29',
+      current: '2024-09-28',
+      window: 3_600_000,
+      timeZone: 'Asia/Kathmandu',
+      playing: true,
+    });
+    const t = useTimeStore.getState();
+    expect(t).toMatchObject({ enabled: true, extentLocked: true, window: 3_600_000, playing: true });
+    expect(t.extent).toEqual([Date.UTC(2024, 8, 27), Date.UTC(2024, 8, 29)]);
+    expect(t.current).toBe(Date.UTC(2024, 8, 28));
+    await expect(executeCommand('setTime', { start: '2024-09-29', end: '2024-09-27' })).rejects.toThrow(
+      'start < end',
+    );
+    await executeCommand('setTime', { enabled: false });
+    expect(useTimeStore.getState().enabled).toBe(false);
+  });
+
+  it('setCompare resolves caller imagery ids and rejects unknown ones', async () => {
+    await executeCommand('addImagery', { id: 'before', tiles: ['https://t.example/{z}/{x}/{y}.png'] });
+    await executeCommand('setCompare', { left: 'before', leftLabel: '2023', position: 0.3 });
+    expect(useCompareStore.getState()).toMatchObject({ active: true, left: ['sdk-before'], leftLabel: '2023', position: 0.3 });
+    await expect(executeCommand('setCompare', { left: 'ghost' })).rejects.toThrow('unknown imagery');
+    await executeCommand('setCompare', { enabled: false });
+    expect(useCompareStore.getState().active).toBe(false);
+  });
+
+  it('story commands validate input', async () => {
+    await expect(executeCommand('loadStory', { url: 'javascript:1' })).rejects.toThrow('http(s)');
+    await expect(executeCommand('setStoryChapter', { chapter: 1 })).rejects.toThrow('is a story open');
   });
 });

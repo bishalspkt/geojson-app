@@ -9,10 +9,8 @@ export const NAME_KEYS = [
   'description',
 ];
 
-/** Keys the app injects internally — hidden from user-facing property views. */
-export const INTERNAL_PROPERTY_KEYS = ['_fid', '_search_result'];
-
-export function countCoordinatePoints(geometry: Feature['geometry']): number {
+export function countCoordinatePoints(geometry: Feature['geometry'] | null): number {
+  if (!geometry) return 0;
   switch (geometry.type) {
     case 'Point': return 1;
     case 'MultiPoint': return geometry.coordinates.length;
@@ -55,7 +53,7 @@ export function getFeatureDetails(feature: Feature): FeatureDetails {
     }
   }
 
-  const geomType = feature.geometry.type;
+  const geomType = feature.geometry?.type ?? 'None';
   const numPoints = countCoordinatePoints(feature.geometry);
 
   let detail: string | null = null;

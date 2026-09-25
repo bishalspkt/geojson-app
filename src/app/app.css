@@ -1,4 +1,6 @@
-#root {
-  padding: 0;
-  margin: 0;
+:root {
+  /* Phone tab bar height (without the home-indicator inset). */
+  --tabbar-h: 60px;
+  /* Embed control bar (chrome=full) incl. its margin. */
+  --embed-bar-h: 56px;
 }

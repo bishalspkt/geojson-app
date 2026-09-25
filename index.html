@@ -1,41 +1,33 @@
 <!doctype html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8" />
-    <meta property="description" content="Geospatial data visualization and processing toolkit built using purely open source web mapping stack." />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#9cd3b4" />
-    <meta property="og:title" content="geojson.app - Open Source Mapping & Geospatial Data Processing" />
-    <meta property="og:description" content="Geospatial data visualization and processing toolkit built using purely open source web mapping stack." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="View, explore and share GeoJSON on a fast open-source map — 3D terrain, timelines, satellite imagery and guided map stories. Embeddable, free, no sign-up." />
+    <meta name="theme-color" content="#e8edf5" />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:title" content="geojson.app - Open Source Mapping & Geospatial Data Visualization" />
+    <meta property="og:description" content="View, explore and share GeoJSON on a fast open-source map — 3D terrain, timelines, satellite imagery and guided map stories." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://geojson.app" />
     <meta property="og:image" content="https://geojson.app/geojson.app.jpg" />
-    <meta property="twitter:title" content="geojson.app - Open Source Mapping & Geospatial Data Processing">
-    <meta property="twitter:image" content="https://geojson.app/geojson.app.jpg">
-    <meta property="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="geojson.app - Open Source Mapping & Geospatial Data Visualization" />
+    <meta name="twitter:image" content="https://geojson.app/geojson.app.jpg" />
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Basemap tiles and label glyphs: open the connections while the app boots. -->
+    <link rel="preconnect" href="https://tiles.geojson.app" crossorigin />
+    <link rel="preconnect" href="https://protomaps.github.io" crossorigin />
     <title>geojson.app - Open Source Mapping & Geospatial Data Visualization</title>
   </head>
-  <body style="background-color:#e8edf5">
+  <body>
     <div id="root"></div>
+    <noscript>geojson.app needs JavaScript to draw the map.</noscript>
+    <!-- Analytics (PostHog, Google Analytics) load after the map, from src/lib/analytics.ts. -->
     <script type="module" src="/src/main.tsx"></script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KVWM508D61"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-
-      gtag('config', 'G-KVWM508D61');
-    </script>
   </body>
 </html>

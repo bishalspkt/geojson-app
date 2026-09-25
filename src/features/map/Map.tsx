@@ -1,167 +1,108 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import maplibregl from 'maplibre-gl';
+import { useEffect, useRef, useState } from 'react';
+import type * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
-import { usePostHog } from '@posthog/react';
-import { buildBasemapStyle, generateStarfieldBackground, startMapEngine } from '@/core';
-import { useMapStore } from '@/state/map-store';
+import { generateStarfieldBackground } from '@/core/basemap/starfield';
 import { useSettingsStore } from '@/state/settings-store';
-import { useUiStore } from '@/state/ui-store';
-import { getTool } from '@/extensions/tools/registry';
-import { ingest } from '@/extensions/sources/registry';
+import { notify } from '@/state/notify-store';
 import { useEmbed } from '@/integrations/embed/embed-context';
-import { DEFAULT_CENTER, DEFAULT_ZOOM } from '@/integrations/embed/params';
+import { fileProps, importData, importErrorMessage } from '@/features/controls/import-data';
+
+// Start fetching MapLibre + the engine as soon as the shell's code runs.
+const runtime = import('./map-runtime');
 
 const STARFIELD_BG = generateStarfieldBackground();
 
+/** Whole-window file drop (main app only). */
+function useFileDrop(enabled: boolean) {
+  const [dragging, setDragging] = useState(false);
+  useEffect(() => {
+    if (!enabled) return;
+    let depth = 0;
+    const hasFiles = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes('Files');
+    const enter = (e: DragEvent) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      if (++depth === 1) setDragging(true);
+    };
+    const leave = (e: DragEvent) => {
+      if (!hasFiles(e)) return;
+      if (--depth <= 0) {
+        depth = 0;
+        setDragging(false);
+      }
+    };
+    const over = (e: DragEvent) => {
+      if (hasFiles(e)) e.preventDefault();
+    };
+    const drop = (e: DragEvent) => {
+      depth = 0;
+      setDragging(false);
+      // Already handled by a drop target inside the app (the Import panel's dropzone).
+      if (e.defaultPrevented || !hasFiles(e)) return;
+      e.preventDefault();
+      const file = e.dataTransfer?.files?.[0];
+      if (!file) return;
+      importData({ kind: 'file', file }, { source: 'drag_and_drop', props: fileProps(file) }).catch((err: unknown) =>
+        notify(importErrorMessage(err, `"${file.name}"`)),
+      );
+    };
+    window.addEventListener('dragenter', enter);
+    window.addEventListener('dragleave', leave);
+    window.addEventListener('dragover', over);
+    window.addEventListener('drop', drop);
+    return () => {
+      window.removeEventListener('dragenter', enter);
+      window.removeEventListener('dragleave', leave);
+      window.removeEventListener('dragover', over);
+      window.removeEventListener('drop', drop);
+    };
+  }, [enabled]);
+  return dragging;
+}
+
 /**
- * Mounts MapLibre and hands it to the core engine. All map behavior
+ * Mounts MapLibre and hands it to the core engine. All map behaviour
  * (rendering, selection, tools, camera) lives in `src/core` — this component
- * only owns the DOM shell: container, starfield, and drag-drop import.
+ * only owns the DOM shell: container, starfield, and file drop.
  */
 export default function Map() {
   const embed = useEmbed();
-  const posthog = usePostHog();
   const containerRef = useRef<HTMLDivElement>(null);
+  const starfieldRef = useRef<HTMLDivElement>(null);
   const isGlobe = useSettingsStore((s) => s.projection === 'globe');
+  const dragging = useFileDrop(!embed.enabled);
 
-  // --- Map + engine lifecycle ---
   useEffect(() => {
-    const map = new maplibregl.Map({
-      container: containerRef.current!,
-      style: buildBasemapStyle(useSettingsStore.getState().theme),
-      center: embed.enabled ? embed.center : DEFAULT_CENTER,
-      zoom: embed.enabled ? embed.zoom : DEFAULT_ZOOM,
-      interactive: embed.interactive,
-      attributionControl: false,
-    });
-
-    map.addControl(
-      new maplibregl.AttributionControl({
-        compact: embed.enabled ? embed.attribution === 'compact' : true,
-        customAttribution: '',
-      }),
-    );
-
-    const { setMap, setReady } = useMapStore.getState();
-    setMap(map);
-
-    let stopEngine: (() => void) | undefined;
-    map.on('load', () => {
-      stopEngine = startMapEngine(map, {
-        embedEnabled: embed.enabled,
-        embedChromeFull: embed.enabled && embed.chrome === 'full',
-        enableContextMenu: !embed.enabled || (embed.interactive && embed.chrome !== 'none'),
-        embedClickContextMenu: embed.enabled && embed.interactive,
-        resolveTool: getTool,
-      });
-      setReady(true);
-    });
-
+    let cleanup: (() => void) | undefined;
+    let cancelled = false;
+    // Starfield parallax behind the globe.
+    const onMove = (map: maplibregl.Map) => {
+      const el = starfieldRef.current;
+      if (!el) return;
+      const c = map.getCenter();
+      el.style.transform = `translate3d(${c.lng * 1.5 + map.getBearing() * 0.5}px, ${-c.lat * 1.5}px, 0)`;
+    };
+    runtime
+      .then(({ mountMap }) => {
+        if (!cancelled && containerRef.current) cleanup = mountMap(containerRef.current, embed, { onMove });
+      })
+      .catch(() => notify("The map couldn't load. Check your connection and reload the page."));
     return () => {
-      stopEngine?.();
-      useMapStore.getState().setMap(null);
-      map.remove();
+      cancelled = true;
+      cleanup?.();
     };
     // The embed config is parsed once per page load and never changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // --- Starfield parallax (globe projection) ---
-  const starfieldRef = useRef<HTMLDivElement>(null);
-  const mapForParallax = useMapStore((s) => s.map);
-  useEffect(() => {
-    if (!mapForParallax) return;
-    const m = mapForParallax;
-    const onMove = () => {
-      if (!starfieldRef.current) return;
-      const center = m.getCenter();
-      const bearing = m.getBearing();
-      const offsetX = center.lng * 1.5 + bearing * 0.5;
-      const offsetY = -center.lat * 1.5;
-      starfieldRef.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-    };
-    m.on('move', onMove);
-    return () => {
-      m.off('move', onMove);
-    };
-  }, [mapForParallax]);
-
-  // --- Drag-and-drop GeoJSON files ---
-  const [isDragging, setIsDragging] = useState(false);
-  const dragCounterRef = useRef(0);
-
-  const handleDragEnter = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    dragCounterRef.current++;
-    if (dragCounterRef.current === 1) setIsDragging(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    dragCounterRef.current--;
-    if (dragCounterRef.current === 0) setIsDragging(false);
-  }, []);
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-  }, []);
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      dragCounterRef.current = 0;
-      setIsDragging(false);
-      const file = e.dataTransfer.files?.[0];
-      if (!file) return;
-
-      ingest({ kind: 'file', file }, { replace: true, origin: 'upload' })
-        .then((result) => {
-          useUiStore.getState().setActivePanel('layers');
-          const center = useMapStore.getState().map?.getCenter();
-          posthog.capture('geojson_uploaded', {
-            source: 'drag_and_drop',
-            file_name: file.name,
-            file_size_bytes: file.size,
-            feature_count: result.featureCount,
-            map_center_lat: center?.lat ?? null,
-            map_center_lng: center?.lng ?? null,
-          });
-        })
-        .catch(() => {
-          /* not a loadable file — ignore */
-        });
-    },
-    [posthog],
-  );
-
   return (
-    <div
-      className="map-wrap"
-      {...(!embed.enabled
-        ? {
-            onDragEnter: handleDragEnter,
-            onDragLeave: handleDragLeave,
-            onDragOver: handleDragOver,
-            onDrop: handleDrop,
-          }
-        : {})}
-    >
-      {isGlobe && (
-        <div
-          ref={starfieldRef}
-          className="starfield"
-          style={{ backgroundImage: STARFIELD_BG, backgroundColor: '#0a0e1a' }}
-        />
-      )}
-      <div
-        ref={containerRef}
-        className="map"
-        style={{ backgroundColor: isGlobe ? 'transparent' : undefined }}
-      />
-      {isDragging && (
-        <div className="drop-overlay">
-          <div className="drop-overlay-inner">Drop GeoJSON file to load</div>
+    <div className="map-wrap">
+      {isGlobe && <div ref={starfieldRef} className="starfield" style={{ backgroundImage: STARFIELD_BG }} aria-hidden />}
+      <div ref={containerRef} className="map" data-globe={isGlobe || undefined} />
+      {dragging && (
+        <div className="drop-overlay" aria-hidden>
+          <div className="drop-overlay-inner">Drop a GeoJSON file to load it</div>
         </div>
       )}
     </div>

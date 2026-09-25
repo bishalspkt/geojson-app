@@ -1,7 +1,16 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { Feature, FeatureCollection, GeoJSON } from 'geojson';
-import { DataLayer, FeatureId, IdentifiedFeature, LayerId, LayerOrigin } from '@/types';
+import {
+  DataLayer,
+  FeatureId,
+  IdentifiedFeature,
+  LayerDisplay,
+  LayerId,
+  LayerOrigin,
+  LegendSpec,
+  TemporalConfig,
+} from '@/types';
 
 /** Anything we accept as feature input: a collection, a single feature, or a list. */
 export type GeoJsonInput = FeatureCollection | Feature | Feature[];
@@ -14,7 +23,16 @@ export interface AddLayerOptions {
   /** Raw MapLibre paint overrides (see DataLayer.paint). */
   paint?: Record<string, unknown>;
   visible?: boolean;
+  temporal?: TemporalConfig;
+  display?: LayerDisplay;
+  legend?: LegendSpec;
+  attribution?: string;
 }
+
+/** Layer-level options that can change after creation without touching features. */
+export type LayerOptionsPatch = Partial<
+  Pick<DataLayer, 'temporal' | 'display' | 'legend' | 'attribution' | 'paint'>
+>;
 
 export interface AddFeatureOptions {
   /** Target layer. When omitted, the feature goes to (or creates) a layer named `layerName`. */
@@ -43,6 +61,14 @@ export interface LayersState {
   removeLayer(id: LayerId): void;
   renameLayer(id: LayerId, name: string): void;
   setLayerVisible(id: LayerId, visible: boolean): void;
+  /** Set several layers' visibility in one update (story chapters). */
+  setLayersVisibility(visibility: Record<LayerId, boolean>): void;
+  updateLayerOptions(id: LayerId, patch: LayerOptionsPatch): void;
+  /**
+   * Put the listed layers in this z-order (bottom → top), after every layer
+   * not listed (which keep their relative order).
+   */
+  reorderLayers(order: LayerId[]): void;
   clearLayers(opts?: { origin?: LayerOrigin }): void;
 
   addFeature(feature: Feature, opts?: AddFeatureOptions): FeatureId | null;
@@ -92,6 +118,10 @@ function buildLayer(data: GeoJsonInput, opts: AddLayerOptions): DataLayer {
     features,
     visible: opts.visible ?? true,
     paint: opts.paint,
+    temporal: opts.temporal,
+    display: opts.display,
+    legend: opts.legend,
+    attribution: opts.attribution,
     featureSeq: seq,
   };
 }
@@ -156,6 +186,33 @@ export const useLayersStore = create<LayersState>()(
       set((state) => ({
         layers: state.layers.map((l) => (l.id === id ? { ...l, visible } : l)),
       }));
+    },
+
+    setLayersVisibility(visibility) {
+      set((state) => ({
+        layers: state.layers.map((l) =>
+          l.id in visibility && visibility[l.id] !== l.visible ? { ...l, visible: visibility[l.id] } : l,
+        ),
+      }));
+    },
+
+    updateLayerOptions(id, patch) {
+      set((state) => ({
+        layers: state.layers.map((l) => (l.id === id ? { ...l, ...patch } : l)),
+      }));
+    },
+
+    reorderLayers(order) {
+      set((state) => {
+        const rank = new Map(order.map((id, i) => [id, i]));
+        const unlisted = state.layers.filter((l) => !rank.has(l.id));
+        const listed = state.layers
+          .filter((l) => rank.has(l.id))
+          .sort((a, b) => rank.get(a.id)! - rank.get(b.id)!);
+        const layers = [...unlisted, ...listed];
+        const same = layers.every((l, i) => l === state.layers[i]);
+        return same ? state : { layers };
+      });
     },
 
     clearLayers(opts = {}) {

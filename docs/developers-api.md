@@ -143,6 +143,8 @@ Creates a map instance inside `options.element` and returns an `EmbedInstance`.
 |---|---|---|---|
 | `element` | `string \| HTMLElement` | **required** | CSS selector or DOM node to mount into. |
 | `geojson` | `string` | — | URL to a GeoJSON file (`Feature` or `FeatureCollection`). Auto-loaded after init. |
+| `story` | `string` | — | URL of a [story document](stories.md) (layers + chapters) to open after init. |
+| `chapter` | `number \| string` | `0` | Initial story chapter (index or chapter id). |
 | `center` | `[lng, lat]` | `[105, -5]` | Initial map center. |
 | `zoom` | `number` | `2.8` | Initial zoom (0–22). |
 | `theme` | `MapTheme` | `"light"` | One of `"light"`, `"dark"`, `"white"`, `"grayscale"`, `"black"`. |
@@ -215,6 +217,16 @@ type EmbedInstance = {
   getZoom(): Promise<number>;
   getBearing(): Promise<number>;
   getBounds(): Promise<[[lng, lat], [lng, lat]]>;
+
+  // Imagery, terrain, time, stories (additive in v1)
+  addImagery(spec: AddImageryArgs): Promise<void>;
+  removeImagery(id: string): Promise<void>;
+  listImagery(): Promise<ImageryInfo[]>;
+  setTerrain(enabled: boolean, opts?: { exaggeration?: number; hillshade?: boolean }): Promise<void>;
+  setTime(opts: SetTimeArgs): Promise<void>;
+  setCompare(opts: SetCompareArgs): Promise<void>;
+  loadStory(url: string, chapter?: number | string): Promise<StoryInfo>;
+  setStoryChapter(chapter: number | string): Promise<void>;
 
   // Events
   on(event: EmbedEvent, cb: (payload: unknown) => void): () => void;
@@ -430,6 +442,92 @@ Returns the current bearing in degrees clockwise from north.
 
 Returns `[southwest, northeast]` corners of the current viewport.
 
+### Imagery
+
+Raster layers (satellite scenes, rainfall, water masks) render beneath all data layers and basemap labels.
+
+#### `addImagery(spec): Promise<void>`
+
+```ts
+await map.addImagery({
+  id: "modis",                         // your id; reusing it replaces the layer
+  name: "MODIS · 2024-09-29",
+  tiles: ["https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/2024-09-29/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg"],
+  maxzoom: 9,
+  opacity: 0.9,
+  attribution: "NASA EOSDIS GIBS",
+});
+
+// One georeferenced image instead of tiles (corners TL, TR, BR, BL):
+await map.addImagery({ id: "chip", url: "https://…/after.webp",
+  coordinates: [[86.60, 27.86], [86.70, 27.86], [86.70, 27.80], [86.60, 27.80]] });
+
+// Time-enabled: {time} follows the timeline (see setTime).
+await map.addImagery({ id: "rain", tiles: ["https://…/{time}/…/{z}/{y}/{x}.png"],
+  time: { format: "datetime", stepMinutes: 30, default: "2024-09-27T12:00:00Z" } });
+
+// A cloud-optimised GeoTIFF at full resolution, streamed from its bucket (additive).
+await map.addImagery({ id: "after", name: "WorldView-3 · 2026-08-27",
+  cog: "https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B040001100881610.tif",
+  bounds: [85.362, 28.264, 85.393, 28.291],   // optional clip
+  attribution: "© Vantor Open Data, CC BY-NC 4.0" });
+```
+
+Tile URLs must be `http(s)` and CORS-enabled. A `cog` must be an RGB GeoTIFF in EPSG:4326, EPSG:3857 or a UTM zone, served with CORS and HTTP range requests; it is read tile by tile in the browser (pure black = no-data). `time.format` is `"date"` (2024-09-28), `"datetime"` (2024-09-28T13:30:00Z) or `"month"` (2024-09).
+
+#### `removeImagery(id)` / `listImagery(): Promise<ImageryInfo[]>`
+
+`ImageryInfo` is `{ id, name, origin, visible, opacity }`.
+
+### Terrain
+
+#### `setTerrain(enabled, opts?): Promise<void>`
+
+3D terrain from open elevation tiles (Mapzen Terrarium on AWS Open Data). `opts.exaggeration` (0–10, default 1.5); `opts.hillshade` defaults to `enabled`. Combine with `flyTo({ pitch })` for oblique views (pitch up to 85°).
+
+### Timeline
+
+#### `setTime(opts): Promise<void>`
+
+Drives the timeline that filters time-enabled layers, animates tracks, and resolves `{time}` imagery.
+
+```ts
+await map.setTime({
+  start: "2024-09-26", end: "2024-09-30",   // locks the extent (else derived from data)
+  current: "2024-09-27T18:00:00+05:45",
+  duration: 20,            // seconds for one full pass at 1×
+  window: 6 * 3600_000,    // ms; null = cumulative
+  timeZone: "Asia/Kathmandu",
+  playing: true,
+  follow: { layer: "flow", zoom: 13.5, pitch: 65, bearing: "track", maxViewSpeed: 0.15 }, // chase camera on an addLayer track
+  captions: [{ time: "2024-09-27T20:00:00+05:45", text: "Peak discharge at Chovar" }],
+});
+await map.setTime({ enabled: false });
+```
+
+`follow.maxViewSpeed` (additive) slows the timeline while the tracked head would cross more than that fraction of the view per second. `captions` (additive) show short narration above the timeline as the playhead passes each time. Times accept ISO-8601 strings, `YYYY`, `YYYY-MM`, or epoch ms. Layers participate via time properties (`time`, `date`, `start`/`end`, … auto-detected) or per-vertex `coordTimes` on lines (animated tracks) — see [stories.md](stories.md#time-in-data-any-layer-not-just-stories).
+
+### Compare
+
+#### `setCompare(opts): Promise<void>`
+
+Before/after swipe: `left` imagery is drawn left of a draggable divider on a synchronized map; the main map (right) keeps its visible imagery.
+
+```ts
+await map.setCompare({ left: "before", leftLabel: "Oct 2023", rightLabel: "Oct 2024", position: 0.5 });
+await map.setCompare({ enabled: false });
+```
+
+### Stories
+
+#### `loadStory(url, chapter?): Promise<StoryInfo>`
+
+Opens a [story document](stories.md) and returns `{ title, chapters: [{ id, title }] }`. Allows 60 s (stories fetch several layers).
+
+#### `setStoryChapter(chapter): Promise<void>`
+
+Go to a chapter by index or id. Each chapter change emits `story:chapter`.
+
 ### Events
 
 #### `on(event, cb): () => void`
@@ -459,15 +557,16 @@ Removes a previously-registered listener for the exact `cb` reference.
 | `load` | _(none)_ | Once, when the iframe's MapLibre map emits `load`. |
 | `move` | `{ center, zoom, bearing, pitch }` | While the camera is animating or being dragged. Throttled to ~60 fps via `requestAnimationFrame`. |
 | `moveend` | `{ center, zoom, bearing, pitch, bounds }` | Once the camera settles. `bounds` is `[[lng, lat], [lng, lat]]`. |
-| `click` | `{ lngLat, features }` | On a map click. `features` lists overlay features (uploaded GeoJSON + `addLayer` layers, **basemap features excluded**). Each is a standard GeoJSON `Feature` with `geometry` and `properties`. |
+| `click` | `{ lngLat, features }` | On a map click. `features` lists overlay features (uploaded GeoJSON + `addLayer` layers, **basemap features excluded**). Each is a standard GeoJSON `Feature` with `geometry` and `properties` — your properties as loaded; the app's internal `_`-prefixed bookkeeping keys are never included. |
 | `theme:change` | `{ theme }` | After `setTheme` succeeds. |
 | `projection:change` | `{ projection }` | After `setProjection` succeeds. |
 | `error` | `{ code, message, where }` | A command failed. `where` is the method name. |
+| `story:chapter` | `{ index, id, title }` | A story chapter opened (story load, `setStoryChapter`, or the reader navigating). |
 
 Payload conventions:
 
 - All coordinates are `[lng, lat]` arrays of two numbers.
-- All zoom/bearing/pitch are numbers (`zoom` 0–22, `bearing` 0–360, `pitch` 0–60).
+- All zoom/bearing/pitch are numbers (`zoom` 0–22, `bearing` 0–360, `pitch` 0–85).
 - `lngLat` is always `[lng, lat]` (longitude first), matching GeoJSON convention.
 
 ---
@@ -533,7 +632,7 @@ iframe.contentWindow.postMessage({
 
 ### Method names
 
-`flyTo`, `jumpTo`, `fitBounds`, `setTheme`, `setProjection`, `setGeoJSON`, `addLayer`, `removeLayer`, `clearLayers`, `listLayers`, `setLayerVisibility`, `getCenter`, `getZoom`, `getBearing`, `getBounds`.
+`flyTo`, `jumpTo`, `fitBounds`, `setTheme`, `setProjection`, `setGeoJSON`, `addLayer`, `removeLayer`, `clearLayers`, `listLayers`, `setLayerVisibility`, `getCenter`, `getZoom`, `getBearing`, `getBounds`, and (additive) `addImagery`, `removeImagery`, `listImagery`, `setTerrain`, `setTime`, `setCompare`, `loadStory`, `setStoryChapter`.
 
 Argument shapes match the imperative API exactly. See [`EmbedInstance` Reference](#embedinstance-reference) above.
 

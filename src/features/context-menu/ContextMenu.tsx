@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Eye, FileJson, MapPin, Minus, Pentagon, Plus, Ruler, Trash2, ZoomIn } from 'lucide-react';
-import { CONTEXT_MENU_EVENT, MapContextMenuContext } from '@/core';
+import { CONTEXT_MENU_EVENT, type MapContextMenuContext } from '@/core/events';
 import { contextMenuRegistry, ContextMenuItem } from '@/extensions/context-menu/registry';
 import { getFeatureDetails } from './feature-details';
 
@@ -56,18 +56,21 @@ export default function ContextMenu() {
     if (!menu.visible) return;
     const handleClick = () => close();
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close();
+      if (e.key === 'Escape') {
+        e.preventDefault(); // handled: the open panel stays open
+        close();
+      }
     };
     const timer = setTimeout(() => {
       window.addEventListener('click', handleClick);
       window.addEventListener('contextmenu', handleClick);
-      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keydown', handleKeyDown, true);
     }, 10);
     return () => {
       clearTimeout(timer);
       window.removeEventListener('click', handleClick);
       window.removeEventListener('contextmenu', handleClick);
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown, true);
     };
   }, [menu.visible, close]);
 
@@ -90,19 +93,19 @@ export default function ContextMenu() {
       const GeomIcon = GEOMETRY_ICONS[geomType] || MapPin;
       const geomLabel = GEOMETRY_LABELS[geomType] || geomType;
       return (
-        <div className="px-3 py-2 border-b border-gray-200/50">
-          {name && <p className="text-xs font-semibold text-gray-800 truncate">{name}</p>}
+        <div className="px-3 py-2 border-b border-glass-border">
+          {name && <p className="text-xs font-semibold truncate">{name}</p>}
           <div className="flex items-center gap-1.5 mt-0.5">
-            <GeomIcon className="h-3 w-3 text-gray-400 shrink-0" />
-            <span className="text-[10px] text-gray-400">{geomLabel}</span>
-            {detail && <span className="text-[10px] text-gray-400 ml-auto">{detail}</span>}
+            <GeomIcon className="h-3 w-3 text-subtle-foreground shrink-0" />
+            <span className="text-[10px] text-subtle-foreground">{geomLabel}</span>
+            {detail && <span className="text-[10px] text-subtle-foreground ml-auto">{detail}</span>}
           </div>
         </div>
       );
     })()
   ) : (
-    <div className="px-3 py-2 border-b border-gray-200/50">
-      <p className="text-[10px] text-gray-400 tabular-nums">
+    <div className="px-3 py-2 border-b border-glass-border">
+      <p className="text-[10px] text-subtle-foreground tabular-nums">
         {menu.context.lngLat.lat.toFixed(5)}, {menu.context.lngLat.lng.toFixed(5)}
       </p>
     </div>
@@ -115,7 +118,8 @@ export default function ContextMenu() {
 
   return (
     <div
-      className="fixed z-50 min-w-[180px] max-w-[calc(100vw-16px)] sm:max-w-[240px] rounded-xl bg-white/80 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/10 py-1"
+      className="glass-strong fixed z-50 min-w-[190px] max-w-[calc(100vw-16px)] sm:max-w-[250px] rounded-xl py-1 animate-pop-in"
+      role="menu"
       style={{ left: menuX, top: menuY }}
     >
       {header}
@@ -124,10 +128,11 @@ export default function ContextMenu() {
         const Icon = ICON_MAP[item.id];
         return (
           <div key={item.id}>
-            {showDivider && <div className="h-px bg-gray-200/50 my-1" />}
+            {showDivider && <div className="h-px bg-glass-border my-1" role="separator" />}
             <button
-              className={`flex items-center gap-2.5 w-full px-3 py-2 text-xs font-medium text-left transition-colors hover:bg-black/5 ${
-                item.group === 'danger' ? 'text-red-600' : 'text-gray-700'
+              role="menuitem"
+              className={`flex items-center gap-2.5 w-full px-3 py-2.5 sm:py-2 text-xs font-semibold text-left transition-colors hover:bg-hover ${
+                item.group === 'danger' ? 'text-destructive' : ''
               }`}
               onClick={() => {
                 item.execute(menu.context!);

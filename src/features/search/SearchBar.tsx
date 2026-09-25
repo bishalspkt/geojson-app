@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Loader2, MapPin, Search, X } from 'lucide-react';
-import { usePostHog } from '@posthog/react';
 import type { Feature } from 'geojson';
 import { findFeature, useLayersStore } from '@/state/layers-store';
 import { useUiStore } from '@/state/ui-store';
 import { getMap } from '@/state/map-store';
+import { track } from '@/lib/analytics';
 import { useSearch } from './use-search';
 import type { PhotonFeature, PhotonProperties } from './photon';
 
@@ -163,18 +163,18 @@ function ResultsList({
               onMouseEnter={() => setActiveIndex(i)}
               onClick={() => selectResult(feature)}
               className={`flex items-start gap-2.5 px-3 py-2.5 cursor-pointer transition-colors duration-100 ${
-                isActive ? 'bg-primary/10' : 'hover:bg-white/40'
+                isActive ? 'bg-primary/10' : 'hover:bg-hover'
               }`}
             >
-              <MapPin className={`h-4 w-4 mt-0.5 shrink-0 ${isActive ? 'text-primary' : 'text-gray-400'}`} />
+              <MapPin className={`h-4 w-4 mt-0.5 shrink-0 ${isActive ? 'text-primary' : 'text-subtle-foreground'}`} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-900 truncate">{primary}</span>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider shrink-0">
+                  <span className="text-sm font-semibold truncate">{primary}</span>
+                  <span className="text-[10px] font-bold text-subtle-foreground uppercase tracking-wider shrink-0">
                     {getTypeLabel(feature.properties)}
                   </span>
                 </div>
-                {secondary && <p className="text-xs text-gray-500 truncate">{secondary}</p>}
+                {secondary && <p className="text-xs text-muted-foreground truncate">{secondary}</p>}
               </div>
             </li>
           );
@@ -186,7 +186,7 @@ function ResultsList({
   if (isLoading) {
     return (
       <div className="px-3 py-4 text-center">
-        <p className="text-xs text-gray-400">Searching...</p>
+        <p className="text-xs text-subtle-foreground">Searching…</p>
       </div>
     );
   }
@@ -197,7 +197,6 @@ function ResultsList({
 export default function SearchBar() {
   const { query, results, isLoading, search, clear } = useSearch();
   const layers = useLayersStore((s) => s.layers);
-  const posthog = usePostHog();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -242,7 +241,7 @@ export default function SearchBar() {
       const props = feature.properties;
       const [lon, lat] = feature.geometry.coordinates;
       const center = getMap()?.getCenter();
-      posthog.capture('search_result_selected', {
+      track('search_result_selected', {
         search_term: query,
         result_name: props.name,
         result_lat: lat,
@@ -265,7 +264,7 @@ export default function SearchBar() {
       setIsExpanded(false);
       inputRef.current?.blur();
     },
-    [posthog, query],
+    [query],
   );
 
   const closeMobileSearch = useCallback(() => {
@@ -332,7 +331,7 @@ export default function SearchBar() {
 
   const searchInput = (
     <>
-      <Search className="h-4 w-4 text-gray-400 shrink-0" />
+      <Search className="h-4 w-4 text-subtle-foreground shrink-0" aria-hidden />
       <input
         ref={inputRef}
         type="text"
@@ -344,22 +343,24 @@ export default function SearchBar() {
         }}
         onFocus={() => setIsOpen(true)}
         onKeyDown={handleKeyDown}
-        placeholder="Search places..."
-        className="flex-1 bg-transparent text-base sm:text-sm text-gray-900 placeholder:text-gray-400 outline-none"
+        placeholder="Search places…"
+        aria-label="Search places"
+        enterKeyHint="search"
+        className="min-w-0 flex-1 bg-transparent text-base sm:text-sm placeholder:text-subtle-foreground outline-none"
         autoComplete="off"
         spellCheck={false}
       />
-      {isLoading && <Loader2 className="h-3.5 w-3.5 text-gray-400 animate-spin shrink-0" />}
+      {isLoading && <Loader2 className="h-3.5 w-3.5 text-subtle-foreground animate-spin shrink-0" aria-hidden />}
       {query && !isLoading && (
         <button
           onClick={() => {
             clear();
             inputRef.current?.focus();
           }}
-          className="h-5 w-5 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors duration-150"
+          className="h-6 w-6 flex items-center justify-center rounded-md hover:bg-hover transition-colors duration-150"
           aria-label="Clear search"
         >
-          <X className="h-3.5 w-3.5 text-gray-400" />
+          <X className="h-3.5 w-3.5 text-subtle-foreground" />
         </button>
       )}
     </>
@@ -370,24 +371,24 @@ export default function SearchBar() {
       {/* Mobile: collapsed search button */}
       <button
         onClick={() => setIsExpanded(true)}
-        className="fixed top-3 right-3 z-30 sm:hidden h-11 w-11 flex items-center justify-center rounded-2xl bg-white/70 backdrop-blur-2xl border border-white/30 shadow-lg shadow-black/5 active:scale-95 transition-transform duration-150"
+        className="glass fixed top-3 right-3 z-30 sm:hidden h-11 w-11 flex items-center justify-center rounded-2xl active:scale-95 transition-transform duration-150"
         aria-label="Search places"
       >
-        <Search className="h-4.5 w-4.5 text-gray-600" />
+        <Search className="h-[18px] w-[18px] text-muted-foreground" />
       </button>
 
       {/* Mobile: expanded fullscreen search overlay */}
       {isExpanded && (
-        <div ref={mobileOverlayRef} className="fixed inset-0 z-50 sm:hidden bg-white/90 backdrop-blur-2xl flex flex-col">
-          <div className="flex items-center gap-2 px-3 py-3 border-b border-gray-100">
+        <div ref={mobileOverlayRef} className="fixed inset-0 z-50 sm:hidden bg-background/95 backdrop-blur-2xl flex flex-col animate-sheet-in">
+          <div className="flex items-center gap-2 px-3 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] border-b border-border">
             <button
               onClick={closeMobileSearch}
-              className="h-9 w-9 flex items-center justify-center rounded-xl hover:bg-black/5 transition-colors duration-150 shrink-0"
+              className="h-9 w-9 flex items-center justify-center rounded-xl hover:bg-hover transition-colors duration-150 shrink-0"
               aria-label="Close search"
             >
-              <ArrowLeft className="h-5 w-5 text-gray-600" />
+              <ArrowLeft className="h-5 w-5 text-muted-foreground" />
             </button>
-            <div className="flex items-center gap-2 flex-1 px-3 py-2 rounded-xl bg-gray-100/80">
+            <div className="flex items-center gap-2 flex-1 px-3 py-2 rounded-xl bg-tint">
               {searchInput}
             </div>
           </div>
@@ -405,8 +406,8 @@ export default function SearchBar() {
                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
                   <Search className="h-5 w-5 text-primary" />
                 </div>
-                <p className="text-sm font-bold text-gray-900">Search for a place</p>
-                <p className="text-xs text-gray-400">Search cities, addresses, and landmarks worldwide</p>
+                <p className="font-heading text-sm font-extrabold">Search for a place</p>
+                <p className="text-xs text-muted-foreground">Cities, addresses and landmarks worldwide</p>
               </div>
             ) : null}
           </div>
@@ -416,14 +417,14 @@ export default function SearchBar() {
       {/* Desktop: inline search bar */}
       <div
         ref={desktopContainerRef}
-        className="hidden sm:block fixed top-3 left-[200px] right-16 md:left-1/2 md:-translate-x-1/2 md:right-auto z-30 md:w-[400px]"
+        className="hidden sm:block fixed top-3 left-[196px] right-[4.25rem] md:left-1/2 md:-translate-x-1/2 md:right-auto z-30 md:w-[420px]"
       >
-        <div className={`flex items-center gap-2 px-3 py-2.5 bg-white/70 backdrop-blur-2xl border border-white/30 shadow-lg shadow-black/5 transition-all duration-150 ${showDropdown ? 'rounded-t-2xl border-b-white/10' : 'rounded-2xl'}`}>
+        <div className={`glass flex h-11 items-center gap-2 px-3.5 transition-[border-radius] duration-150 focus-within:ring-2 focus-within:ring-ring/35 ${showDropdown ? 'rounded-t-2xl' : 'rounded-2xl'}`}>
           {searchInput}
         </div>
 
         {showDropdown && (
-          <div className="bg-white/70 backdrop-blur-2xl border border-t-0 border-white/30 rounded-b-2xl shadow-lg shadow-black/5 overflow-hidden">
+          <div className="glass-strong border-t-0 rounded-b-2xl overflow-hidden">
             <ResultsList
               results={results}
               isLoading={isLoading}

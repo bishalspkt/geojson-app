@@ -33,11 +33,14 @@ map.isStyleLoaded(); map.loaded();
 | Symptom | Check | Usual cause |
 |---|---|---|
 | Store has layers, map shows nothing | `useMapStore.getState().ready` | Engine starts on map `load`; if the style can't finish (tiles/sprite/glyphs unreachable) `load` never fires. Check the Network tab for `tiles.geojson.app` / `protomaps.github.io`. |
-| Features gone after theme switch | app layers list empty after swap | The `style.load` re-add didn't run. The engine must register `once('style.load')` **before** `setStyle` — MapLibre ≥5.24 fires it synchronously for inline styles. Any new setStyle call site must follow this order. |
+| Features gone after theme switch | app layers list empty after swap | The `style.load` re-add didn't run. The engine must register `once('style.load')` **before** `setStyle` — MapLibre fires it synchronously for inline styles. Any new setStyle call site must follow this order. |
 | One feature won't hide/highlight | `feature.properties._fid` vs `feature.id` | `_fid` is the only addressing key (promoteId). A feature missing `_fid` bypassed the store — data must enter via `ingest()`/store actions. |
 | Clicks select nothing | `interactiveLayerIds` vs existing layers | Interactions query `gj:*:main`/`:symbol` layers; suppressed while `useToolsStore.getState().activeTool != null`. |
 | Embed command times out | bridge only accepts `ev.source === window.parent` | Commands must come from the direct parent window with the exact envelope (`source: "geojson.app.embed", v: 1, id, method`). |
 | Embed command `method_failed` | `error.message` | Executor validation message — arg shape is wrong; compare with `docs/developers-api.md`. |
+| Map never draws in a production build | Network: `/vendor/maplibre-gl@<v>/maplibre-gl-worker.mjs` | MapLibre 6 loads its worker next to its own module. Production serves it from `dist/vendor/` (`vite.config.ts` `maplibreVendor`); dev points `setWorkerUrl` at `node_modules` (`core/maplibre-setup.ts`). A CSP change that drops `worker-src 'self' blob:` also breaks it. |
+| Imagery / terrain / chase camera does nothing | a `failed to load a map module` console error | These bindings load their code on first use (`core/lazy.ts`); a failed chunk (offline, stale deploy) is logged and retried on the next demand. |
+| Console: `Refused to load/execute …` | `public/_headers` CSP | A new script host must be added to `script-src`; data/imagery hosts are already open (`https:`). |
 
 ## Preview-tool quirk (Claude Code verification)
 

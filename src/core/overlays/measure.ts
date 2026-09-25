@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { MeasurePoint } from '@/types';
 import { sysId } from '../layers/ids';

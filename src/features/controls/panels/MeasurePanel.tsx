@@ -1,11 +1,12 @@
-import { useEffect, useRef } from 'react';
-import { MapPin, RotateCcw, Ruler } from 'lucide-react';
+import { useEffect, useMemo, useRef } from 'react';
+import { Copy, Ruler, Trash2, Undo2 } from 'lucide-react';
 import { distance } from '@turf/distance';
-import { point } from '@turf/helpers';
-import { usePostHog } from '@posthog/react';
-import { MeasurePoint } from '@/types';
+import type { MeasurePoint } from '@/types';
 import { useToolsStore } from '@/state/tools-store';
 import { useMapStore } from '@/state/map-store';
+import { notify } from '@/state/notify-store';
+import { track } from '@/lib/analytics';
+import { keyBelongsToFocus } from '@/lib/keys';
 import Panel from '../Panel';
 
 function formatDistance(km: number): string {
@@ -14,110 +15,112 @@ function formatDistance(km: number): string {
   return `${km.toFixed(1)} km`;
 }
 
-function getSegmentDistances(points: MeasurePoint[]): number[] {
-  const distances: number[] = [];
-  for (let i = 1; i < points.length; i++) {
-    const from = point([points[i - 1].lng, points[i - 1].lat]);
-    const to = point([points[i].lng, points[i].lat]);
-    distances.push(distance(from, to, { units: 'kilometers' }));
-  }
-  return distances;
-}
+const segmentLengths = (points: MeasurePoint[]) =>
+  points.slice(1).map((p, i) => distance([points[i].lng, points[i].lat], [p.lng, p.lat], { units: 'kilometers' }));
 
 export default function MeasurePanel() {
-  const posthog = usePostHog();
   const points = useToolsStore((s) => s.measurePoints);
-  const isMeasuring = useToolsStore((s) => s.activeTool === 'measure');
-  const clearMeasurePoints = useToolsStore((s) => s.clearMeasurePoints);
-  const segments = getSegmentDistances(points);
-  const totalDistance = segments.reduce((sum, d) => sum + d, 0);
+  const segments = useMemo(() => segmentLengths(points), [points]);
+  const total = segments.reduce((sum, d) => sum + d, 0);
+  const { undoMeasurePoint, clearMeasurePoints } = useToolsStore.getState();
 
-  // Track when a new measurement starts (first point placed).
-  const prevCountRef = useRef(points.length);
+  // Record when a measurement starts (first point placed).
+  const prevCount = useRef(points.length);
   useEffect(() => {
-    if (prevCountRef.current === 0 && points.length === 1) {
-      const start = points[0];
+    if (prevCount.current === 0 && points.length === 1) {
       const center = useMapStore.getState().map?.getCenter();
-      posthog.capture('measure_started', {
-        start_lat: start.lat,
-        start_lng: start.lng,
+      track('measure_started', {
+        start_lat: points[0].lat,
+        start_lng: points[0].lng,
         map_center_lat: center?.lat ?? null,
         map_center_lng: center?.lng ?? null,
       });
     }
-    prevCountRef.current = points.length;
-  }, [points, posthog]);
+    prevCount.current = points.length;
+  }, [points]);
+
+  // Backspace / Ctrl+Z undo the last point while measuring.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const undoChord = (e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'z';
+      const typing = e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]');
+      if (undoChord ? e.defaultPrevented || typing : e.key !== 'Backspace' || keyBelongsToFocus(e)) return;
+      e.preventDefault();
+      useToolsStore.getState().undoMeasurePoint();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
+  const copyAsGeoJson = async () => {
+    const feature = {
+      type: 'Feature',
+      properties: { distance_km: Number(total.toFixed(4)) },
+      geometry: { type: 'LineString', coordinates: points.map((p) => [p.lng, p.lat]) },
+    };
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(feature));
+      notify('Copied the path as GeoJSON', 'info');
+    } catch {
+      notify("Couldn't copy to the clipboard");
+    }
+  };
+
+  const footer = points.length > 0 && (
+    <div className="flex shrink-0 items-center gap-1 border-t border-glass-border px-2 py-1.5">
+      <button type="button" onClick={undoMeasurePoint} className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold text-muted-foreground hover:bg-hover hover:text-foreground">
+        <Undo2 className="h-3.5 w-3.5" aria-hidden /> Undo
+      </button>
+      {points.length >= 2 && (
+        <button type="button" onClick={copyAsGeoJson} className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold text-muted-foreground hover:bg-hover hover:text-foreground">
+          <Copy className="h-3.5 w-3.5" aria-hidden /> Copy GeoJSON
+        </button>
+      )}
+      <span className="flex-1" />
+      <button type="button" onClick={clearMeasurePoints} className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
+        <Trash2 className="h-3.5 w-3.5" aria-hidden /> Clear
+      </button>
+    </div>
+  );
 
   return (
-    <Panel panelId="measure">
-      <div className="p-3 flex flex-col gap-3">
-        {points.length === 0 && (
-          <div className="flex flex-col items-center gap-2 py-4 text-center">
-            <div className="h-10 w-10 rounded-xl bg-amber-50 flex items-center justify-center">
-              <Ruler className="h-5 w-5 text-amber-500" />
-            </div>
-            <p className="text-sm font-bold text-gray-900">Click the map to start measuring</p>
-            <p className="text-xs text-gray-400">Each click adds a point. Distances update live.</p>
+    <Panel panelId="measure" footer={footer || undefined} className="p-3.5">
+      {points.length < 2 ? (
+        <div className="flex flex-col items-center gap-2 py-5 text-center">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/15 text-accent">
+            <Ruler className="h-5 w-5" aria-hidden />
+          </span>
+          <p className="font-heading text-sm font-extrabold">
+            {points.length === 0 ? 'Tap the map to start measuring' : 'Tap another point'}
+          </p>
+          <p className="text-xs text-muted-foreground">Each tap adds a point; distances update as you go.</p>
+        </div>
+      ) : (
+        <>
+          <div className="flex items-baseline justify-between">
+            <span className="eyebrow">Total distance</span>
+            <span className="font-heading text-2xl font-extrabold tabular-nums">{formatDistance(total)}</span>
           </div>
-        )}
-
-        {points.length === 1 && (
-          <div className="flex items-center gap-2 px-1 py-2">
-            <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <p className="text-xs font-medium text-gray-500">Click another point to measure distance</p>
-          </div>
-        )}
-
-        {points.length >= 2 && (
-          <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total</span>
-            <span className="text-lg font-extrabold text-gray-900 tabular-nums">{formatDistance(totalDistance)}</span>
-          </div>
-        )}
-
-        {segments.length > 0 && (
-          <div className="flex flex-col gap-1 max-h-[250px] overflow-y-auto">
+          <ol className="mt-3 flex flex-col">
             {points.map((pt, i) => (
-              <div key={i} className="flex items-center gap-2.5">
-                <div className="flex flex-col items-center">
-                  <div className={`h-5 w-5 rounded-lg flex items-center justify-center text-[10px] text-white font-bold shrink-0 ${i === 0 ? 'bg-primary' : 'bg-amber-500'}`}>
-                    {i + 1}
-                  </div>
-                  {i < points.length - 1 && <div className="w-px h-5 bg-gray-200" />}
-                </div>
-                <div className="flex items-center justify-between flex-1 min-w-0 py-1">
-                  <span className="text-xs text-gray-500 tabular-nums truncate">
-                    {pt.lat.toFixed(4)}, {pt.lng.toFixed(4)}
+              <li key={i} className="flex items-stretch gap-2.5">
+                <span className="flex flex-col items-center">
+                  <span className={`flex h-5 w-5 items-center justify-center rounded-md text-[10px] font-bold text-white ${i === 0 ? 'bg-primary' : 'bg-accent'}`}>{i + 1}</span>
+                  {i < points.length - 1 && <span className="w-px flex-1 bg-border" />}
+                </span>
+                <span className="flex min-w-0 flex-1 items-start justify-between pb-2">
+                  <span className="truncate text-xs text-muted-foreground tabular-nums">
+                    {pt.lat.toFixed(5)}, {pt.lng.toFixed(5)}
                   </span>
                   {i < segments.length && (
-                    <span className="text-xs font-bold text-amber-600 tabular-nums ml-2 shrink-0">
-                      {formatDistance(segments[i])}
-                    </span>
+                    <span className="ml-2 shrink-0 text-xs font-bold text-accent tabular-nums">+{formatDistance(segments[i])}</span>
                   )}
-                </div>
-              </div>
+                </span>
+              </li>
             ))}
-          </div>
-        )}
-
-        {points.length > 0 && (
-          <div className="flex gap-2 pt-1 border-t border-white/30">
-            <button
-              onClick={clearMeasurePoints}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-gray-500 hover:bg-white/40 transition-colors duration-150 active:scale-95"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              Clear
-            </button>
-            {isMeasuring && (
-              <p className="flex items-center gap-1.5 ml-auto text-[11px] text-gray-400">
-                <MapPin className="h-3 w-3" />
-                Click map to add points
-              </p>
-            )}
-          </div>
-        )}
-      </div>
+          </ol>
+        </>
+      )}
     </Panel>
   );
 }

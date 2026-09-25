@@ -4,9 +4,14 @@ import {
   allDataLayerIds,
   dataLayerIds,
   dataSourceId,
+  imageryLayerId,
+  imagerySourceId,
   interactiveLayerIds,
+  isAppLayerId,
+  pulseIds,
   sanitizeExternalLayerId,
   sysId,
+  trackIds,
 } from './ids';
 
 const layer = (id: string): DataLayer => ({
@@ -27,13 +32,38 @@ describe('id namespaces', () => {
       casing: 'gj:L1:polygon:casing',
       outline: 'gj:L1:polygon:outline',
       symbol: 'gj:L1:polygon:symbol',
+      label: 'gj:L1:polygon:label',
+      heat: 'gj:L1:polygon:heat',
     });
     expect(sysId('highlight')).toBe('sys:highlight');
   });
 
+  it('mints timeline pulse/track ids inside the layer namespace', () => {
+    expect(pulseIds('L3').source).toBe('gj:L3:pulse');
+    expect(trackIds('L3')).toMatchObject({ source: 'gj:L3:track', head: 'gj:L3:track:head' });
+  });
+
+  it('mints img: ids for imagery and recognizes app-owned ids', () => {
+    expect(imagerySourceId('R1')).toBe('img:R1');
+    expect(imageryLayerId('R1')).toBe('img:R1:raster');
+    expect(isAppLayerId('img:R1:raster')).toBe(true);
+    expect(isAppLayerId('sys:hillshade')).toBe(true);
+    expect(isAppLayerId('roads_highway')).toBe(false);
+  });
+
+  it('allDataLayerIds lists fills < lines < markers < labels (restack order)', () => {
+    const ids = allDataLayerIds('L2');
+    const at = (id: string) => ids.indexOf(id);
+    expect(at('gj:L2:line:casing')).toBeLessThan(at('gj:L2:line:main'));
+    expect(at('gj:L2:point:glow')).toBeLessThan(at('gj:L2:point:main'));
+    expect(at('gj:L2:polygon:main')).toBeLessThan(at('gj:L2:line:main'));
+    expect(at('gj:L2:track:trail')).toBeLessThan(at('gj:L2:point:main'));
+    expect(at('gj:L2:point:main')).toBeLessThan(at('gj:L2:point:label'));
+  });
+
   it('allDataLayerIds covers every bucket/role for cleanup', () => {
     const ids = allDataLayerIds('L2');
-    expect(ids).toHaveLength(3 * 5);
+    expect(ids).toHaveLength(3 * 7 + 2 + 4);
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.every((id) => id.startsWith('gj:L2:'))).toBe(true);
   });

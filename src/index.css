@@ -1,11 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* UI chrome follows the map: dark/black basemaps put `.dark` on <html>. */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-heading: 'DM Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'DM Sans Variable', 'DM Sans', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
@@ -19,75 +20,113 @@
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-subtle-foreground: hsl(var(--subtle-foreground));
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
   --color-popover: hsl(var(--popover));
   --color-popover-foreground: hsl(var(--popover-foreground));
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
+  /* Translucent surfaces over the map. */
+  --color-glass: hsl(var(--glass) / var(--glass-alpha));
+  --color-glass-strong: hsl(var(--glass) / 0.94);
+  --color-glass-border: hsl(var(--glass-border) / var(--glass-border-alpha));
+  --color-tint: hsl(var(--tint) / var(--tint-alpha));
+  --color-hover: hsl(var(--tint) / var(--hover-alpha));
+  --color-brand: hsl(255 72% 42%);
+  --color-selected: hsl(var(--selected));
+  --color-selected-foreground: hsl(var(--selected-foreground));
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-sheet-in: sheet-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-pop-in: pop-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
+  @keyframes sheet-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
   }
 
-  @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.97) translateY(-4px); }
+    to { opacity: 1; transform: none; }
   }
 }
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 230 25% 10%;
+    --background: 220 30% 93%;
+    --foreground: 230 25% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 230 25% 10%;
+    --card-foreground: 230 25% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 230 25% 10%;
+    --popover-foreground: 230 25% 12%;
     --primary: 255 72% 42%;
     --primary-foreground: 0 0% 100%;
     --secondary: 250 20% 94%;
     --secondary-foreground: 250 30% 18%;
     --muted: 250 15% 94%;
-    --muted-foreground: 250 10% 46%;
-    --accent: 16 90% 58%;
+    --muted-foreground: 230 10% 40%;
+    --subtle-foreground: 230 8% 58%;
+    --accent: 16 90% 52%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 250 15% 88%;
-    --input: 250 15% 88%;
+    --border: 230 15% 86%;
+    --input: 230 15% 86%;
     --ring: 255 72% 42%;
     --radius: 0.75rem;
+
+    --glass: 0 0% 100%;
+    --glass-alpha: 0.78;
+    --glass-border: 0 0% 100%;
+    --glass-border-alpha: 0.45;
+    --tint: 230 30% 20%;
+    --tint-alpha: 0.05;
+    --hover-alpha: 0.07;
+    --selected: 28 100% 96%;
+    --selected-foreground: 24 80% 30%;
+    --shadow-color: 230 40% 12%;
+
+    color-scheme: light;
   }
 
   .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-    --primary: 60 9.1% 97.8%;
-    --primary-foreground: 24 9.8% 10%;
-    --secondary: 12 6.5% 15.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-    --muted: 12 6.5% 15.1%;
-    --muted-foreground: 24 5.4% 63.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 60 9.1% 97.8%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
-    --ring: 24 5.7% 82.9%;
+    --background: 225 30% 7%;
+    --foreground: 220 20% 94%;
+    --card: 225 25% 12%;
+    --card-foreground: 220 20% 94%;
+    --popover: 225 25% 11%;
+    --popover-foreground: 220 20% 94%;
+    --primary: 255 90% 72%;
+    --primary-foreground: 250 40% 10%;
+    --secondary: 230 20% 18%;
+    --secondary-foreground: 220 20% 94%;
+    --muted: 230 18% 18%;
+    --muted-foreground: 220 12% 70%;
+    --subtle-foreground: 220 10% 52%;
+    --accent: 24 95% 62%;
+    --accent-foreground: 20 40% 8%;
+    --destructive: 0 80% 64%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 225 15% 24%;
+    --input: 225 15% 24%;
+    --ring: 255 90% 72%;
+
+    --glass: 225 28% 10%;
+    --glass-alpha: 0.8;
+    --glass-border: 220 30% 90%;
+    --glass-border-alpha: 0.1;
+    --tint: 220 30% 92%;
+    --tint-alpha: 0.06;
+    --hover-alpha: 0.09;
+    --selected: 28 70% 18%;
+    --selected-foreground: 32 100% 80%;
+    --shadow-color: 230 50% 2%;
+
+    color-scheme: dark;
   }
 }
 
@@ -95,10 +134,69 @@
   * {
     @apply border-border;
   }
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+  }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+/* Frosted surface for panels, bars and floating buttons. */
+@utility glass {
+  background-color: var(--color-glass);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: 0 10px 30px -12px hsl(var(--shadow-color) / 0.28), 0 1px 3px hsl(var(--shadow-color) / 0.08);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  backdrop-filter: blur(22px) saturate(1.4);
+}
+
+/* Same surface, nearly opaque (menus and popovers over busy maps). */
+@utility glass-strong {
+  background-color: var(--color-glass-strong);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: 0 16px 40px -12px hsl(var(--shadow-color) / 0.35), 0 1px 3px hsl(var(--shadow-color) / 0.1);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  backdrop-filter: blur(22px) saturate(1.4);
+}
+
+/* Section eyebrow label. */
+@utility eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-subtle-foreground);
+}
+
+/* Heading typeface. */
+@utility font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Bottom padding that clears the iOS home indicator. */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
   }
 }

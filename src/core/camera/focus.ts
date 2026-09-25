@@ -1,8 +1,9 @@
-import type maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 import { bbox } from '@turf/bbox';
 import { Feature, GeoJSON } from 'geojson';
 import { MapFocusTarget } from '@/types';
 import { showLocateDot } from '../overlays/locate';
+import { easeInOutQuad, flightDurationMs } from './flight';
 
 export type LngLatBounds = [[number, number], [number, number]];
 
@@ -20,6 +21,8 @@ export interface FocusOptions {
   padding?: FocusPadding;
   maxZoom?: number;
   maxDuration?: number;
+  /** Pixel offset of the visual center (UI covering one side of the map). Camera targets only. */
+  offset?: [number, number];
 }
 
 /** Execute a one-shot focus request. `resolveFeature` maps a FeatureId to its feature. */
@@ -47,6 +50,32 @@ export function executeFocus(
       if (target.showDot !== false) {
         showLocateDot(map, target);
       }
+      return;
+    }
+    case 'camera': {
+      // Constant perceived speed: long flights take longer instead of rushing;
+      // `duration` is the shortest a flight may take.
+      const from = map.getCenter();
+      const canvas = map.getCanvas();
+      const duration = flightDurationMs(
+        {
+          from: { lng: from.lng, lat: from.lat, zoom: map.getZoom() },
+          to: { lng: target.center[0], lat: target.center[1], zoom: target.zoom },
+          width: canvas.clientWidth || 800,
+          height: canvas.clientHeight || 600,
+        },
+        { minMs: target.duration ?? 1800 },
+      );
+      map.flyTo({
+        center: target.center,
+        zoom: target.zoom,
+        pitch: target.pitch ?? 0,
+        bearing: target.bearing ?? 0,
+        offset: options.offset,
+        essential: true,
+        duration,
+        easing: easeInOutQuad,
+      });
       return;
     }
   }

@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 import { DataLayer, FeatureId } from '@/types';
 import { interactiveLayerIds } from './ids';
 
@@ -7,6 +7,8 @@ export interface InteractionHandlers {
   /** True while an exclusive tool (measure, draw…) owns the pointer. */
   isSuppressed(): boolean;
   onFeatureClick(featureId: FeatureId): void;
+  /** Pointer over a feature (screen point) or null when it leaves. */
+  onHover?(featureId: FeatureId | null, point: { x: number; y: number } | null): void;
 }
 
 /**
@@ -24,6 +26,7 @@ export function attachLayerInteractions(
     if (hovered) {
       map.setFeatureState(hovered, { hover: false });
       hovered = null;
+      handlers.onHover?.(null, null);
     }
   };
 
@@ -46,11 +49,16 @@ export function attachLayerInteractions(
       }
       return;
     }
-    if (hovered && hovered.source === hit.source && hovered.id === hit.id) return;
+    const fid = hit.properties?._fid as FeatureId | undefined;
+    if (hovered && hovered.source === hit.source && hovered.id === hit.id) {
+      if (fid) handlers.onHover?.(fid, { x: e.point.x, y: e.point.y });
+      return;
+    }
     clearHover();
     hovered = { source: hit.source, id: hit.id };
     map.setFeatureState(hovered, { hover: true });
     map.getCanvas().style.cursor = 'pointer';
+    if (fid) handlers.onHover?.(fid, { x: e.point.x, y: e.point.y });
   };
 
   const onMouseOut = () => {

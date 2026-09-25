@@ -11,6 +11,7 @@ import {
   geojsonDataProvider,
 } from './sources/builtin/geojson';
 import { registerBuiltinPanels } from '@/features/controls/register-panels';
+import { registerGibsPresets } from './imagery/builtin/gibs';
 
 /**
  * Registers every built-in extension. Called once at app bootstrap —
@@ -24,6 +25,7 @@ export function registerBuiltinExtensions(): void {
   registerSourceProvider(geojsonUrlProvider);
   registerSourceProvider(geojsonTextProvider);
   registerSourceProvider(geojsonDataProvider);
+  registerGibsPresets();
 }
 
 export { registerPanel, listPanels, getPanel } from './panels/registry';
@@ -38,6 +40,15 @@ export {
   registerSourceProvider,
   listSourceProviders,
   ingest,
+  loadSource,
   toFeatureCollection,
 } from './sources/registry';
 export type { SourceProvider, SourceInput, IngestOptions, IngestResult } from './sources/registry';
+
+export {
+  registerImageryPreset,
+  unregisterImageryPreset,
+  listImageryPresets,
+  getImageryPreset,
+} from './imagery/registry';
+export type { ImageryPreset } from './imagery/registry';
