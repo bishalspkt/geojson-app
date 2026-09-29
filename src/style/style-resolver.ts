@@ -96,7 +96,7 @@ export function resolvePointPaint(features: Feature[]) {
  */
 export function resolveLinePaint(features: Feature[]) {
   const hasStroke = features.some(f => f.properties?.['stroke']);
-  const hasWidth = features.some(f => f.properties?.['stroke-width']);
+  const hasWidth = features.some(f => f.properties?.['stroke-width'] != null);
   const hasOpacity = features.some(f => f.properties?.['stroke-opacity']);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -144,7 +144,7 @@ export function resolvePolygonPaint(features: Feature[]) {
   const hasFill = features.some(f => f.properties?.['fill']);
   const hasFillOpacity = features.some(f => f.properties?.['fill-opacity']);
   const hasStroke = features.some(f => f.properties?.['stroke']);
-  const hasStrokeWidth = features.some(f => f.properties?.['stroke-width']);
+  const hasStrokeWidth = features.some(f => f.properties?.['stroke-width'] != null);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fillColorExpr: any = hasFill

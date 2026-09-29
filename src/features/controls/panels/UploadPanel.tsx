@@ -1,18 +1,20 @@
 import { useRef, useState } from 'react';
-import { ArrowRight, BookOpen, FileUp, Link2, Loader2, Mountain, Route, Sparkles, Trees } from 'lucide-react';
+import { ArrowRight, BookOpen, FileUp, Link2, Loader2 } from 'lucide-react';
 import type { SourceInput } from '@/extensions/sources/registry';
 import { loadStory, preloadStoryRuntime } from '@/stories';
 import { FEATURED_STORIES } from '@/features/story/featured';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import Panel from '../Panel';
+import { CycloneIcon, FirePerimeterIcon, PlatesIcon, SeismogramIcon } from './sample-icons';
 import { fileProps, importData, importErrorMessage, type ImportSource } from '../import-data';
 
+/** Real open datasets, rebuilt by scripts/build-samples.mjs. */
 const SAMPLES = [
-  { name: 'Volcanoes', file: 'volcanoes', icon: Mountain },
-  { name: 'Wonders', file: 'wonders', icon: Sparkles },
-  { name: 'Train routes', file: 'train-routes', icon: Route },
-  { name: 'National parks', file: 'national-parks', icon: Trees },
+  { name: 'Earthquakes', file: 'earthquakes-2025', detail: 'Every M5.5+ in 2025', icon: SeismogramIcon },
+  { name: 'Storms', file: 'storms-2025', detail: '2025 cyclone tracks', icon: CycloneIcon },
+  { name: 'Tectonic plates', file: 'tectonic-plates', detail: '52 plates & boundaries', icon: PlatesIcon },
+  { name: 'LA wildfires', file: 'la-fires-2025', detail: 'Burn scars, Jan 2025', icon: FirePerimeterIcon },
 ];
 
 /** What is loading: 'file', 'url', or a demo's name. */
@@ -135,7 +137,7 @@ export default function UploadPanel() {
       <section>
         <p className="eyebrow mb-2">Try a demo</p>
         <div className="grid grid-cols-2 gap-1.5">
-          {SAMPLES.map(({ name, file, icon: Icon }) => (
+          {SAMPLES.map(({ name, file, detail, icon: Icon }) => (
             <button
               key={file}
               type="button"
@@ -143,8 +145,11 @@ export default function UploadPanel() {
               onClick={() => void load({ kind: 'url', url: `/samples/${file}.geojson` }, { source: 'sample', name, props: { sample: name } }, name, name)}
               className="flex items-center gap-2 rounded-xl bg-card/70 px-2.5 py-2 text-left text-xs font-bold shadow-sm ring-1 ring-foreground/5 transition-colors hover:bg-card active:scale-[0.98] disabled:opacity-60"
             >
-              {busy === name ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Icon className="h-4 w-4 text-primary" aria-hidden />}
-              {name}
+              {busy === name ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" /> : <Icon className="h-4 w-4 shrink-0 text-primary" />}
+              <span className="min-w-0">
+                <span className="block truncate">{name}</span>
+                <span className="block truncate text-[10px] font-semibold text-muted-foreground">{detail}</span>
+              </span>
             </button>
           ))}
         </div>

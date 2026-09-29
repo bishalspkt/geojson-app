@@ -160,7 +160,7 @@ The base map is the product; everything else is optional and must not slow it do
 - **Nothing competes with the first map render**: analytics and panel prefetching wait for the map's first `idle` (`lib/after-map-idle.ts`), not just an idle main thread, so they don't steal bandwidth from tiles and glyphs on slow networks. Google Analytics never loads inside embeds.
 - **Per-frame work stays out of React**: during playback only the timeline's readout, scrubber and caption re-render; the compass rotates its icon on the DOM (the chase camera turns the map every frame). Track trails are re-sent to the worker at ~20 Hz (the head every frame), and empty pulse updates are skipped — on a 4×-throttled phone playback runs at MapLibre's own terrain frame rate.
 - **Bounded caches**: open COGs are LRU-capped (8 scenes, ≤12 MB of cached blocks each), the chase camera's DEM sampler holds ≤96 tiles.
-- **Demo data** lives in `public/samples/` and is fetched on click. Fonts are self-hosted (`@fontsource-variable`).
+- **Demo data** lives in `public/samples/` and is fetched on click — real open datasets (USGS, NOAA IBTrACS, PB2002, NIFC), rebuilt with `node scripts/build-samples.mjs`. Fonts are self-hosted (`@fontsource-variable`).
 - **Big layers**: the layers panel renders 150 rows per section with "Show more" and caches feature area/length; the timeline histogram re-renders only when data changes (playback moves a clip).
 - **Adding a feature**: import it with `lazy(() => import(...))` (UI) or `core/lazy.ts` (engine), and keep it out of `@/core`'s barrel.
 

@@ -22,6 +22,7 @@ Analysis features for time-varying, terrain-heavy data; a faster, redesigned and
 - **Media on the map**: features with `image` / `video` / `url` / `credit` / `license` show a hover preview and a media card (see docs/styling.md).
 - Story charts: multi-series line charts with legends, dashed series and threshold lines; story bodies support bullet lists.
 - **The Bhote Koshi–Trishuli disaster, 26 August 2026** story (`/stories/bhotekoshi-2026/`, 31 chapters) with a rebuildable open-data pipeline (`stories/bhotekoshi-2026/pipeline`): minute-by-minute chase of the debris-flow front with captions; town-by-town before/after of the sharpest open imagery (Vantor and Planet scenes, 3.5–6 cm NEA drone orthophotos, HOT's post-event mosaic); UNOSAT detachment zone, barrier lakes and flow extent; DHM hydrographs and warning lead times; hydropower losses; the government's damage assessment (buildings, bridges, debris, costs); tolls and where bodies were recovered; crowdsourced photos, street-level frames and videos.
+- **Real demo datasets** in the import panel, each with its own icon, replacing the hand-drawn samples: every M5.5+ earthquake of 2025 (USGS; pulses on the timeline), all named tropical cyclones of 2025 (NOAA IBTrACS; animated 6-hourly tracks coloured by peak category), the PB2002 tectonic plates and boundaries, and the January 2025 Los Angeles fire perimeters (NIFC). Rebuilt with `node scripts/build-samples.mjs`.
 
 ### Changed — a faster, calmer, safer base app
 - **Every dependency on its latest release**, including MapLibre GL JS 6 (ESM, WebGL 2), TypeScript 7 (native `tsc`; ESLint keeps the TS 6 API via an alias until typescript-eslint supports 7), Vitest 5, geotiff 3, React 19.3 and Vite 8.3. Node ≥ 22.12.
@@ -36,6 +37,7 @@ Analysis features for time-varying, terrain-heavy data; a faster, redesigned and
 - **Security**: story/SDK attribution strings are sanitised before MapLibre renders them as HTML (a crafted `?story=` link could otherwise run script on geojson.app); story source and credit links must be http(s); every `_`-prefixed internal property is stripped from protocol events, copies and the properties dialog (previously only `_fid`); remote GeoJSON over 25 MB is refused; `public/_headers` adds a Content-Security-Policy, `nosniff`, referrer and permissions policies and long-lived caching for hashed assets.
 
 ### Fixed
+- `stroke-width: 0` now hides line and polygon outlines instead of falling back to the default width.
 - Data-layer sub-layers restack in true draw order (line casing under the line, point glow under the marker).
 - With 3D terrain, camera flights no longer end inside mountains (fixed upstream in MapLibre 6; the 5.24 workarounds are gone).
 - The swipe-compare map fills the whole viewport (MapLibre's container CSS had collapsed it to a 300 px strip), so the two sides no longer show the same image. The divider starts in the middle of the area the story panel leaves visible — also for a chapter opened from a link — and its labels sit below the search bar.
