@@ -34,6 +34,11 @@ import {
  * Layers are immutable in the store, so a cheap identity diff tells us whether
  * a layer needs a full rebuild or just visibility/filter updates.
  *
+ * Only visible layers are on the map: a layer's sources are built when it is
+ * first shown and freed once it has stayed hidden for `EVICT_HIDDEN_MS`, so a
+ * story with dozens of layers only tiles (in the worker) and uploads (to the
+ * GPU) what the current chapter shows, while quick toggles stay instant.
+ *
  * Temporal layers additionally get time filters, a "pulse" overlay for points
  * that just appeared, and animated trails for lines with per-vertex times —
  * all driven by `setTime` (null = timeline off, everything shows).
@@ -67,6 +72,8 @@ interface RenderedLayer {
   trailSentAt: number;
   /** Pending trailing trail update, so the last frame of a burst is exact. */
   trailTimer: ReturnType<typeof setTimeout> | null;
+  /** Pending removal from the map while the layer stays hidden. */
+  evictTimer: ReturnType<typeof setTimeout> | null;
 }
 
 /**
@@ -75,6 +82,9 @@ interface RenderedLayer {
  * frame and covers the trail's tip) and frees the frame budget on phones.
  */
 const TRAIL_INTERVAL_MS = 50;
+
+/** A hidden layer's sources are freed after this long (showing it again within it is instant). */
+export const EVICT_HIDDEN_MS = 15_000;
 
 const EMPTY: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] };
 const LABEL_FONT = ['Noto Sans Medium'];
@@ -136,12 +146,33 @@ export function createLayerRenderer(map: maplibregl.Map, options: LayerRendererO
   };
 
   function reset(removeFromMap: boolean) {
-    for (const entry of rendered.values()) if (entry.trailTimer) clearTimeout(entry.trailTimer);
+    for (const entry of rendered.values()) clearTimers(entry);
     if (removeFromMap && map.style) {
       for (const id of rendered.keys()) removeLayerFromMap(id);
     }
     rendered.clear();
     order = [];
+  }
+
+  function clearTimers(entry: RenderedLayer) {
+    if (entry.trailTimer) clearTimeout(entry.trailTimer);
+    if (entry.evictTimer) clearTimeout(entry.evictTimer);
+    entry.trailTimer = entry.evictTimer = null;
+  }
+
+  function evict(layerId: LayerId) {
+    const entry = rendered.get(layerId);
+    if (entry) clearTimers(entry);
+    removeLayerFromMap(layerId);
+    rendered.delete(layerId);
+  }
+
+  function scheduleEviction(entry: RenderedLayer) {
+    if (entry.evictTimer) return;
+    entry.evictTimer = setTimeout(() => {
+      entry.evictTimer = null;
+      if (!destroyed && rendered.get(entry.layer.id) === entry && !entry.layer.visible) evict(entry.layer.id);
+    }, EVICT_HIDDEN_MS);
   }
 
   function removeLayerFromMap(layerId: LayerId) {
@@ -506,7 +537,8 @@ export function createLayerRenderer(map: maplibregl.Map, options: LayerRendererO
     const wasOn = time !== null;
     time = next;
     for (const entry of rendered.values()) {
-      if (!entry.layer.temporal) continue;
+      // Hidden layers catch up when shown again (sync → applyState).
+      if (!entry.layer.temporal || !entry.layer.visible) continue;
       if (wasOn !== (time !== null) || entry.timeKey !== timeKeyOf(entry.layer)) {
         applyState(entry);
       } else if (time) {
@@ -522,10 +554,7 @@ export function createLayerRenderer(map: maplibregl.Map, options: LayerRendererO
     // Remove layers that no longer exist.
     const liveIds = new Set(layers.map((l) => l.id));
     for (const id of [...rendered.keys()]) {
-      if (!liveIds.has(id)) {
-        removeLayerFromMap(id);
-        rendered.delete(id);
-      }
+      if (!liveIds.has(id)) evict(id);
     }
 
     const prevOrder = order;
@@ -541,11 +570,32 @@ export function createLayerRenderer(map: maplibregl.Map, options: LayerRendererO
         prev.layer.paint !== layer.paint ||
         prev.layer.display !== layer.display ||
         prev.layer.temporal !== layer.temporal;
+      if (!layer.visible) {
+        // Never shown (or changed while hidden): nothing to build until it is.
+        if (needsRebuild) {
+          if (prev) evict(layer.id);
+          continue;
+        }
+        scheduleEviction(prev!); // hidden below; freed if it stays hidden
+      } else if (prev?.evictTimer) {
+        clearTimeout(prev.evictTimer);
+        prev.evictTimer = null;
+      }
 
       const hiddenKey = hiddenKeyOf(layer);
       if (needsRebuild) {
-        removeLayerFromMap(layer.id);
-        const entry: RenderedLayer = { layer, hiddenKey, timeKey: null, pulse: null, tracks: [], pulseEmpty: false, trailSentAt: 0, trailTimer: null };
+        if (prev) evict(layer.id);
+        const entry: RenderedLayer = {
+          layer,
+          hiddenKey,
+          timeKey: null,
+          pulse: null,
+          tracks: [],
+          pulseEmpty: false,
+          trailSentAt: 0,
+          trailTimer: null,
+          evictTimer: null,
+        };
         for (const bucket of BUCKETS) addBucket(layer, bucket);
         addTemporalOverlays(layer, entry);
         rendered.set(layer.id, entry);

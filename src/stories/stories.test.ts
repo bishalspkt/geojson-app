@@ -9,7 +9,7 @@ import { useStoryStore } from '@/state/story-store';
 import { registerSourceProvider } from '@/extensions/sources/registry';
 import { geojsonUrlProvider } from '@/extensions/sources/builtin/geojson';
 import { parseStory, StoryError } from './schema';
-import { chapterIndexOf, chapterVisibility, goToChapter } from './chapter';
+import { chapterDataLayers, chapterIndexOf, chapterVisibility, goToChapter } from './chapter';
 import { closeStory, loadStory } from './loader';
 
 registerSourceProvider(geojsonUrlProvider);
@@ -110,6 +110,11 @@ describe('parseStory', () => {
     expect(() => parseStory(dup, BASE)).toThrow('duplicate layer id');
   });
 
+  it('accepts a story-wide time zone and rejects unknown ones', () => {
+    expect(parseStory({ ...doc(), timeZone: 'Asia/Kathmandu' }, BASE).timeZone).toBe('Asia/Kathmandu');
+    expect(() => parseStory({ ...doc(), timeZone: 'Mars/Olympus' }, BASE)).toThrow(StoryError);
+  });
+
   it('refuses non-http URLs', () => {
     const d = doc();
     (d.layers[0] as { url: string }).url = 'javascript:alert(1)';
@@ -125,6 +130,15 @@ describe('chapters', () => {
       data: { 'story:rivers': false, 'story:villages': true },
       imagery: { 'story:before': false, 'story:after': true },
     });
+  });
+
+  it('lists every layer a chapter uses', () => {
+    const chapter = {
+      ...story.chapters[2],
+      compare: { left: 'before', right: ['after'], rightOptions: [{ layers: 'alt', label: 'Alt' }] },
+      time: { start: 'x', end: 'y', follow: { layer: 'track' } },
+    } as unknown as (typeof story.chapters)[number];
+    expect(chapterDataLayers(chapter).sort()).toEqual(['after', 'alt', 'before', 'track', 'villages']);
   });
 
   it('resolves chapter references by index, numeric string, or id', () => {
@@ -199,6 +213,7 @@ describe('loadStory', () => {
 
     goToChapter(2);
     expect(useTimeStore.getState().enabled).toBe(false);
+    expect(useTimeStore.getState().timeZone).toBeNull(); // no story-wide zone in the demo
     expect(useCompareStore.getState()).toMatchObject({ active: true, left: ['story:before'], position: 0.4 });
     expect(useImageryStore.getState().layers.map((l) => [l.id, l.visible])).toEqual([
       ['story:before', false],
@@ -225,17 +240,58 @@ describe('loadStory', () => {
     expect(useStoryStore.getState().status).toBe('idle');
   });
 
-  it('opens after the opening chapter\'s layers and streams the rest', async () => {
+  it('opens after the opening chapter\'s layers and prefetches the next chapter\'s', async () => {
     const story = await loadStory(BASE, { chapter: 'intro' });
     expect(story.title).toBe('Demo');
     expect(useStoryStore.getState().status).toBe('ready');
-    // Only rivers is needed by the intro chapter; villages arrives in the background.
-    expect(useLayersStore.getState().layers.map((l) => l.id)).toContain('story:rivers');
-    await vi.waitFor(() => expect(useStoryStore.getState().pendingLayers).toBe(0));
+    // Only rivers is needed by the intro chapter; villages (next chapter) arrives in the background.
+    expect(useLayersStore.getState().layers.map((l) => l.id)).toEqual(['story:rivers']);
+    await vi.waitFor(() => expect(useLayersStore.getState().layers).toHaveLength(2));
     expect(useLayersStore.getState().layers.map((l) => [l.id, l.visible])).toEqual([
       ['story:rivers', true],
       ['story:villages', false],
     ]);
+  });
+
+  it('loads layers as the reader gets near them, and never ones no chapter uses', async () => {
+    const url = 'https://geojson.app/stories/lazy/story.json';
+    const line = (x: number) => ({
+      type: 'FeatureCollection',
+      features: [{ type: 'Feature', geometry: { type: 'LineString', coordinates: [[x, 27], [x + 1, 28]] }, properties: {} }],
+    });
+    const ids = ['a', 'b', 'c', 'd', 'unused'];
+    files[url] = {
+      version: 1,
+      title: 'Lazy',
+      layers: ids.map((id) => ({ id, type: 'geojson', name: id.toUpperCase(), url: `data/${id}.geojson` })),
+      chapters: ['a', 'b', 'c', 'd'].map((id) => ({ id, title: id, body: '', camera: { center: [85, 27], zoom: 8 }, layers: [id] })),
+    };
+    ids.forEach((id, i) => (files[`https://geojson.app/stories/lazy/data/${id}.geojson`] = line(85 + i)));
+    const fetched = () =>
+      vi.mocked(fetch).mock.calls.map(([u]) => String(u).match(/lazy\/data\/(\w+)\./)?.[1]).filter(Boolean).sort();
+    const loaded = () => useLayersStore.getState().layers.map((l) => [l.id, l.visible]);
+    try {
+      await loadStory(url);
+      await vi.waitFor(() => expect(fetched()).toEqual(['a', 'b']));
+      await vi.waitFor(() => expect(loaded()).toEqual([['story:a', true], ['story:b', false]]));
+
+      // Jumping ahead loads that chapter (shown as soon as it arrives) and the one after it.
+      goToChapter('c');
+      await vi.waitFor(() => expect(fetched()).toEqual(['a', 'b', 'c', 'd']));
+      await vi.waitFor(() =>
+        expect(loaded()).toEqual([['story:a', false], ['story:b', false], ['story:c', true], ['story:d', false]]),
+      );
+      expect(useStoryStore.getState().pendingLayers).toBe(0);
+    } finally {
+      delete files[url];
+      for (const id of ids) delete files[`https://geojson.app/stories/lazy/data/${id}.geojson`];
+    }
+  });
+
+  it('opens built-in stories by slug', async () => {
+    vi.stubGlobal('window', { location: { href: 'https://geojson.app/?story=demo' } });
+    await expect(loadStory('demo')).resolves.toMatchObject({ title: 'Demo' });
+    expect(useStoryStore.getState().url).toBe(BASE);
   });
 
   it('surfaces fetch/validation errors in the store', async () => {

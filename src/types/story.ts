@@ -17,6 +17,8 @@ export interface StoryDocument {
   byline?: string;
   /** Basemap theme while the story is open. */
   theme?: MapTheme;
+  /** IANA zone every time is shown in while the story is open (timeline, captions, tooltips), e.g. "Asia/Kathmandu". Default: the reader's. */
+  timeZone?: string;
   credits?: StorySource[];
   layers: StoryLayer[];
   chapters: StoryChapter[];
@@ -78,7 +80,7 @@ export interface StoryTime {
   /** Start playing once the camera arrives. */
   autoplay?: boolean;
   loop?: boolean;
-  /** IANA zone for labels, e.g. "Asia/Kathmandu". */
+  /** IANA zone for labels, e.g. "Asia/Kathmandu" (default: the story's `timeZone`). */
   timeZone?: string;
   /** Chase camera: follow the head of this layer's animated track while playing. */
   follow?: StoryFollow;

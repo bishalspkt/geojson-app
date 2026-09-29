@@ -1,6 +1,6 @@
 # The Bhote Koshi–Trishuli disaster, 26 August 2026 — story pipeline
 
-This folder builds the story served at `/stories/bhotekoshi-2026/story.json`. Open it in the app at `/?story=/stories/bhotekoshi-2026/story.json`; add `&chapter=<id>` to jump to a chapter. Everything in `public/stories/bhotekoshi-2026/` is generated from open data by the pipeline here. Rebuild it rather than editing it by hand.
+This folder builds the story served at `/stories/bhotekoshi-2026/story.json`. Open it in the app at `/?story=bhotekoshi-2026`; add `&chapter=<id>` to jump to a chapter. Everything in `public/stories/bhotekoshi-2026/` is generated from open data by the pipeline here. Rebuild it rather than editing it by hand.
 
 ```bash
 cd stories/bhotekoshi-2026/pipeline

@@ -20,4 +20,4 @@ A story is data: `public/stories/<name>/story.json` plus the GeoJSON/images it r
 
 - `node build.mjs` in the pipeline reruns offline from cache.
 - `npm run lint && npm test && npm run build`.
-- Dev server: `/?story=/stories/<name>/story.json` → every chapter: camera lands in the visible area (panel doesn't cover the subject), the right layers show, timeline plays, swipe works, legends/sources render, no console errors. Use `?chapter=<id>` to jump straight to a chapter. In the hidden preview pane rendering can stall — drive a headless Chrome (Playwright with the system Chrome) for screenshots instead.
+- Dev server: `/?story=<name>` (≡ `/stories/<name>/story.json`) → every chapter: camera lands in the visible area (panel doesn't cover the subject), the right layers show, timeline plays, swipe works, legends/sources render, no console errors. Use `?chapter=<id>` to jump straight to a chapter. In the hidden preview pane rendering can stall — drive a headless Chrome (Playwright with the system Chrome) for screenshots instead.

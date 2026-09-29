@@ -18,7 +18,7 @@ Built entirely on the open web-mapping stack: [MapLibre GL JS](https://maplibre.
 - **3D terrain & relief** — open elevation tiles as 3D terrain (with exaggeration) and hillshade; tilt up to 85° for valley-level views.
 - **Imagery** — add satellite and Earth-observation layers (NASA GIBS: MODIS, VIIRS, HLS 30 m, IMERG rainfall…), or georeferenced images; adjust opacity; **swipe-compare** any two for before/after.
 - **Timeline** — data with time properties (`time`, `date`, `start`/`end`, …) plays on a timeline with a histogram scrubber, cumulative or sliding-window modes; lines with per-vertex `coordTimes` animate as moving tracks, and new points pulse as they appear.
-- **Stories** — guided, shareable narratives (`?story=<url>&chapter=<id>`): each chapter flies the camera, switches layers, plays the timeline (optionally with a chase camera), and opens before/after comparisons. See the built-in **Bhote Koshi–Trishuli disaster (26 August 2026)** story and [docs/stories.md](docs/stories.md).
+- **Stories** — guided, shareable narratives (`?story=bhotekoshi-2026&chapter=<id>`, or `?story=<url>`): each chapter flies the camera, switches layers, plays the timeline (optionally with a chase camera), and opens before/after comparisons. See the built-in **Bhote Koshi–Trishuli disaster (26 August 2026)** story and [docs/stories.md](docs/stories.md).
 
 ## Embedding & scripting
 

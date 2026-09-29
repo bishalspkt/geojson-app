@@ -34,7 +34,7 @@ Core flows:
 9. Drag-drop a .geojson file anywhere on the map; paste a GeoJSON link in the Import panel.
 10. Phone width: tab bar fits, panels are bottom sheets (header collapses), timeline and compare labels sit above the sheet.
 11. Dark basemap: every panel, menu, toast and chart is dark and legible.
-12. Story: open a chapter link (`/?story=/stories/<name>/story.json&chapter=<id>`) with terrain — it lands at the chapter's zoom; step chapters with → and the contents list.
+12. Story: open a chapter link (`/?story=<name>&chapter=<id>`) with terrain — it lands at the chapter's zoom; step chapters with → and the contents list.
 13. Production build under headers: serve `dist/` with `public/_headers` applied and check the console for CSP violations.
 
 Embed flows (if integration code changed):

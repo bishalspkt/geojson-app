@@ -18,11 +18,15 @@ export function getBoundingBox(geoJson: GeoJSON | Feature): LngLatBounds {
 export type FocusPadding = number | { top: number; right: number; bottom: number; left: number };
 
 export interface FocusOptions {
+  /** Room around fitted features/bounds, on top of the map's own padding. */
   padding?: FocusPadding;
   maxZoom?: number;
   maxDuration?: number;
-  /** Pixel offset of the visual center (UI covering one side of the map). Camera targets only. */
-  offset?: [number, number];
+  /**
+   * The map's padding (UI covering its edges) to animate to during the move, so
+   * the target lands in the middle of what's visible. Fits use the current one.
+   */
+  viewPadding?: maplibregl.PaddingOptions;
 }
 
 /** Execute a one-shot focus request. `resolveFeature` maps a FeatureId to its feature. */
@@ -46,7 +50,7 @@ export function executeFocus(
       return;
     }
     case 'location': {
-      map.flyTo({ center: [target.longitude, target.latitude], zoom: 15, maxDuration });
+      map.flyTo({ center: [target.longitude, target.latitude], zoom: 15, maxDuration, padding: options.viewPadding });
       if (target.showDot !== false) {
         showLocateDot(map, target);
       }
@@ -71,7 +75,7 @@ export function executeFocus(
         zoom: target.zoom,
         pitch: target.pitch ?? 0,
         bearing: target.bearing ?? 0,
-        offset: options.offset,
+        padding: options.viewPadding,
         essential: true,
         duration,
         easing: easeInOutQuad,

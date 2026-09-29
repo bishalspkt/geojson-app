@@ -53,6 +53,8 @@ export function startCompareMap(container: HTMLElement, main: maplibregl.Map): (
       pitch: main.getPitch(),
       roll: main.getRoll(),
       elevation: main.getCenterElevation(),
+      // Same covered edges, so the same centre lands on the same pixels.
+      padding: main.getPadding(),
     });
   };
 
@@ -69,6 +71,7 @@ export function startCompareMap(container: HTMLElement, main: maplibregl.Map): (
     syncCamera();
   };
 
+  syncCamera(); // before the first frame, not just on load (padding isn't a constructor option)
   secondary.on('load', () => {
     loaded = true;
     syncAll();

@@ -8,12 +8,12 @@ Everything stays static and cheap: a story is a JSON file plus GeoJSON and image
 
 | Surface | How |
 |---|---|
-| Link | `https://geojson.app/?story=<url>&chapter=<index-or-id>` |
+| Link | `https://geojson.app/?story=<name>&chapter=<id>` for built-in stories (`?story=bhotekoshi-2026`), `?story=<url>` for any other |
 | App | Stories panel (or Import panel → Stories) |
 | Embed | `GeoJSONApp("create", { element, story: url, chapter })` |
 | SDK / agents | `map.loadStory(url, chapter?)`, `map.setStoryChapter(ref)`; event `story:chapter` |
 
-Story URLs must be `http(s)` (or site-relative); relative URLs inside the document resolve against the document's own URL, so a story folder can be moved as a unit. The host must allow CORS for cross-origin stories.
+A bare name (letters, digits, `-`, `_`) is a built-in story: `bhotekoshi-2026` ≡ `/stories/bhotekoshi-2026/story.json`. Links written by the app use the shortest form, and older `?story=%2Fstories%2F…` links keep working. Other story URLs must be `http(s)` (or site-relative); relative URLs inside the document resolve against the document's own URL, so a story folder can be moved as a unit. The host must allow CORS for cross-origin stories.
 
 ## Document format (version 1)
 
@@ -23,6 +23,7 @@ Story URLs must be `http(s)` (or site-relative); relative URLs inside the docume
   "title": "Nepal floods & debris flows",
   "subtitle": "…",                       // shown on the first chapter
   "theme": "light",                       // basemap theme while the story is open
+  "timeZone": "Asia/Kathmandu",           // optional: all times (timeline, captions, tooltips) in this zone, labelled NPT
   "credits": [{ "label": "BIPAD, Government of Nepal", "url": "https://bipadportal.gov.np" }],
   "layers": [ /* StoryLayer[] — loaded once, hidden until a chapter shows them */ ],
   "chapters": [ /* StoryChapter[] */ ]
@@ -131,3 +132,11 @@ Timeline modes: **cumulative** (everything up to now) or **recent** (a sliding w
 ## Building a story from data
 
 Keep raw downloads and processing out of `public/`: put a pipeline next to the story (see `stories/bhotekoshi-2026/pipeline/`) that fetches open data with caching, processes it, and writes `public/stories/<name>/`. Budget sizes — the whole story should load in a few seconds on a phone: simplify geometry, round coordinates to ~1 m (5 decimals), and prefer WebP for imagery chips.
+
+## Performance
+
+Readers may be on low-end phones, so a story only costs what the current chapter shows:
+
+- **Data layers load on demand**: the opening chapter's layers before it opens, the next chapter's right after, then more as the reader moves. A layer no chapter uses is never downloaded (SDK callers can still pass `waitForAll`).
+- **Only visible layers are on the map**: a hidden layer isn't tiled or uploaded to the GPU; once it has stayed hidden for 15 s its map sources are freed (showing it again sooner is instant). Imagery is only added while visible.
+- Keep individual GeoJSON files small (simplify, round coordinates to 5–6 decimals, drop unused properties); a layer shown in one chapter is still parsed in full.

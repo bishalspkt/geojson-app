@@ -10,15 +10,32 @@ export function granularityFor(spanMs: number): TimeGranularity {
   return 'minute';
 }
 
-const OPTIONS: Record<TimeGranularity, Intl.DateTimeFormatOptions> = {
+type Style = TimeGranularity | 'datetime';
+
+const OPTIONS: Record<Style, Intl.DateTimeFormatOptions> = {
   month: { year: 'numeric', month: 'short' },
   day: { year: 'numeric', month: 'short', day: 'numeric' },
   minute: { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' },
+  datetime: { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' },
+};
+
+/**
+ * Abbreviations people use for zones Intl (en-GB) only names as an offset
+ * ("GMT+5:45"). Zones not listed keep Intl's short name.
+ */
+const ZONE_ABBREVIATIONS: Record<string, string> = {
+  'Asia/Kathmandu': 'NPT',
+  'Asia/Katmandu': 'NPT',
+  'Asia/Kolkata': 'IST',
+  'Asia/Calcutta': 'IST',
+  'Asia/Dhaka': 'BST',
+  'Asia/Thimphu': 'BTT',
+  'Asia/Karachi': 'PKT',
 };
 
 const formatters = new Map<string, Intl.DateTimeFormat>();
 
-function formatter(granularity: TimeGranularity, timeZone: string | null, withZone: boolean): Intl.DateTimeFormat {
+function formatter(granularity: Style, timeZone: string | null, withZone: boolean): Intl.DateTimeFormat {
   const key = `${granularity}|${timeZone ?? ''}|${withZone}`;
   let f = formatters.get(key);
   if (!f) {
@@ -35,14 +52,29 @@ function formatter(granularity: TimeGranularity, timeZone: string | null, withZo
   return f;
 }
 
-/** Human label for an instant, e.g. "27 Sept 2024" or "16 Aug, 14:30 GMT+5:45". */
+function format(t: number, style: Style, timeZone: string | null, withZone: boolean): string {
+  const f = formatter(style, timeZone, withZone);
+  const abbreviation = withZone && timeZone ? ZONE_ABBREVIATIONS[timeZone] : undefined;
+  if (!abbreviation) return f.format(new Date(t));
+  return f
+    .formatToParts(new Date(t))
+    .map((p) => (p.type === 'timeZoneName' ? abbreviation : p.value))
+    .join('');
+}
+
+/** Human label for an instant, e.g. "27 Sept 2024" or "16 Aug, 14:30 NPT". */
 export function formatInstant(
   t: number,
   granularity: TimeGranularity,
   timeZone: string | null,
   opts: { withZone?: boolean } = {},
 ): string {
-  return formatter(granularity, timeZone, opts.withZone ?? granularity === 'minute').format(new Date(t));
+  return format(t, granularity, timeZone, opts.withZone ?? granularity === 'minute');
+}
+
+/** Full date and time with its zone, e.g. "26 Aug 2026, 08:37 NPT" (null zone = the viewer's). */
+export function formatDateTime(t: number, timeZone: string | null): string {
+  return format(t, 'datetime', timeZone, true);
 }
 
 /** Compact duration, e.g. "2 h 15 min", "3 days", "1.5 yr". */

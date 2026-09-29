@@ -10,6 +10,7 @@ import { sanitizeExternalLayerId } from '@/core/layers/ids';
 import { parseTime } from '@/core/time/temporal';
 import { ingest } from '@/extensions/sources/registry';
 import { goToChapter, loadStory } from '@/stories';
+import { isStorySlug } from '@/stories/ref';
 import {
   Bounds,
   CommandName,
@@ -394,11 +395,11 @@ export async function executeCommand(method: CommandName, args: unknown): Promis
     }
 
     case 'loadStory': {
-      if (!isHttpUrl(a.url) && !(typeof a.url === 'string' && a.url.startsWith('/'))) {
-        throw new Error('loadStory: url must be an http(s) URL or a site path');
+      if (!isHttpUrl(a.url) && !(typeof a.url === 'string' && (a.url.startsWith('/') || isStorySlug(a.url)))) {
+        throw new Error('loadStory: url must be an http(s) URL, a site path, or a built-in story name');
       }
       const chapter = typeof a.chapter === 'number' || typeof a.chapter === 'string' ? a.chapter : undefined;
-      const story = await loadStory(a.url as string, { chapter, waitForAll: true });
+      const story = await loadStory(a.url as string, { chapter });
       return { title: story.title, chapters: story.chapters.map((c) => ({ id: c.id, title: c.title })) };
     }
 

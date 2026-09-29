@@ -5,11 +5,12 @@ import { useSettingsStore } from '@/state/settings-store';
 import { useStoryStore } from '@/state/story-store';
 import { loadSource, LoadedData } from '@/extensions/sources/registry';
 import { parseStory, storyLayerId } from './schema';
-import { applyChapter, chapterIndexOf, chapterVisibility, resetStoryState } from './chapter';
+import { applyChapter, chapterDataLayers, chapterIndexOf, chapterVisibility, resetStoryState } from './chapter';
+import { resolveStoryRef } from './ref';
 
 let loadSeq = 0;
-/** Background layer fetches running at once. */
-const BACKGROUND_CONCURRENCY = 3;
+/** Stops following the open story's chapters (layer loading). */
+let stopFollowing: (() => void) | null = null;
 
 export interface LoadStoryOptions {
   chapter?: number | string;
@@ -17,20 +18,16 @@ export interface LoadStoryOptions {
   waitForAll?: boolean;
 }
 
-function absoluteUrl(url: string): string {
-  const base = typeof window !== 'undefined' ? window.location.href : 'http://localhost/';
-  return new URL(url, base).toString();
-}
-
 /**
  * Load a story: fetch + validate the document, add its imagery, load the data
- * layers the opening chapter needs, open that chapter, then stream the other
- * layers in the background. Layers that fail to load are reported, not fatal.
+ * layers the opening chapter needs and open that chapter. Other layers load as
+ * the reader gets near them (see `openStory`). Layers that fail to load are
+ * reported, not fatal. `url` may be a built-in story's slug (`resolveStoryRef`).
  */
 export async function loadStory(url: string, opts: LoadStoryOptions = {}): Promise<StoryDocument> {
   const seq = ++loadSeq;
   const store = useStoryStore.getState();
-  const docUrl = absoluteUrl(url);
+  const docUrl = resolveStoryRef(url, typeof window !== 'undefined' ? window.location.href : 'http://localhost/');
   store.setLoading(docUrl);
 
   try {
@@ -46,13 +43,22 @@ export async function loadStory(url: string, opts: LoadStoryOptions = {}): Promi
   }
 }
 
-/** Open an already-parsed story (SDK callers may pass documents inline). */
+/**
+ * Open an already-parsed story (SDK callers may pass documents inline).
+ *
+ * Data layers load on demand so low-end devices only download, parse and hold
+ * what the reader is near: the opening chapter's layers before it opens, the
+ * next chapter's right after, and so on as the reader moves. Layers no chapter
+ * uses are only loaded for `waitForAll`.
+ */
 export async function openStory(
   story: StoryDocument,
   opts: LoadStoryOptions & { seq?: number } = {},
 ): Promise<StoryDocument> {
   const seq = opts.seq ?? ++loadSeq;
   const stale = () => seq !== loadSeq;
+  stopFollowing?.();
+  stopFollowing = null;
   resetStoryState();
   if (story.theme) useSettingsStore.getState().setTheme(story.theme);
 
@@ -79,9 +85,9 @@ export async function openStory(
   const index = found >= 0 ? found : 0;
   const dataLayers = story.layers.filter((l): l is StoryGeoJsonLayer => l.type === 'geojson');
   const order = dataLayers.map((l) => storyLayerId(l.id));
-  const needed = new Set(story.chapters[index].layers);
-  const first = dataLayers.filter((l) => needed.has(l.id));
-  const rest = dataLayers.filter((l) => !needed.has(l.id));
+  const byId = new Map(dataLayers.map((l) => [l.id, l]));
+  const layersOf = (i: number) =>
+    story.chapters[i] ? chapterDataLayers(story.chapters[i]).flatMap((id) => byId.get(id) ?? []) : [];
 
   /** Add a loaded layer, visible iff the chapter being read right now shows it. */
   const add = (layer: StoryGeoJsonLayer, data: LoadedData) => {
@@ -106,47 +112,65 @@ export async function openStory(
     useStoryStore.getState().addLayerError(message);
   };
 
-  // Opening chapter first (in parallel), then the story opens.
-  const results = await Promise.allSettled(first.map((l) => loadSource({ kind: 'url', url: l.url })));
+  // Each layer is fetched once (a failure is reported once) and added once.
+  const loads = new Map<string, Promise<LoadedData | null>>();
+  const added = new Set<string>();
+  const pending = (delta: number) => {
+    if (!stale()) useStoryStore.getState().setPendingLayers(useStoryStore.getState().pendingLayers + delta);
+  };
+  const fetchLayer = (layer: StoryGeoJsonLayer): Promise<LoadedData | null> => {
+    let load = loads.get(layer.id);
+    if (!load) {
+      pending(1);
+      load = loadSource({ kind: 'url', url: layer.url })
+        .catch((err: unknown) => {
+          if (!stale()) fail(layer, err);
+          return null;
+        })
+        .finally(() => pending(-1));
+      loads.set(layer.id, load);
+    }
+    return load;
+  };
+  const addOnce = (layer: StoryGeoJsonLayer, data: LoadedData | null) => {
+    if (!data || stale() || added.has(layer.id)) return;
+    added.add(layer.id);
+    add(layer, data);
+  };
+  const load = (layers: StoryGeoJsonLayer[]) =>
+    Promise.all(layers.map(async (layer) => addOnce(layer, await fetchLayer(layer))));
+  /** The chapter being read, then (prefetched) the one after it. */
+  const loadAround = async (i: number) => {
+    await load(layersOf(i));
+    if (!stale()) await load(layersOf(i + 1));
+  };
+
+  // The opening chapter's layers (in parallel), then the story opens with them.
+  const opening = layersOf(index);
+  const results = await Promise.all(opening.map(fetchLayer));
   if (stale()) return story;
   // Set the index before `ready` so listeners never see the previous story's chapter.
   useStoryStore.getState().setChapterIndex(index);
   useStoryStore.getState().setReady(story);
-  first.forEach((layer, i) => {
-    const r = results[i];
-    if (r.status === 'fulfilled') add(layer, r.value);
-    else fail(layer, r.reason);
-  });
+  opening.forEach((layer, i) => addOnce(layer, results[i]));
   applyChapter(story, index);
 
-  // Everything else streams in behind the reader.
-  const background = (async () => {
-    useStoryStore.getState().setPendingLayers(rest.length);
-    let next = 0;
-    const worker = async () => {
-      while (next < rest.length) {
-        const layer = rest[next++];
-        try {
-          const data = await loadSource({ kind: 'url', url: layer.url });
-          if (stale()) return;
-          add(layer, data);
-        } catch (err) {
-          if (stale()) return;
-          fail(layer, err);
-        }
-        useStoryStore.getState().setPendingLayers(useStoryStore.getState().pendingLayers - 1);
-      }
-    };
-    await Promise.all(Array.from({ length: Math.min(BACKGROUND_CONCURRENCY, rest.length) }, worker));
-  })();
-
-  if (opts.waitForAll) await background;
+  stopFollowing = useStoryStore.subscribe(
+    (s) => s.chapterIndex,
+    (i) => {
+      if (!stale()) void loadAround(i);
+    },
+  );
+  const around = loadAround(index);
+  if (opts.waitForAll) await Promise.all([around, load(dataLayers)]);
   return story;
 }
 
 /** Close the open story and remove its layers. */
 export function closeStory(): void {
   loadSeq++;
+  stopFollowing?.();
+  stopFollowing = null;
   resetStoryState();
   useStoryStore.getState().close();
 }

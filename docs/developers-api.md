@@ -143,7 +143,7 @@ Creates a map instance inside `options.element` and returns an `EmbedInstance`.
 |---|---|---|---|
 | `element` | `string \| HTMLElement` | **required** | CSS selector or DOM node to mount into. |
 | `geojson` | `string` | — | URL to a GeoJSON file (`Feature` or `FeatureCollection`). Auto-loaded after init. |
-| `story` | `string` | — | URL of a [story document](stories.md) (layers + chapters) to open after init. |
+| `story` | `string` | — | A [story](stories.md) to open after init: a built-in story's name (`"bhotekoshi-2026"`) or a story document URL. |
 | `chapter` | `number \| string` | `0` | Initial story chapter (index or chapter id). |
 | `center` | `[lng, lat]` | `[105, -5]` | Initial map center. |
 | `zoom` | `number` | `2.8` | Initial zoom (0–22). |
@@ -522,7 +522,7 @@ await map.setCompare({ enabled: false });
 
 #### `loadStory(url, chapter?): Promise<StoryInfo>`
 
-Opens a [story document](stories.md) and returns `{ title, chapters: [{ id, title }] }`. Allows 60 s (stories fetch several layers).
+Opens a [story](stories.md) (built-in name or document URL) and returns `{ title, chapters: [{ id, title }] }` once its opening chapter is shown; other layers load as chapters are visited. Allows 60 s (stories fetch several layers).
 
 #### `setStoryChapter(chapter): Promise<void>`
 

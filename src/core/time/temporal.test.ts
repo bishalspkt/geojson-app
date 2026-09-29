@@ -12,7 +12,7 @@ import {
   trackParts,
   unionExtents,
 } from './temporal';
-import { formatDuration, formatInstant, granularityFor } from './format';
+import { formatDateTime, formatDuration, formatInstant, granularityFor } from './format';
 
 const pt = (props: Record<string, unknown>): Feature => ({
   type: 'Feature',
@@ -201,6 +201,14 @@ describe('format', () => {
     expect(formatInstant(t, 'minute', 'Asia/Kathmandu')).toContain('05:45');
     // Unknown zones fall back instead of throwing.
     expect(() => formatInstant(t, 'day', 'Mars/Olympus')).not.toThrow();
+  });
+
+  it('labels zones by their usual abbreviation, not a GMT offset', () => {
+    const t = Date.parse('2026-08-26T02:52:10Z');
+    expect(formatInstant(t, 'minute', 'Asia/Kathmandu')).toBe('26 Aug, 08:37 NPT');
+    expect(formatInstant(t, 'minute', 'Asia/Kathmandu', { withZone: false })).toBe('26 Aug, 08:37');
+    expect(formatDateTime(t, 'Asia/Kathmandu')).toBe('26 Aug 2026, 08:37 NPT');
+    expect(formatDateTime(t, 'UTC')).toBe('26 Aug 2026, 02:52 UTC');
   });
 
   it('formats durations compactly', () => {

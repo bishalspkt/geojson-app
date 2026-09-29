@@ -300,6 +300,15 @@ export function parseStory(raw: unknown, baseUrl: string): StoryDocument {
   if (typeof raw.theme === 'string' && (MAP_THEMES as string[]).includes(raw.theme)) {
     doc.theme = raw.theme as StoryDocument['theme'];
   }
+  if (raw.timeZone !== undefined) {
+    const zone = str(raw, 'timeZone', '');
+    try {
+      new Intl.DateTimeFormat('en', { timeZone: zone });
+    } catch {
+      throw new StoryError('.timeZone', `unknown time zone "${zone}"`);
+    }
+    doc.timeZone = zone;
+  }
   if (Array.isArray(raw.credits)) doc.credits = parseLinks(raw.credits);
   return doc;
 }

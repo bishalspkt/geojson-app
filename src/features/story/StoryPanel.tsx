@@ -18,10 +18,11 @@ import { cn } from '@/lib/utils';
 import { RichText } from './rich-text';
 import { Chart } from './charts';
 import { FEATURED_STORIES } from './featured';
+import { readableSearch, storyRefFor } from '@/stories/ref';
 
 /**
  * Keep `?story=…&chapter=…` in the address bar so any chapter can be shared
- * (main app only). The link is left alone while a story loads or after it
+ * (main app only): `?story=bhotekoshi-2026&chapter=timure` for built-in stories. The link is left alone while a story loads or after it
  * failed, so reloading retries it; it's removed only when the story is closed.
  */
 function useShareableUrl(storyUrl: string | null, chapterId: string | null, enabled: boolean) {
@@ -30,13 +31,13 @@ function useShareableUrl(storyUrl: string | null, chapterId: string | null, enab
     if (!enabled || status === 'loading' || status === 'error') return;
     const url = new URL(window.location.href);
     if (storyUrl && chapterId) {
-      const doc = new URL(storyUrl, window.location.href);
-      url.searchParams.set('story', doc.origin === window.location.origin ? doc.pathname + doc.search : doc.toString());
+      url.searchParams.set('story', storyRefFor(storyUrl, window.location.origin));
       url.searchParams.set('chapter', chapterId);
     } else {
       url.searchParams.delete('story');
       url.searchParams.delete('chapter');
     }
+    url.search = readableSearch(url.search);
     if (url.toString() !== window.location.href) window.history.replaceState(window.history.state, '', url);
   }, [storyUrl, chapterId, enabled, status]);
 }

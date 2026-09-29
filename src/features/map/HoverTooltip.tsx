@@ -4,13 +4,15 @@ import { useUiStore } from '@/state/ui-store';
 import { useToolsStore } from '@/state/tools-store';
 import { SIMPLESTYLE_KEYS } from '@/style';
 import { parseTime } from '@/core/time/temporal';
+import { formatDateTime } from '@/core/time/format';
+import { useTimeStore } from '@/state/time-store';
 import { NAME_KEYS } from '@/features/context-menu/feature-details';
 import { featureMedia, MEDIA_KEYS } from '@/features/media/media';
 
 const MAX_FIELDS = 4;
 const HIDDEN = new Set<string>([...SIMPLESTYLE_KEYS, ...MEDIA_KEYS, 'coordTimes', 'coordinateProperties', 'id', 'osm_id']);
 
-function formatValue(value: unknown): string | null {
+function formatValue(value: unknown, timeZone: string | null): string | null {
   if (value == null || value === '') return null;
   if (typeof value === 'number') return Number.isInteger(value) ? value.toLocaleString('en-US') : value.toFixed(2);
   if (typeof value === 'boolean') return value ? 'yes' : 'no';
@@ -18,7 +20,7 @@ function formatValue(value: unknown): string | null {
     // ISO timestamps read better as dates.
     if (/^\d{4}-\d{2}-\d{2}T/.test(value)) {
       const t = parseTime(value);
-      if (t !== null) return new Date(t).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+      if (t !== null) return formatDateTime(t, timeZone);
     }
     return value.length > 80 ? `${value.slice(0, 77)}…` : value;
   }
@@ -36,6 +38,8 @@ export default function HoverTooltip() {
   const hover = useUiStore((s) => s.hover);
   const layers = useLayersStore((s) => s.layers);
   const toolActive = useToolsStore((s) => s.activeTool !== null);
+  // The open story's (or timeline's) zone, else the viewer's.
+  const timeZone = useTimeStore((s) => s.timeZone);
 
   const content = useMemo(() => {
     if (!hover) return null;
@@ -47,12 +51,12 @@ export default function HoverTooltip() {
       ?? Object.keys(props).filter((k) => !k.startsWith('_') && !HIDDEN.has(k) && k !== nameKey);
     const rows: [string, string][] = [];
     for (const key of fields) {
-      const v = formatValue(props[key]);
+      const v = formatValue(props[key], timeZone);
       if (v !== null) rows.push([humanize(key), v]);
       if (rows.length >= MAX_FIELDS) break;
     }
     return { name: nameKey ? String(props[nameKey]) : null, layer: hit.layer.name, rows, media: featureMedia(props) };
-  }, [hover, layers]);
+  }, [hover, layers, timeZone]);
 
   if (!hover || !content || toolActive) return null;
   if (typeof window !== 'undefined' && window.matchMedia?.('(hover: none)').matches) return null;

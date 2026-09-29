@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BookOpen, Check, Copy, ExternalLink } from 'lucide-react';
 import { useMapStore } from '@/state/map-store';
 import { useSettingsStore } from '@/state/settings-store';
+import { storyRefFor } from '@/stories/ref';
 import { useStoryStore } from '@/state/story-store';
 import { Segmented } from '@/components/ui/segmented';
 import { IconButton } from '@/components/ui/icon-button';
@@ -66,12 +67,8 @@ export default function DevelopersPanel() {
   const storyUrl = useStoryStore((s) => (s.status === 'ready' ? s.url : null));
   const [kind, setKind] = useState<'script' | 'iframe'>('script');
 
-  // Same-origin stories as a site path (works on geojson.app); others keep their full URL.
-  const storyPath = (() => {
-    if (!storyUrl) return null;
-    const doc = new URL(storyUrl, window.location.href);
-    return doc.origin === window.location.origin ? doc.pathname + doc.search : doc.href;
-  })();
+  // Built-in stories by slug, other same-origin ones as a site path (both work on geojson.app); others keep their full URL.
+  const storyPath = storyUrl ? storyRefFor(storyUrl, window.location.origin) : null;
   const script = `<div id="map" style="width:100%;height:480px"></div>
 <script src="${ORIGIN}/embed.js"></script>
 <script>

@@ -104,7 +104,7 @@ interface DataLayer {
 | `imagery` | imagery store → imagery renderer (+ COG decoder) | with the first imagery layer |
 | `terrain` | terrain/hillshade settings → DEM, hillshade, sky | when terrain or relief is first switched on |
 | `chase` | timeline `follow` → chase camera | when a timeline first follows a track |
-| `camera` | `ui-store.focusRequest` → flights, padded by `viewInsets` | at startup |
+| `camera` | `ui-store.focusRequest` → flights; map padding mirrors `viewInsets` | at startup |
 | `pointer` | hover, click-to-select, context-menu events, exclusive tools | at startup |
 
 Lazy bindings use `core/lazy.ts` (`lazy(create, destroy)`), so a session that never touches imagery, terrain or the chase camera never downloads them. A new optional capability should follow the same pattern (see "Performance").
@@ -119,7 +119,7 @@ gj:<layerId>:polygons      (source)   gj:<layerId>:polygons:main / :outline
 
 - The `gj:` prefix is reserved for data layers; `sys:` for system overlays (highlight, measure, locate); `embed:` for SDK-added custom layers. Collisions are impossible by construction — never hand-write a raw layer id outside `core/layers/ids.ts`.
 - Paint comes from `src/style/` which resolves [simplestyle-spec](https://github.com/mapbox/simplestyle-spec) feature properties into data-driven MapLibre expressions.
-- Visibility: hidden layers use `layout.visibility`; hidden individual features use a `['!', ['in', ['get','_fid'], …]]` filter.
+- Visibility: only visible layers are on the map. A layer's sources are built when it's first shown; hiding it sets `layout.visibility` and frees its sources after `EVICT_HIDDEN_MS` (15 s) hidden. Hidden individual features use a `['!', ['in', ['get','_fid'], …]]` filter.
 - Re-rendering is change-driven: the renderer diffs by layer identity and only rewrites sources whose layer object changed (layers are immutable in the store).
 - Interactions (`core/layers/interactions.ts`) attach hover/click/contextmenu handlers per rendered layer and translate hits back into `{layerId, featureId}` via `_fid` — UI code never sees MapLibre event objects.
 
@@ -136,7 +136,7 @@ gj:<layerId>:polygons      (source)   gj:<layerId>:polygons:main / :outline
 
 ### Stories
 
-`src/stories/` turns a validated story document into store updates: the loader fetches layers (through the source-provider registry) and adds them hidden, and `applyChapter` sets layer visibility, terrain, compare, timeline, and a `camera` focus request. Chapters are pure store transitions, so they're unit-tested without a map. Format reference: [stories.md](stories.md).
+`src/stories/` turns a validated story document into store updates: the loader fetches layers on demand (the current and next chapter's, through the source-provider registry) and adds them hidden, and `applyChapter` sets layer visibility, terrain, compare, timeline, and a `camera` focus request. Chapters are pure store transitions, so they're unit-tested without a map. Format reference: [stories.md](stories.md).
 
 `src/stories/index.ts` is a lazy facade (`loadStory`, `goToChapter`, `closeStory` are async and load the story runtime on first use); the story feature itself imports `stories/runtime` directly.
 
@@ -144,7 +144,7 @@ gj:<layerId>:polygons      (source)   gj:<layerId>:polygons:main / :outline
 
 ## UI: chrome, layouts, themes
 
-- **One panel frame, three layouts** (`features/controls/Panel.tsx`): a floating card above the toolbar on desktop, a bottom sheet above the tab bar on phones (the header collapses it; max ~55 dvh), and a sidebar in wide embeds with `chrome=full`. Every panel reports the map area it covers (`ui-store.viewInsets`), so camera flights centre targets on what's still visible and the timeline and compare labels move out of its way. Escape closes the open panel; popovers and menus take Escape first (capture phase).
+- **One panel frame, three layouts** (`features/controls/Panel.tsx`): a floating card above the toolbar on desktop, a bottom sheet above the tab bar on phones (the header collapses it; max ~55 dvh), and a sidebar in wide embeds with `chrome=full`. Every panel reports the map area it covers (`ui-store.viewInsets`); the camera binding mirrors it into MapLibre's padding (keeping the view still when a panel opens or closes), so flights, fits and the chase camera centre targets on what's still visible and the timeline and compare labels move out of its way. Escape closes the open panel; popovers and menus take Escape first (capture phase).
 - **Toolbar** (`MapControls.tsx`): one button per registered panel — icon + label on desktop, a native-style tab bar on phones. Panels declare `mobileVisible`, `embedVisible`, `useHidden()` and `useBadge()`; their code is split (`lazyPanel`) and preloaded on hover/focus and at idle.
 - **Theme tokens** (`src/index.css`): components use semantic colours (`bg-glass`, `text-foreground`, `text-muted-foreground`, `bg-hover`, `border-glass-border`, …) and the `glass` / `glass-strong` / `eyebrow` utilities — never raw greys. Dark and Midnight basemaps put `.dark` on `<html>`, so every panel, menu and chart follows the map.
 - **Notices**: `notify(message)` (`state/notify-store.ts`) from any layer shows a toast (`features/toast`) — no `alert()`.

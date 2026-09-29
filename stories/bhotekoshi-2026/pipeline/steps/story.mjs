@@ -1048,6 +1048,8 @@ export async function buildStory() {
   const story = {
     version: 1,
     title: 'The Bhote Koshi–Trishuli disaster, 26 August 2026',
+    // Every time in the app (timeline, captions, tooltips) reads in Nepal time; the data is UTC.
+    timeZone: 'Asia/Kathmandu',
     subtitle: 'An ice–rock avalanche on Langtang Lirung became a 200 km debris flow. Minute by minute and town by town, from open data.',
     byline: 'geojson.app',
     layers,

@@ -82,6 +82,19 @@ function autoplayAfterFlight(seq: number, index: number) {
   autoplayTimer = setTimeout(play, AUTOPLAY_FALLBACK_MS);
 }
 
+/** Ids of every story layer a chapter uses: shown, on either compare side or option, or followed. */
+export function chapterDataLayers(chapter: StoryChapter): string[] {
+  const ids = new Set(chapter.layers);
+  const compare = chapter.compare;
+  if (compare) {
+    for (const ref of [compare.left, compare.right, ...[...(compare.leftOptions ?? []), ...(compare.rightOptions ?? [])].map((o) => o.layers)]) {
+      for (const id of idList(ref)) ids.add(id);
+    }
+  }
+  if (chapter.time?.follow) ids.add(chapter.time.follow.layer);
+  return [...ids];
+}
+
 /** Visibility of every story layer for a chapter (compare sides included). */
 export function chapterVisibility(story: StoryDocument, chapter: StoryChapter) {
   const visible = new Set(chapter.layers);
@@ -157,7 +170,7 @@ export function applyChapter(story: StoryDocument, index: number): void {
       speed: 1,
       window,
       loop: chapter.time.loop ?? false,
-      timeZone: chapter.time.timeZone ?? null,
+      timeZone: chapter.time.timeZone ?? story.timeZone ?? null,
       playing: false,
       follow: chapter.time.follow
         ? {
@@ -170,9 +183,10 @@ export function applyChapter(story: StoryDocument, index: number): void {
         : null,
       captions: (chapter.time.captions ?? []).map((c) => ({ t: parseTime(c.time)!, text: c.text })),
     });
-  } else if (time.enabled || time.extentLocked) {
-    time.disable();
-    time.configure({ lockExtent: false, window: null, timeZone: null });
+  } else {
+    if (time.enabled || time.extentLocked) time.disable();
+    // Times outside the timeline (tooltips) still read in the story's zone.
+    time.configure({ lockExtent: false, window: null, timeZone: story.timeZone ?? null });
   }
 
   const seq = useUiStore.getState().requestFocus({ kind: 'camera', ...chapter.camera });
