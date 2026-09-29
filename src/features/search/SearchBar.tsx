@@ -151,35 +151,48 @@ function ResultsList({
 }) {
   if (results.length > 0) {
     return (
-      <ul role="listbox" className="py-1">
-        {results.map((feature, i) => {
-          const { primary, secondary } = formatResult(feature.properties);
-          const isActive = i === activeIndex;
-          return (
-            <li
-              key={`${feature.properties.osm_id}-${i}`}
-              role="option"
-              aria-selected={isActive}
-              onMouseEnter={() => setActiveIndex(i)}
-              onClick={() => selectResult(feature)}
-              className={`flex items-start gap-2.5 px-3 py-2.5 cursor-pointer transition-colors duration-100 ${
-                isActive ? 'bg-primary/10' : 'hover:bg-hover'
-              }`}
-            >
-              <MapPin className={`h-4 w-4 mt-0.5 shrink-0 ${isActive ? 'text-primary' : 'text-subtle-foreground'}`} />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold truncate">{primary}</span>
-                  <span className="text-[10px] font-bold text-subtle-foreground uppercase tracking-wider shrink-0">
-                    {getTypeLabel(feature.properties)}
-                  </span>
+      <>
+        <ul role="listbox" className="py-1">
+          {results.map((feature, i) => {
+            const { primary, secondary } = formatResult(feature.properties);
+            const isActive = i === activeIndex;
+            return (
+              <li
+                key={`${feature.properties.osm_id}-${i}`}
+                role="option"
+                aria-selected={isActive}
+                onMouseEnter={() => setActiveIndex(i)}
+                onClick={() => selectResult(feature)}
+                className={`flex items-start gap-2.5 px-3 py-2.5 cursor-pointer transition-colors duration-100 ${
+                  isActive ? 'bg-primary/10' : 'hover:bg-hover'
+                }`}
+              >
+                <MapPin className={`h-4 w-4 mt-0.5 shrink-0 ${isActive ? 'text-primary' : 'text-subtle-foreground'}`} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold truncate">{primary}</span>
+                    <span className="text-[10px] font-bold text-subtle-foreground uppercase tracking-wider shrink-0">
+                      {getTypeLabel(feature.properties)}
+                    </span>
+                  </div>
+                  {secondary && <p className="text-xs text-muted-foreground truncate">{secondary}</p>}
                 </div>
-                {secondary && <p className="text-xs text-muted-foreground truncate">{secondary}</p>}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="border-t border-glass-border px-3 py-1.5 text-[10px] text-subtle-foreground">
+          Search by{' '}
+          <a href="https://photon.komoot.io" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-primary">
+            Photon
+          </a>{' '}
+          · data ©{' '}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-primary">
+            OpenStreetMap
+          </a>{' '}
+          contributors
+        </p>
+      </>
     );
   }
 

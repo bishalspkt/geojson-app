@@ -261,15 +261,18 @@ export async function buildStory() {
       attribution: 'DHM via Acharya & Paudel (2026), CC BY 4.0',
       legend: { kind: 'swatches', items: [{ label: 'Gauge survived', color: '#0369a1' }, { label: 'Gauge went silent / destroyed', color: '#7f1d1d' }] } },
     { id: 'report-places', type: 'geojson', name: 'Source estimates, barrier lakes and reported places', url: 'data/report-places.geojson', temporal: false,
-      display: { labelField: 'name', labelMinZoom: 10.5, tooltipFields: ['note'] } },
+      display: { labelField: 'name', labelMinZoom: 10.5, tooltipFields: ['note'] },
+      attribution: 'USGS, GFZ, UNOSAT and news reports (research dossier)' },
     { id: 'flow', type: 'geojson', name: 'Debris-flow front, 26 Aug 2026 (times from DHM gauges)', url: 'data/rasuwa-2026-flow.geojson',
       temporal: { coordTimesField: 'coordTimes', trackColor: '#c2410c' }, display: { tooltipFields: ['length_km', 'start', 'end'] },
-      legend: { kind: 'gradient', title: 'Flow front', stops: [{ color: '#fed7aa', label: 'earlier' }, { color: '#c2410c' }, { color: '#fff7ed', label: 'front' }] } },
+      legend: { kind: 'gradient', title: 'Flow front', stops: [{ color: '#fed7aa', label: 'earlier' }, { color: '#c2410c' }, { color: '#fff7ed', label: 'front' }] },
+      attribution: 'Centreline and timing: Acharya & Paudel (2026), CC BY 4.0, from DHM gauge reports' },
     { id: 'places', type: 'geojson', name: 'Settlements along the path (flash when the front arrives)', url: 'data/rasuwa-2026-places.geojson',
       temporal: { startField: 'arrival' }, display: { labelField: 'name', labelMinZoom: 10.5, tooltipFields: ['arrival', 'km_downstream', 'dist_m', 'place'] },
       attribution: '© OpenStreetMap contributors' },
     { id: 'keypoints', type: 'geojson', name: 'Key places and gauges (research dossier)', url: 'data/rasuwa-2026-keypoints.geojson', temporal: false,
-      display: { labelField: 'name', labelMinZoom: 7.5, tooltipFields: ['reported', 'arrival', 'km', 'note'] } },
+      display: { labelField: 'name', labelMinZoom: 7.5, tooltipFields: ['reported', 'arrival', 'km', 'note'] },
+      attribution: 'Acharya & Paudel (2026), CC BY 4.0; USGS, DHM and news reports (research dossier)' },
     { id: 'unosat-detachment', type: 'geojson', name: `Detachment zone, ${un?.detachment_km2 ?? 1.96} km² (UNOSAT, Landsat 9, 26 Aug)`, url: 'data/unosat-detachment.geojson', temporal: false,
       display: { tooltipFields: ['area_km2'] }, attribution: 'UNOSAT, CC BY-SA 4.0',
       legend: { kind: 'swatches', items: [{ label: 'Detachment zone', color: '#7c2d12', shape: 'fill' }] } },
@@ -381,7 +384,8 @@ export async function buildStory() {
     body:
       `At **08:37:10** a slab of rock and glacier ice broke from the north face of **Langtang Lirung**. In the next six hours the debris flow it became ran **${fmt(r26.length_km)} km** down the Bhote Koshi, Trishuli and Narayani, past the Nepal–China border, a dry port, a trekking town, a cascade of hydropower plants and a string of river towns.\n\n` +
       `It was Nepal's deadliest disaster since the 2015 earthquake. As of 22 September the NDRRMA counts **1,451 bodies or remains recovered and 5,705 people missing**; China reported 43 dead and 519 missing. The government puts damage and losses at **${usd(rdna.total_effects.usd_m)}**. All figures are still provisional.\n\n` +
-      `This story follows the front minute by minute, then goes town by town with the sharpest before-and-after imagery that is openly available. Every layer is open data; the sources are listed in each chapter.`,
+      `This story follows the front minute by minute, then goes town by town with the sharpest before-and-after imagery that is openly available. Every layer is open data; the sources are listed in each chapter.\n\n` +
+      `**Please note:** this is an independent analysis built from open data, not an official source. All figures are provisional and may change. Not for emergency response or navigation.`,
     camera: { center: [85.0, 28.0], zoom: 8.6, pitch: 50, bearing: -20, duration: 3500 },
     layers: ['rivers', 'flow', 'keypoints'],
     terrain: true,

@@ -6,7 +6,7 @@ import { MapTheme } from '@/types';
 export const DEFAULT_TILES_URL = 'https://tiles.geojson.app/20260308.json';
 
 export const ATTRIBUTION =
-  '<a href="https://protomaps.com" target="_blank">Protomaps</a> © <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>';
+  '<a href="https://protomaps.com" target="_blank">Protomaps</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
 
 export interface BasemapOptions {
   /** TileJSON url for the vector source. Swap to bring your own tiles. */

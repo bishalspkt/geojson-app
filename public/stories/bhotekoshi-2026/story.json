@@ -346,7 +346,8 @@
     "tooltipFields": [
      "note"
     ]
-   }
+   },
+   "attribution": "USGS, GFZ, UNOSAT and news reports (research dossier)"
   },
   {
    "id": "flow",
@@ -380,7 +381,8 @@
       "label": "front"
      }
     ]
-   }
+   },
+   "attribution": "Centreline and timing: Acharya & Paudel (2026), CC BY 4.0, from DHM gauge reports"
   },
   {
    "id": "places",
@@ -417,7 +419,8 @@
      "km",
      "note"
     ]
-   }
+   },
+   "attribution": "Acharya & Paudel (2026), CC BY 4.0; USGS, DHM and news reports (research dossier)"
   },
   {
    "id": "unosat-detachment",
@@ -1770,7 +1773,7 @@
    "id": "title",
    "kicker": "26 August 2026 · Rasuwa → Chitwan",
    "title": "The Bhote Koshi–Trishuli disaster",
-   "body": "At **08:37:10** a slab of rock and glacier ice broke from the north face of **Langtang Lirung**. In the next six hours the debris flow it became ran **200 km** down the Bhote Koshi, Trishuli and Narayani, past the Nepal–China border, a dry port, a trekking town, a cascade of hydropower plants and a string of river towns.\n\nIt was Nepal's deadliest disaster since the 2015 earthquake. As of 22 September the NDRRMA counts **1,451 bodies or remains recovered and 5,705 people missing**; China reported 43 dead and 519 missing. The government puts damage and losses at **US$2.70 bn**. All figures are still provisional.\n\nThis story follows the front minute by minute, then goes town by town with the sharpest before-and-after imagery that is openly available. Every layer is open data; the sources are listed in each chapter.",
+   "body": "At **08:37:10** a slab of rock and glacier ice broke from the north face of **Langtang Lirung**. In the next six hours the debris flow it became ran **200 km** down the Bhote Koshi, Trishuli and Narayani, past the Nepal–China border, a dry port, a trekking town, a cascade of hydropower plants and a string of river towns.\n\nIt was Nepal's deadliest disaster since the 2015 earthquake. As of 22 September the NDRRMA counts **1,451 bodies or remains recovered and 5,705 people missing**; China reported 43 dead and 519 missing. The government puts damage and losses at **US$2.70 bn**. All figures are still provisional.\n\nThis story follows the front minute by minute, then goes town by town with the sharpest before-and-after imagery that is openly available. Every layer is open data; the sources are listed in each chapter.\n\n**Please note:** this is an independent analysis built from open data, not an official source. All figures are provisional and may change. Not for emergency response or navigation.",
    "camera": {
     "center": [
      85,
