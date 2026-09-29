@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { MapPinned } from 'lucide-react';
 import { useLayersStore } from '@/state/layers-store';
 import { useStoryStore } from '@/state/story-store';
+import LogoMark from './LogoMark';
 import MapSettings from './MapSettings';
 
-const BASE_TITLE = 'geojson.app - Open Source Mapping & Geospatial Data Visualization';
+const BASE_TITLE = 'geojson.app — View, explore and share GeoJSON on an open map';
 
 /** What's on the map, for the document title: the open story, the dataset name, or a layer count. */
 function useDocumentTitle() {
@@ -24,8 +24,8 @@ function useDocumentTitle() {
 export default function Brand() {
   useDocumentTitle();
   return (
-    <div className="fixed left-3 top-3 z-40 flex h-11 items-center gap-2 rounded-2xl bg-brand pl-3.5 pr-1.5 text-white shadow-lg shadow-brand/30">
-      <MapPinned className="h-4 w-4" aria-hidden />
+    <div className="fixed left-3 top-3 z-40 flex h-11 items-center gap-2 rounded-2xl bg-brand pl-2.5 pr-1.5 text-white shadow-lg shadow-brand/30">
+      <LogoMark className="-ml-1 h-7 w-7" />
       <h1 className="font-heading text-sm font-extrabold tracking-tight">geojson.app</h1>
       <span className="mx-0.5 h-4 w-px bg-white/25" aria-hidden />
       <MapSettings />

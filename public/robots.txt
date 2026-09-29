@@ -1,0 +1,5 @@
+# geojson.app welcomes crawlers and agents. A summary for LLMs: https://geojson.app/llms.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://geojson.app/sitemap.xml

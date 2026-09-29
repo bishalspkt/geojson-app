@@ -3,26 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="View, explore and share GeoJSON on a fast open-source map — 3D terrain, timelines, satellite imagery and guided map stories. Embeddable, free, no sign-up." />
+    <title>geojson.app — View, explore and share GeoJSON on an open map</title>
+    <meta name="description" content="View, explore and share GeoJSON on a fast open-source map — 3D terrain, timelines, satellite imagery and guided map stories. Embeddable, scriptable, free, no sign-up." />
     <meta name="theme-color" content="#e8edf5" />
     <meta name="color-scheme" content="light dark" />
-    <meta property="og:title" content="geojson.app - Open Source Mapping & Geospatial Data Visualization" />
+    <meta name="application-name" content="geojson.app" />
+    <meta name="apple-mobile-web-app-title" content="geojson.app" />
+    <link rel="canonical" href="https://geojson.app/" />
+    <meta property="og:site_name" content="geojson.app" />
+    <meta property="og:title" content="geojson.app — Open maps for people and agents" />
     <meta property="og:description" content="View, explore and share GeoJSON on a fast open-source map — 3D terrain, timelines, satellite imagery and guided map stories." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://geojson.app" />
+    <meta property="og:url" content="https://geojson.app/" />
     <meta property="og:image" content="https://geojson.app/geojson.app.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The geojson.app logo, a 3D map tile with mountains and a route, next to the tagline “Open maps for people and agents.”" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="geojson.app - Open Source Mapping & Geospatial Data Visualization" />
+    <meta name="twitter:title" content="geojson.app — Open maps for people and agents" />
+    <meta name="twitter:description" content="View, explore and share GeoJSON on a fast open-source map. Embeddable and scriptable." />
     <meta name="twitter:image" content="https://geojson.app/geojson.app.jpg" />
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <!-- For agents and crawlers: what the app does and how to drive it. -->
+    <link rel="alternate" type="text/markdown" href="/llms.txt" title="geojson.app for LLMs" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "geojson.app",
+        "url": "https://geojson.app/",
+        "image": "https://geojson.app/geojson.app.jpg",
+        "logo": "https://geojson.app/icon-512x512.png",
+        "description": "View, explore and share GeoJSON on a fast open-source map, with 3D terrain, timelines, satellite imagery, guided map stories and an embeddable JavaScript SDK.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web browser)",
+        "browserRequirements": "Requires JavaScript and WebGL",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "sameAs": ["https://github.com/bishalspkt/geojson-app"],
+        "potentialAction": {
+          "@type": "ViewAction",
+          "target": "https://geojson.app/?geojson={url}",
+          "name": "Open a GeoJSON URL on the map"
+        }
+      }
+    </script>
     <!-- Basemap tiles and label glyphs: open the connections while the app boots. -->
     <link rel="preconnect" href="https://tiles.geojson.app" crossorigin />
     <link rel="preconnect" href="https://protomaps.github.io" crossorigin />
-    <title>geojson.app - Open Source Mapping & Geospatial Data Visualization</title>
   </head>
   <body>
     <div id="root"></div>

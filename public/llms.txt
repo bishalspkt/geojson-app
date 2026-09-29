@@ -1,0 +1,46 @@
+# geojson.app
+
+> A free, open-source web map for viewing, exploring and sharing GeoJSON — with 3D terrain, timelines, satellite imagery and guided map stories. Everything a person can do by clicking, an agent can do with a link or the embed SDK. No account, no API key.
+
+geojson.app runs entirely in the browser. Data you open by URL is fetched by the viewer's browser (the source must allow CORS); data you drop in never leaves the device. Features follow RFC 7946 GeoJSON, and styling follows the simplestyle-spec (`stroke`, `fill`, `marker-color`, …).
+
+## Open data with a link
+
+Every parameter works on `https://geojson.app/?…`. Parameter names are a frozen v1 contract.
+
+- `geojson=<url>`: load a GeoJSON `Feature` or `FeatureCollection` and fit the map to it. Example: `https://geojson.app/?geojson=https://example.com/data.geojson`
+- `center=<lng>,<lat>` and `zoom=<0–22>`: initial camera. Example: `?center=85.3,27.7&zoom=11`
+- `theme=light|dark|white|grayscale|black` and `projection=mercator|globe`: appearance
+- `story=<name-or-url>` and `chapter=<index-or-id>`: open a guided map story. Example: `?story=bhotekoshi-2026`
+- `embed=1`, `chrome=full|minimal|none`, `interactive=true|false`, `attribution=visible|compact`: embed behaviour
+
+## Embed and drive a live map
+
+Load `https://geojson.app/embed.js` (~2 kB gzipped, no dependencies). It exposes `window.GeoJSONApp`:
+
+```html
+<div id="map" style="height: 450px"></div>
+<script src="https://geojson.app/embed.js"></script>
+<script type="module">
+  const map = GeoJSONApp("create", { element: "#map", geojson: "https://example.com/data.geojson" });
+  await map.ready();
+  await map.flyTo({ center: [85.3, 27.7], zoom: 11 });
+  map.on("click", ({ lngLat, features }) => console.log(lngLat, features));
+</script>
+```
+
+Methods (all return Promises): `flyTo`, `jumpTo`, `fitBounds`, `setTheme`, `setProjection`, `setGeoJSON`, `addLayer`, `removeLayer`, `clearLayers`, `listLayers`, `setLayerVisibility`, `getCenter`, `getZoom`, `getBearing`, `getBounds`, `addImagery`, `removeImagery`, `listImagery`, `setTerrain`, `setTime`, `setCompare`, `loadStory`, `setStoryChapter`.
+Events: `load`, `move`, `moveend`, `click`, `theme:change`, `projection:change`, `story:chapter`, `error`.
+The iframe speaks postMessage protocol v1 (envelope `{ source: "geojson.app.embed", v: 1, … }`), so any client that can post messages can drive it without the SDK.
+
+## Docs
+
+- [Developer API](https://github.com/bishalspkt/geojson-app/blob/main/docs/developers-api.md): full SDK and postMessage reference, error codes, recipes
+- [Embedding guide](https://github.com/bishalspkt/geojson-app/blob/main/docs/embed.md): quick start and options
+- [Integrations](https://github.com/bishalspkt/geojson-app/blob/main/docs/integrations.md): URL parameters, SDK, and the planned MCP server
+- [Stories](https://github.com/bishalspkt/geojson-app/blob/main/docs/stories.md): the story document format (chapters, camera, layers, terrain, timelines, before/after imagery)
+
+## Optional
+
+- [Source code](https://github.com/bishalspkt/geojson-app)
+- [Architecture](https://github.com/bishalspkt/geojson-app/blob/main/docs/architecture.md)

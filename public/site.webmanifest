@@ -1,24 +1,19 @@
 {
+  "id": "/",
   "name": "geojson.app",
   "short_name": "geojson.app",
-  "description": "View, explore and share GeoJSON on an open-source map.",
+  "description": "View, explore and share GeoJSON on a fast open-source map — 3D terrain, timelines, satellite imagery, map stories and an embeddable SDK.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#4a24b8",
-  "background_color": "#e8edf5",
+  "background_color": "#12072f",
+  "categories": ["navigation", "productivity", "utilities"],
   "icons": [
-    {
-      "src": "/web-app-manifest-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/web-app-manifest-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/web-app-manifest-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/web-app-manifest-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
